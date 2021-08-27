@@ -29,13 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-  base16:
-    dependency: transitive
-    description:
-      name: base16
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   base32:
     dependency: transitive
     description:
@@ -188,7 +181,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "807623bfe28b7aa94e673070c70ba6c3997215b7"
+      resolved-ref: "0d10cc7f09172b9f71566cd6dae9f3cbbe0d9335"
       url: "https://github.com/tokend/dart-crypto-kit"
     source: git
     version: "0.0.1"
@@ -197,7 +190,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "7b78d4ea943deb9ab7f93e737177c53567eb171c"
+      resolved-ref: "1d94f70d04f5c2f7f2b5ccf034eb1c336d3a9c70"
       url: "https://github.com/tokend/dart-sdk"
     source: git
     version: "0.0.1"
@@ -213,7 +206,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: c3e90bcde67dfea6495425e301d78485a6cdf470
+      resolved-ref: "2dcad08be0c139b482f8a04a6feb9d2c80b3feb7"
       url: "https://github.com/tokend/dart-wallet"
     source: git
     version: "0.0.1"
@@ -360,6 +353,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  material:
+    dependency: "direct main"
+    description:
+      name: material
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+2"
   meta:
     dependency: transitive
     description:
@@ -542,13 +542,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
-  utility:
-    dependency: transitive
-    description:
-      name: utility
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   varargs:
     dependency: transitive
     description:
