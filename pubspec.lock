@@ -190,7 +190,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "1d94f70d04f5c2f7f2b5ccf034eb1c336d3a9c70"
+      resolved-ref: be2f916506b1c9f9e8f422c69c91a4771404a731
       url: "https://github.com/tokend/dart-sdk"
     source: git
     version: "0.0.1"
