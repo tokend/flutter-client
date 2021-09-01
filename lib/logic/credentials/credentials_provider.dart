@@ -1,7 +1,7 @@
 import 'package:tuple/tuple.dart';
 
 abstract class CredentialsProvider {
-  bool hasCredentials();
+  Future<bool> hasCredentials();
 
-  Tuple2<String, String> getCredentials();
+  Future<Tuple2<String, String>> getCredentials();
 }

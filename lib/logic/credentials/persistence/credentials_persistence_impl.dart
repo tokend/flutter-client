@@ -1,10 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
+import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tuple/tuple.dart';
 
-class CredentialsPersistenceImpl implements CredentialsPersistence {
+class CredentialsPersistenceImpl extends CredentialsPersistence {
   final SharedPreferences _sharedPreferences;
 
   CredentialsPersistenceImpl(this._sharedPreferences) {
@@ -29,16 +27,15 @@ class CredentialsPersistenceImpl implements CredentialsPersistence {
   }
 
   @override
-  String? getSavedPassword() {
-    var passwordBytes = _secureStorage.load(PASSWORD_KEY);
-    if (passwordBytes == null) return null;
-    var password = String.fromCharCodes(passwordBytes);
+  Future<String?> getSavedPassword() async {
+    var password = await _secureStorage.load(PASSWORD_KEY);
+    if (password == null) return null;
     return password;
   }
 
   @override
-  bool hasSavedPassword() {
-    var password = getSavedPassword();
+  Future<bool> hasSavedPassword() async {
+    var password = await getSavedPassword();
     var hasPassword = password != null;
     password = '';
     return hasPassword;
@@ -51,20 +48,10 @@ class CredentialsPersistenceImpl implements CredentialsPersistence {
   }
 
   void _tryToSavePassword(String password) {
-    var passwordBytes = Uint8List.fromList(password.codeUnits);
-    _secureStorage.save(passwordBytes, PASSWORD_KEY);
+    _secureStorage.save(password, PASSWORD_KEY);
   }
 
   static const PASSWORD_KEY = '(¬_¬)';
   static const EMAIL_KEY = 'email';
 
-  @override
-  Tuple2<String, String> getCredentials() {
-    return this.getCredentials();
-  }
-
-  @override
-  bool hasCredentials() {
-    return this.hasCredentials();
-  }
 }

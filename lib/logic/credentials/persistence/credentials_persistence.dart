@@ -10,10 +10,10 @@ abstract class CredentialsPersistence extends CredentialsProvider {
   String? getSavedEmail();
 
   /// @return true if there is a securely saved password
-  bool hasSavedPassword();
+  Future<bool> hasSavedPassword();
 
   /// @return saved password or null if it's missing
-  String? getSavedPassword();
+  Future<String?> getSavedPassword();
 
   /// Clears stored credentials
   /// @param keepEmail if set then email will not be cleared
@@ -21,12 +21,13 @@ abstract class CredentialsPersistence extends CredentialsProvider {
   void clear(bool keepEmail);
 
   @override
-  Tuple2<String, String> getCredentials() {
-    return Tuple2(getSavedEmail()!, getSavedPassword()!);
+  Future<Tuple2<String, String>> getCredentials() async {
+    var password = await getSavedPassword();
+    return Tuple2(getSavedEmail()!, password!);
   }
 
   @override
-  bool hasCredentials() {
-    return getSavedEmail() != null && hasSavedPassword();
+  Future<bool> hasCredentials() async {
+    return getSavedEmail() != null && await hasSavedPassword();
   }
 }

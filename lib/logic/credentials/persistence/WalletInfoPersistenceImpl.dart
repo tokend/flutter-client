@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dart_sdk/key_server/models/wallet_info.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
+import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletInfoPersistenceImpl implements WalletInfoPersistence {
