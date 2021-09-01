@@ -33,6 +33,7 @@ class CredentialsPersistenceImpl implements CredentialsPersistence {
     var passwordBytes = _secureStorage.load(PASSWORD_KEY);
     if (passwordBytes == null) return null;
     var password = String.fromCharCodes(passwordBytes);
+    return password;
   }
 
   @override
