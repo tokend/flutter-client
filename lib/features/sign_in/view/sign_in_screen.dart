@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/utils/view/base_state.dart';
+import 'package:get/get.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -13,11 +14,11 @@ class _SignInCreateState extends BaseState<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("SignInTitle"),
+        title: Text("app_title".tr),
       ),
       backgroundColor: Color(0xFFFF5000),
       body: Center(
-        child: Text("SignIN Text"),
+        child: Text("sign_in_text".tr),
       ),
     );
   }
