@@ -51,7 +51,8 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
     _secureStorage.save(password, PASSWORD_KEY);
   }
 
-  static const PASSWORD_KEY = '(¬_¬)';
+  static const PASSWORD_KEY = 'my 32 length key................';
+      //'(¬_¬)'; ///TODO add key generation
   static const EMAIL_KEY = 'email';
 
 }
