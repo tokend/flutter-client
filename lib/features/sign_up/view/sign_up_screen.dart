@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/sign_up/logic/sign_up_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/validators/email_validator.dart';
 import 'package:flutter_template/utils/validators/password_validator.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:flutter_template/utils/view/sign_in_screen_template.dart';
+import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -60,144 +63,155 @@ class _SignUpScreenState extends BaseState<SignUpScreen> {
 
     final screenSize = MediaQuery.of(context).size;
 
-    return SignInScreenTemplate(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //Image column
-            Column(
+    return BlocProvider(
+        create: (_) => SignUpBloc(),
+        child: SignInScreenTemplate(
+            child: BlocListener<SignUpBloc, SignUpState>(
+          listener: (context, state) {
+            if (state.status.isSubmissionFailure) {
+              print('submission failure');
+            } else if (state.status.isSubmissionSuccess) {
+              Navigator.of(context).pushNamed('sign_in');
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: screenSize.height * 0.1,
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "title_sign_up".tr,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: Sizes.textSizeTitle,
-                        color: colorTheme.primary),
-                  ),
-                ),
-                Container(
-                  height: screenSize.height * 0.01,
-                ),
-              ],
-            ),
-            //TextFields column
-            Column(
-              children: [
-                DefaultTextField(
-                  validator: (value) {
-                    if (EmailValidator.get().isValid(value) ||
-                        value == null ||
-                        value.isEmpty) {
-                      return null;
-                    } else {
-                      return "Invalid email";
-                    }
-                  },
-                  controller: _emailController,
-                  inputType: TextInputType.emailAddress,
-                  hint: "Email",
-                  title: "Email",
-                  colorTheme: colorTheme,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
-                ),
-                PasswordTextField(
-                  inputType: TextInputType.visiblePassword,
-                  controller: _passwordEditingController,
-                  hint: "Password",
-                  title: "Password",
-                  colorTheme: colorTheme,
-                  validator: (String? value) {
-                    if (PasswordValidator.get().isValid(value) ||
-                        value == null ||
-                        value.isEmpty) {
-                      return null;
-                    } else {
-                      return "Weak password";
-                    }
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
-                ),
-                PasswordTextField(
-                  inputType: TextInputType.visiblePassword,
-                  key: _passwordConfirmKey,
-                  controller: _passwordConfirmEditingController,
-                  hint: "Confirm password",
-                  title: "Confirm password",
-                  colorTheme: colorTheme,
-                  validator: (value) {
-                    if (_passwordEditingController.text !=
-                            _passwordConfirmEditingController.text &&
-                        value != null &&
-                        value.isNotEmpty) {
-                      return "Passwords didn`t match";
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-              ],
-            ),
-            Container(
-              height: screenSize.height * 0.027,
-            ),
-            //Button column
-            Column(
-              children: [
-                DefaultButton(
-                    key: _buttonKey,
-                    text: "Continue",
-                    colorTheme: colorTheme,
-                    onPressed: () {
-                      if (_passwordEditingController.text ==
-                          _passwordConfirmEditingController.text) {
-                        FocusScope.of(context).unfocus();
-                        /*ScreenNavigator.of(context: context)
-                            .openEmailCheck(_emailController.text);*/
-                      } else {
-                        this._passwordConfirmKey.currentState?.validate();
-                      }
-                    }),
-                Padding(padding: EdgeInsets.only(top: Sizes.standartMargin)),
-                GestureDetector(
-                  child: RichText(
-                    text: TextSpan(
-                      text: '"Already have account" ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: Sizes.textSizeHint,
-                          color: colorTheme.hint),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: "Sign in",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: Sizes.textSizeHint,
-                              color: colorTheme.primary),
-                        ),
-                      ],
+                //Image column
+                Column(
+                  children: [
+                    Container(
+                      height: screenSize.height * 0.1,
                     ),
-                  ),
-                  onTap: () => Navigator.pop(context),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "title_sign_up".tr,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: Sizes.textSizeTitle,
+                            color: colorTheme.primary),
+                      ),
+                    ),
+                    Container(
+                      height: screenSize.height * 0.01,
+                    ),
+                  ],
+                ),
+                //TextFields column
+                Column(
+                  children: [
+                    DefaultTextField(
+                      validator: (value) {
+                        if (EmailValidator.get().isValid(value) ||
+                            value == null ||
+                            value.isEmpty) {
+                          return null;
+                        } else {
+                          return "Invalid email";
+                        }
+                      },
+                      controller: _emailController,
+                      inputType: TextInputType.emailAddress,
+                      hint: "Email",
+                      title: "Email",
+                      colorTheme: colorTheme,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
+                    ),
+                    PasswordTextField(
+                      inputType: TextInputType.visiblePassword,
+                      controller: _passwordEditingController,
+                      hint: "Password",
+                      title: "Password",
+                      colorTheme: colorTheme,
+                      validator: (String? value) {
+                        if (PasswordValidator.get().isValid(value) ||
+                            value == null ||
+                            value.isEmpty) {
+                          return null;
+                        } else {
+                          return "Weak password";
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
+                    ),
+                    PasswordTextField(
+                      inputType: TextInputType.visiblePassword,
+                      key: _passwordConfirmKey,
+                      controller: _passwordConfirmEditingController,
+                      hint: "Confirm password",
+                      title: "Confirm password",
+                      colorTheme: colorTheme,
+                      validator: (value) {
+                        if (_passwordEditingController.text !=
+                                _passwordConfirmEditingController.text &&
+                            value != null &&
+                            value.isNotEmpty) {
+                          return "Passwords didn`t match";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 Container(
-                  height: screenSize.height * 0.04,
+                  height: screenSize.height * 0.027,
+                ),
+                //Button column
+                Column(
+                  children: [
+                    DefaultButton(
+                        key: _buttonKey,
+                        text: "Continue",
+                        colorTheme: colorTheme,
+                        onPressed: () {
+                          if (_passwordEditingController.text ==
+                              _passwordConfirmEditingController.text) {
+                            FocusScope.of(context).unfocus();
+                            /*ScreenNavigator.of(context: context)
+                            .openEmailCheck(_emailController.text);*/
+                          } else {
+                            this._passwordConfirmKey.currentState?.validate();
+                          }
+                        }),
+                    Padding(
+                        padding: EdgeInsets.only(top: Sizes.standartMargin)),
+                    GestureDetector(
+                      child: RichText(
+                        text: TextSpan(
+                          text: '"Already have account" ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: Sizes.textSizeHint,
+                              color: colorTheme.hint),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: "Sign in",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: Sizes.textSizeHint,
+                                  color: colorTheme.primary),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    Container(
+                      height: screenSize.height * 0.04,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        )));
   }
 }

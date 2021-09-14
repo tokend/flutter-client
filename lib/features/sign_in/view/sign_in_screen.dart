@@ -18,8 +18,11 @@ class _SignInCreateState extends BaseState<SignInScreen> {
       ),
       backgroundColor: Color(0xFFFF5000),
       body: Center(
-        child: Text("sign_in_text".tr),
-      ),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, "sign_up");
+              },
+              child: Text("sign_in_text".tr))),
     );
   }
 }
