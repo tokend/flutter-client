@@ -45,6 +45,8 @@ dependencies:
   flutter_secure_storage: ^4.2.1
   encrypt: ^5.0.1
   flutter_keychain: ^2.0.1
+  synchronized: ^3.0.0
+  dcache: ^0.4.0
 
 
 

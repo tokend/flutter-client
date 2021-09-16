@@ -129,7 +129,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
   OutlineInputBorder _borderStyle(Color color) {
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: Sizes.borderWidth),
-      borderRadius: BorderRadius.circular(Sizes.mediumRadius),
+      borderRadius: BorderRadius.circular(Sizes.xSmallRadius),
     );
   }
 }

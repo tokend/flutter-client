@@ -1,7 +1,8 @@
 class Sizes {
   //Radius
-  static const mediumRadius = 12.0;
-  static const xSmallRadius = 10.0;
+  static const radius = 12.0;
+  static const mediumRadius = 10.0;
+  static const xSmallRadius = 4.0;
 
   //Paddings
   static const doublePadding = 48.0;

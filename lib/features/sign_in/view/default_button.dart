@@ -46,7 +46,7 @@ class DefaultButtonState extends State<DefaultButton> {
             minimumSize: MaterialStateProperty.all(Size(double.infinity, 56)),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Sizes.mediumRadius),
+                borderRadius: BorderRadius.circular(Sizes.radius),
               ),
             ),
             backgroundColor: MaterialStateProperty.all(value

@@ -27,10 +27,10 @@ class LightColorTheme implements BaseColorTheme {
   LightColorTheme._internal();
 
   @override
-  final Color accent = Color(0xFF6454ee);
+  final Color accent = Color(0xFF7B6EFF);
 
   @override
-  final Color primary = Color(0xFF333E63);
+  final Color primary = Color(0xFF0B2962);
 
   @override
   final Color middlePrimary = Color(0xFF5B5B7E);
@@ -51,7 +51,7 @@ class LightColorTheme implements BaseColorTheme {
   final Color suffixIcons = Color(0xFF9695A8);
 
   @override
-  final Color hint = Color(0xFF9695A8);
+  final Color hint = Color(0xFF0B2962);
 
   @override
   final Color buttonDisabled = Color(0xFF9695A8);
