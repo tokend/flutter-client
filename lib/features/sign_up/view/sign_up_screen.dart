@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/extensions/resources.dart';
@@ -175,8 +176,10 @@ class _SignUpScreenState extends BaseState<SignUpScreen> {
                           if (_passwordEditingController.text ==
                               _passwordConfirmEditingController.text) {
                             FocusScope.of(context).unfocus();
-                            /*ScreenNavigator.of(context: context)
-                            .openEmailCheck(_emailController.text);*/
+                            */
+/*ScreenNavigator.of(context: context)
+                            .openEmailCheck(_emailController.text);*/ /*
+
                           } else {
                             this._passwordConfirmKey.currentState?.validate();
                           }
@@ -215,3 +218,4 @@ class _SignUpScreenState extends BaseState<SignUpScreen> {
         )));
   }
 }
+*/

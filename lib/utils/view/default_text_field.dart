@@ -6,12 +6,12 @@ import 'package:flutter_template/resources/theme/themes.dart';
 class DefaultTextField extends StatefulWidget {
   final String title;
   final String hint;
+  final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
   final Widget? suffixIcon;
   final bool showText;
-  final TextEditingController? controller;
-  final FormFieldValidator<String>? validator;
+  final ValueChanged<String> onChanged;
   final List<TextInputFormatter>? textInputFormatters;
   final Color background;
 
@@ -20,8 +20,8 @@ class DefaultTextField extends StatefulWidget {
       this.background = Colors.transparent,
       this.textInputFormatters,
       this.title = "",
-      this.controller,
-      this.validator,
+      this.error,
+      required this.onChanged,
       required this.colorTheme,
       this.hint = "",
       this.inputType = TextInputType.text,
@@ -38,27 +38,8 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   final _key = GlobalKey<FormState>();
 
-  final _focusNode = FocusNode();
-
-  var _textFieldText = "";
-
-  void validate() {
-    _error.value = widget.validator?.call(widget.controller?.text);
-  }
-
-  @override
-  void initState() {
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        _error.value = widget.validator?.call(widget.controller?.text);
-      }
-    });
-    super.initState();
-  }
-
   @override
   void dispose() {
-    _focusNode.dispose();
     _error.dispose();
     super.dispose();
   }
@@ -86,14 +67,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                 return TextFormField(
                   inputFormatters: widget.textInputFormatters,
                   keyboardType: widget.inputType,
-                  focusNode: _focusNode,
-                  onChanged: (text) {
-                    if (_error.value != null && _textFieldText != text) {
-                      _error.value = null;
-                    }
-                    _textFieldText = text;
-                  },
-                  controller: widget.controller,
+                  onChanged: widget.onChanged,
                   textAlignVertical: TextAlignVertical.center,
                   obscureText: !widget.showText,
                   cursorColor: widget.colorTheme.primaryText,
@@ -104,7 +78,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: widget.background,
-                      errorText: value,
+                      errorText: widget.error,
                       errorBorder: _borderStyle(widget.colorTheme.negative),
                       focusedErrorBorder:
                           _borderStyle(widget.colorTheme.negative),

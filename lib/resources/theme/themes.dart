@@ -27,10 +27,10 @@ class LightColorTheme implements BaseColorTheme {
   LightColorTheme._internal();
 
   @override
-  final Color accent = Color(0xff5041fd);
+  final Color accent = Color(0xff0b2962);
 
   @override
-  final Color primary = Color(0xFF6454ee);
+  final Color primary = Color(0xff7b6eff);
 
   @override
   final Color middlePrimary = Color(0xFF5B5B7E);

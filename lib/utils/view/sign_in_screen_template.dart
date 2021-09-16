@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/resources/assets.dart';
 import 'package:flutter_template/resources/sizes.dart';
 
 class SignInScreenTemplate extends StatelessWidget {
@@ -23,21 +21,6 @@ class SignInScreenTemplate extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Container(
-              height: imageSize,
-              transform: Matrix4.translationValues(0.0, 25.0, 0.0),
-              constraints: BoxConstraints(minHeight: imageMinHeight),
-              alignment: Alignment.bottomCenter,
-              child: Transform.scale(
-                alignment: Alignment.bottomCenter,
-                scale: 1.9,
-                child: Opacity(
-                  opacity: 0.15,
-                  child: SvgPicture.asset(Assets.ic_city,
-                      alignment: Alignment.bottomCenter),
-                ),
-              ),
-            ),
             CustomScrollView(
               physics: ClampingScrollPhysics(),
               slivers: [

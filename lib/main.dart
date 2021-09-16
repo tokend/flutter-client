@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_screen.dart';
-import 'package:flutter_template/features/sign_up/sign_up_design_tmp.dart';
+import 'package:flutter_template/features/sign_up/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
 import 'package:get/get.dart';
 

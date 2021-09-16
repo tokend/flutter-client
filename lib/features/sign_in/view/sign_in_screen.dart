@@ -14,7 +14,7 @@ class _SignInCreateState extends BaseState<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("app_title".tr),
+        title: Text('app_title'.tr),
       ),
       backgroundColor: Color(0xFFFF5000),
       body: Center(
@@ -22,7 +22,7 @@ class _SignInCreateState extends BaseState<SignInScreen> {
               onTap: () {
                 Navigator.pushNamed(context, "sign_up");
               },
-              child: Text("sign_in_text".tr))),
+              child: Text('sign_in_text'.tr))),
     );
   }
 }

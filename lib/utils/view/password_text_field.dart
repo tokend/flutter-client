@@ -7,17 +7,17 @@ import 'default_text_field.dart';
 class PasswordTextField extends StatefulWidget {
   final String title;
   final String hint;
+  final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
-  final TextEditingController? controller;
-  final FormFieldValidator<String>? validator;
+  final ValueChanged<String> onChanged;
 
   const PasswordTextField(
       {Key? key,
       this.title = "",
-      this.controller,
-      this.validator,
+      required this.onChanged,
       required this.colorTheme,
+      this.error,
       this.hint = "",
       this.inputType = TextInputType.text})
       : super(key: key);
@@ -33,9 +33,6 @@ class PasswordTextFieldState extends State<PasswordTextField> {
 
   final _textFieldKey = GlobalKey<DefaultTextFieldState>();
 
-  void validate() {
-    _textFieldKey.currentState?.validate();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +40,10 @@ class PasswordTextFieldState extends State<PasswordTextField> {
       key: _textFieldKey,
       showText: _isPasswordVisible,
       title: widget.title,
-      controller: widget.controller,
-      validator: widget.validator,
+      onChanged: widget.onChanged,
       colorTheme: widget.colorTheme,
       hint: widget.hint,
+      error: widget.error,
       inputType: widget.inputType,
       suffixIcon: PasswordToggle(
         iconColor: widget.colorTheme.suffixIcons,

@@ -49,7 +49,7 @@ class DefaultButtonState extends State<DefaultButton> {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(value
-                ? widget.colorTheme.accent
+                ? widget.colorTheme.primary
                 : widget.colorTheme.buttonDisabled),
           ),
           onPressed: value
