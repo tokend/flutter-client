@@ -66,8 +66,9 @@ class _PasswordInputField extends StatelessWidget {
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
+        print(state.password.error != null ? state.password.error!.name : null);
         return Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
+          padding: const EdgeInsets.only(bottom: 20.0),
           child: AuthTextField(
             hint: 'Password',
             key: const Key('signUpForm_passwordInput_textField'),
@@ -79,7 +80,7 @@ class _PasswordInputField extends StatelessWidget {
                 : null,
             onChanged: (password) => context
                 .read<SignUpBloc>()
-                .add(PasswordChanged(password: password)),
+                    .add(PasswordChanged(password: password)),
           ),
         );
       },
@@ -95,6 +96,8 @@ class _ConfirmPasswordInput extends StatelessWidget {
           previous.password != current.password ||
           previous.confirmPassword != current.confirmPassword,
       builder: (context, state) {
+        print(
+            "TEST CONFITM -> ${state.confirmPassword.error != null ? state.confirmPassword.error!.name : null}");
         return AuthTextField(
           hint: 'Confirm Password',
           isRequiredField: true,
@@ -106,7 +109,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
               : null,
           onChanged: (confirmPassword) => context
               .read<SignUpBloc>()
-              .add(ConfirmPasswordChanged(confirmPassword: confirmPassword)),
+                  .add(ConfirmPasswordChanged(confirmPassword: confirmPassword)),
         );
       },
     );

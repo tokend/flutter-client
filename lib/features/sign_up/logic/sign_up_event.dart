@@ -19,7 +19,7 @@ class EmailChanged extends SignUpEvent {
 }
 
 class PasswordChanged extends SignUpEvent {
-  const PasswordChanged({@required this.password});
+  const PasswordChanged({required this.password});
 
   final String? password;
 

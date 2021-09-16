@@ -9,7 +9,6 @@ import 'package:flutter_template/features/sign_up/model/password.dart';
 import 'package:formz/formz.dart';
 
 part 'sign_up_event.dart';
-
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
@@ -17,8 +16,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   @override
   void onTransition(Transition<SignUpEvent, SignUpState> transition) {
-    print(transition);
     super.onTransition(transition);
+    print(transition);
   }
 
   @override
@@ -28,7 +27,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     if (event is EmailChanged) {
       final email = Email.dirty(event.email!);
       yield state.copyWith(
-        email: email.valid ? email : Email.pure(),
+        email: email,
         status: Formz.validate([
           email,
           state.password,
@@ -42,7 +41,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         value: state.confirmPassword.value,
       );
       yield state.copyWith(
-        password: password.valid ? password : Password.pure(),
+        password: password,
         status: Formz.validate([
           state.email,
           password,
@@ -50,11 +49,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         ]),
       );
     } else if (event is ConfirmPasswordChanged) {
+      print("ConfPassEvent -> $event");
       final password = ConfirmPassword.dirty(
           password: state.password.value, value: event.confirmPassword!);
-      print('confirm is valid ${password.valid}');
       yield state.copyWith(
-        confirmPassword: password.valid ? password : ConfirmPassword.pure(),
+        confirmPassword: password,
         status: Formz.validate([
           state.email,
           state.password,

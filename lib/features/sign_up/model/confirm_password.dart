@@ -17,8 +17,11 @@ class ConfirmPassword
   @override
   ConfirmedPasswordValidationError? validator(String value) {
     if (value.isEmpty) {
+      print("CONF -> $value");
       return ConfirmedPasswordValidationError.invalid;
     }
+    print(
+        "CONF_VALIDATION -> value -> $value -> ${password == value ? null : ConfirmedPasswordValidationError.mismatch}");
     return password == value ? null : ConfirmedPasswordValidationError.mismatch;
   }
 }
@@ -27,8 +30,10 @@ extension Explanation on ConfirmedPasswordValidationError {
   String? get name {
     switch (this) {
       case ConfirmedPasswordValidationError.mismatch:
-        return 'passwords must match';
+        print("Passwords must match");
+        return 'Passwords must match';
       default:
+        print(this);
         return null;
     }
   }

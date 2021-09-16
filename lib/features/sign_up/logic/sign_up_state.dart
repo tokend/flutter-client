@@ -30,3 +30,8 @@ class SignUpState extends Equatable {
     );
   }
 }
+
+class SignUpInitial extends SignUpState {
+  @override
+  List<Object> get props => [];
+}
