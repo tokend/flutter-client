@@ -11,6 +11,7 @@ import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:flutter_template/utils/view/sign_in_screen_template.dart';
 import 'package:formz/formz.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 import 'logic/sign_up_bloc.dart';
@@ -28,6 +29,7 @@ class SignUpForm extends StatelessWidget {
           if (state.status.isSubmissionFailure) {
             print('submission failure');
           } else if (state.status.isSubmissionSuccess) {
+            Get.toNamed('sign_in');
             Navigator.of(context).pushNamed('sign_in');
           }
         },
@@ -135,7 +137,7 @@ class _EmailInputField extends StatelessWidget {
   }
 }
 
-class _PasswordInputField extends StatelessWidget {
+class _PasswordInputField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
@@ -199,7 +201,7 @@ class _SignUpButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
-          text: 'Sign Up',
+          text: 'title_sign_up'.tr,
           onPressed: () {
             state.status.isValidated
                 ? context.read<SignUpBloc>().add(FormSubmitted())

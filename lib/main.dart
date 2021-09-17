@@ -29,7 +29,8 @@ class App extends StatelessWidget {
         // 'sign_up': (context) => SignUpScreen(),
         // '/home': (context) => HomeScaffold(),
       },
-      home: SignInScreen(),
+      //TODO
+      home: SignUpScaffold(),
     );
   }
 }

@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_sdk/api/tokend_api.dart';
+import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_template/features/sign_up/logic/sign_up_usecase.dart';
 import 'package:flutter_template/features/sign_up/model/confirm_password.dart';
 import 'package:flutter_template/features/sign_up/model/email.dart';
 import 'package:flutter_template/features/sign_up/model/password.dart';
 import 'package:formz/formz.dart';
 
 part 'sign_up_event.dart';
+
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
@@ -64,7 +69,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       if (!state.status.isValidated) return;
       yield state.copyWith(status: FormzStatus.submissionInProgress);
       try {
-        await Future.delayed(Duration(seconds: 3));
+        //TODO
+        var api = TokenDApi('http://d631-193-19-228-94.ngrok.io/_/api/');
+        var keyServer = KeyServer(api.wallets);
+        await SignUpUseCase(
+                state.email.value, state.password.value, keyServer, api)
+            .perform()
+            .then((wallet) => log('ID:  ${wallet.walletData.id}'));
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } on Exception {
         yield state.copyWith(status: FormzStatus.submissionFailure);

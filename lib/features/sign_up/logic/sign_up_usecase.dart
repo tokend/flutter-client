@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/api/wallets/model/exceptions.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
@@ -16,12 +18,19 @@ class SignUpUseCase {
   int _defaultSignerRole = 0;
 
   Future<WalletCreateResult> perform() async {
-    var isFree = await _ensureEmailIsFree();
-    _getAccount().then((rootAccount) => this._rootAccount = rootAccount);
-    _getDefaultSignerRole().then(
-        (defaultSignerRole) => this._defaultSignerRole = defaultSignerRole);
-    return _createAndSaveWallet();
+    try {
+      await _ensureEmailIsFree();
+    } catch (e, s) {
+      log(s.toString());
+    }
+    return _getAccount()
+        .then((rootAccount) => this._rootAccount = rootAccount)
+        .then((_) => _getDefaultSignerRole())
+        .then(
+            (defaultSignerRole) => this._defaultSignerRole = defaultSignerRole)
+        .then((_) => _createAndSaveWallet());
   }
+
 
   Future<bool> _ensureEmailIsFree() async {
     var isFree = false;
