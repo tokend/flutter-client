@@ -6,7 +6,7 @@ void main() => Development();
 
 class Development extends Env {
   @override
-  String apiUrl = 'https://api.demo.tokend.io';
+  String apiUrl = 'https://api.staging.helpbees.de/';
 
   @override
   String storageUrl = 'https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden/';

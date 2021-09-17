@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
+import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_screen.dart';
 import 'package:flutter_template/features/sign_up/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
@@ -19,6 +20,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MainBindings(env).dependencies();
     return GetMaterialApp(
       title: 'Flutter Client',
       locale: Get.deviceLocale,
@@ -29,8 +31,8 @@ class App extends StatelessWidget {
         // 'sign_up': (context) => SignUpScreen(),
         // '/home': (context) => HomeScaffold(),
       },
-      //TODO
-      home: SignUpScaffold(),
+      home: SignInScreen(),
+      getPages: [GetPage(name: '/signIn', page: () => SignInScreen(), binding: MainBindings(env))],
     );
   }
 }

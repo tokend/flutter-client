@@ -6,7 +6,7 @@ import 'package:flutter_template/logic/credentials/persistence/wallet_info_persi
 import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class WalletInfoPersistenceImpl implements WalletInfoPersistence {
+class WalletInfoPersistenceImpl extends WalletInfoPersistence {
   final SharedPreferences _sharedPreferences;
 
   WalletInfoPersistenceImpl(this._sharedPreferences) {
@@ -34,21 +34,22 @@ class WalletInfoPersistenceImpl implements WalletInfoPersistence {
       if (seedBytes == null) return null;
       walletInfo.setSecretSeed = String.fromCharCodes(seedBytes);
       return email == walletInfo.email ? walletInfo : null;
-    } catch (e) {
+    } catch (e, stacktrace) {
       print(e);
+      print(stacktrace);
       return null;
     }
   }
 
   @override
-  void saveWalletInfo(WalletInfo data, String password) {
-    var copyWalletInfo = WalletInfo(
-        data.accountId, data.email, data.walletIdHex, data.loginParams, ['']);
+  Future<void> saveWalletInfo(WalletInfo data, String password) async {
+    var copyWalletInfo = new WalletInfo(data.accountId, data.email,
+        data.walletIdHex, data.loginParams, List.empty());
     var nonSensitiveData =
-        Uint8List.fromList(copyWalletInfo.toJson().toString().codeUnits);
+        Uint8List.fromList(json.encode(copyWalletInfo).codeUnits);
     var sensitiveData = Uint8List.fromList(data.secretSeeds.first.codeUnits);
-    _secureStorage.saveWithPassword(sensitiveData, SEED_KEY, password);
-    _secureStorage.saveWithPassword(
+    await _secureStorage.saveWithPassword(sensitiveData, SEED_KEY, password);
+    await _secureStorage.saveWithPassword(
         nonSensitiveData, WALLET_INFO_KEY, password);
   }
 
