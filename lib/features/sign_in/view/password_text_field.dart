@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/sign_in/view/default_text_field.dart';
 import 'package:flutter_template/features/sign_in/view/password_toggle.dart';
-import 'package:flutter_template/resources/themes/Themes.dart';
+import 'package:flutter_template/resources/theme/themes.dart';
 
 class PasswordTextField extends StatefulWidget {
   final String title;

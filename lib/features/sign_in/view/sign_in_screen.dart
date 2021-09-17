@@ -11,13 +11,13 @@ import 'package:flutter_template/features/sign_in/logic/sign_in_usecase.dart';
 import 'package:flutter_template/features/sign_in/view/default_button.dart';
 import 'package:flutter_template/features/sign_in/view/default_text_field.dart';
 import 'package:flutter_template/features/sign_in/view/password_text_field.dart';
-import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence_impl.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence_impl.dart';
+import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence_impl.dart';
 import 'package:flutter_template/logic/session.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/validators/email_validator.dart';
+import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/base_state.dart';
-import 'package:flutter_template/view/templates/sign_in_template.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,7 +44,7 @@ class _SignInCreateState extends BaseState<SignInScreen> {
     log('STORAGE ENV ${env.apiUrl}');
     final screenSize = MediaQuery.of(context).size;
 
-    return SignInScreenTemplate(
+    return AuthScreenTemplate(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
         child: Column(
@@ -63,7 +63,7 @@ class _SignInCreateState extends BaseState<SignInScreen> {
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: Sizes.textSizeTitle,
-                        color: colorTheme.primary),
+                        color: colorTheme.accent),
                   ),
                 ),
                 Container(
@@ -117,7 +117,7 @@ class _SignInCreateState extends BaseState<SignInScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: Sizes.textSizeHint,
-                                color: colorTheme.primary),
+                                color: colorTheme.accent),
                           ),
                         ],
                       ),
@@ -166,12 +166,13 @@ class _SignInCreateState extends BaseState<SignInScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: Sizes.textSizeHint,
-                              color: colorTheme.primary),
+                              color: colorTheme.accent),
                         ),
                       ],
                     ),
                   ),
-                  onTap: onLoginClick,
+                  onTap: () =>
+                      Navigator.of(context).pushReplacementNamed('sign_up'),
                 ),
                 Container(
                   height: screenSize.height * 0.04,

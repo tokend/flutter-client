@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/resources/Sizes.dart';
+import 'package:flutter_template/resources/sizes.dart';
 
-class SignInScreenTemplate extends StatelessWidget {
+class AuthScreenTemplate extends StatelessWidget {
   final Widget child;
 
-  SignInScreenTemplate({required this.child});
+  AuthScreenTemplate({required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class SignInScreenTemplate extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
 
     final imageSize = screenSize.width * 0.5;
-    final imageMinHeight = 220.0;
+    final imageMinHeight = 100.0;
 
     return Scaffold(
       backgroundColor: colorTheme.accent,
@@ -44,8 +43,10 @@ class SignInScreenTemplate extends StatelessWidget {
                                 color: colorTheme.background, child: child),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(Sizes.mediumRadius),
-                                topRight: Radius.circular(Sizes.mediumRadius),
+                                topLeft:
+                                    Radius.circular(Sizes.backgroundCardRadius),
+                                topRight:
+                                    Radius.circular(Sizes.backgroundCardRadius),
                               ),
                             ),
                           ),

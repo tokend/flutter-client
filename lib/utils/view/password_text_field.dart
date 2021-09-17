@@ -7,6 +7,7 @@ import 'default_text_field.dart';
 class PasswordTextField extends StatefulWidget {
   final String title;
   final String hint;
+  final String label;
   final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
@@ -19,6 +20,7 @@ class PasswordTextField extends StatefulWidget {
       required this.colorTheme,
       this.error,
       this.hint = "",
+      this.label = "",
       this.inputType = TextInputType.text})
       : super(key: key);
 
@@ -43,6 +45,7 @@ class PasswordTextFieldState extends State<PasswordTextField> {
       onChanged: widget.onChanged,
       colorTheme: widget.colorTheme,
       hint: widget.hint,
+      label: widget.label,
       error: widget.error,
       inputType: widget.inputType,
       suffixIcon: PasswordToggle(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 
 class PasswordToggle extends StatefulWidget {
   final Function(bool isShown) callback;
@@ -18,7 +19,7 @@ class _PasswordToggleState extends State<PasswordToggle> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(
-        _isPasswordShown ? Icons.visibility_off : Icons.visibility,
+        _isPasswordShown ? CustomIcons.eye_slash : CustomIcons.eye,
         color: widget.iconColor,
       ),
       onPressed: () {

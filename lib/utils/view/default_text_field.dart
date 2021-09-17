@@ -6,6 +6,7 @@ import 'package:flutter_template/resources/theme/themes.dart';
 class DefaultTextField extends StatefulWidget {
   final String title;
   final String hint;
+  final String label;
   final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
@@ -24,6 +25,7 @@ class DefaultTextField extends StatefulWidget {
       required this.onChanged,
       required this.colorTheme,
       this.hint = "",
+      this.label = "",
       this.inputType = TextInputType.text,
       this.suffixIcon,
       this.showText = true})
@@ -53,11 +55,11 @@ class DefaultTextFieldState extends State<DefaultTextField> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              widget.title,
+              widget.label,
               style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: Sizes.textSizeHint,
-                  color: widget.colorTheme.primaryText),
+                  color: widget.colorTheme.accent),
             ),
           ),
           Padding(padding: EdgeInsets.only(top: Sizes.quartedStandartMargin)),
@@ -76,13 +78,15 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                     fontSize: Sizes.textSizeDialog,
                   ),
                   decoration: InputDecoration(
-                      filled: true,
+                      filled: false,
                       fillColor: widget.background,
                       errorText: widget.error,
                       errorBorder: _borderStyle(widget.colorTheme.negative),
                       focusedErrorBorder:
                           _borderStyle(widget.colorTheme.negative),
                       hintText: widget.hint,
+                      // labelText: widget.label,
+                      // floatingLabelBehavior: FloatingLabelBehavior.always,
                       isDense: true,
                       hintStyle: TextStyle(
                           color: widget.colorTheme.hint,
