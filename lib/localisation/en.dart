@@ -27,4 +27,5 @@ final Map<String, String> en = {
   "alreadyHaveAccount": "Already have an account?",
   "signInAction": "Sign in",
 
+  "title_sign_up": "SignUp"
 };
