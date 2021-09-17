@@ -18,6 +18,8 @@ class SecureStorage {
 
   SecureStorage(this.preferences);
 
+  var keyStorage = FlutterSecureStorage();
+
   /// Encrypts data using secure key from [FlutterSecureStorage]
   /// and saves cipher text in [SharedPreferences].
   /// Returns true on success, false otherwise
@@ -27,12 +29,18 @@ class SecureStorage {
     try {
       final encrypter = _getEncryptCipher(secretKey);
 
-      var encryptedData = encrypter.encrypt(data);
-      var keychainData =
-          KeychainData.fromRaw(IV.fromLength(16).bytes, encryptedData.bytes);
-      _saveKeychainData(keychainData, key);
-    } catch (e) {
-      print(e);
+      var iv = IV.fromLength(16);
+      var encryptedData;
+      try {
+        encryptedData = encrypter.encrypt(data, iv: iv);
+      } catch (e, stacktrace) {
+        print(stacktrace);
+        print(e);
+      }
+      var keychainData = KeychainData.fromRaw(iv.bytes, encryptedData.bytes);
+      await _saveKeychainData(keychainData, key);
+    } catch (e, stacktrace) {
+      print(stacktrace);
       return false;
     }
 
@@ -47,33 +55,36 @@ class SecureStorage {
     try {
       var keychainData = _loadKeychainData(secretKey)!;
       return _getEncryptCipher(secretKey)
-          .decrypt64(keychainData.encodedCipherText);
-    } catch (e) {
-      print(e);
+          .decrypt64(String.fromCharCodes(keychainData.cipherText));
+    } catch (e, stacktrace) {
+      print(stacktrace);
+      throw e;
     }
-    return null;
   }
 
   /// Encrypts data with given password
   /// and saves cipher text in [SharedPreferences].
-  bool saveWithPassword(Uint8List data, String key, String password) {
+  Future<bool> saveWithPassword(
+      Uint8List data, String key, String password) async {
     Uint8List keyBytes = Uint8List(0);
     var passwordBytes = Uint8List.fromList(password.codeUnits);
     try {
       var seed = getSecureRandomSeed(16);
       keyBytes =
           _getKeyDerivation().derive(passwordBytes, seed, _kdfParams.bytes);
-      var encryptedData = Aes256GCM(seed).decrypt(data, keyBytes);
+      var encryptedData = Aes256GCM(seed).encrypt(data, keyBytes);
       keyBytes.fillRange(0, keyBytes.length, 0);
 
       var keychainData = KeychainData.fromRaw(seed, encryptedData);
-      _saveKeychainData(keychainData, key);
+      await _saveKeychainData(keychainData, key);
       return true;
-    } catch (e) {
+    } catch (e, stacktrace) {
+      print(stacktrace);
+      print(e);
       return false;
     } finally {
       keyBytes.fillRange(0, keyBytes.length, 0);
-      passwordBytes.fillRange(0, keyBytes.length, 0);
+      passwordBytes.fillRange(0, passwordBytes.length, 0);
     }
   }
 
@@ -89,11 +100,12 @@ class SecureStorage {
       keyBytes =
           _getKeyDerivation().derive(passwordBytes, seed, _kdfParams.bytes);
       return Aes256GCM(seed).decrypt(keychainData.cipherText, keyBytes);
-    } catch (e) {
-      print(e);
+    } catch (e, stacktrace) {
+      print(stacktrace);
+      throw e;
     } finally {
       keyBytes.fillRange(0, keyBytes.length, 0);
-      passwordBytes.fillRange(0, keyBytes.length, 0);
+      passwordBytes.fillRange(0, passwordBytes.length, 0);
     }
   }
 
@@ -124,11 +136,13 @@ class SecureStorage {
   }
 
   Encrypter _getEncryptCipher(String key) {
-    return Encrypter(AES(Key.fromBase16(key), mode: AESMode.cbc)); //CBC
+    return Encrypter(AES(Key.fromUtf8(key), mode: AESMode.cbc));
   }
 
   String _createSecretKey(String name) {
-    return Key.fromUtf8(name).base16;
+    var key = String.fromCharCodes(Key.fromUtf8(name).bytes);
+    keyStorage.write(key: name, value: key);
+    return key;
   }
 
   _saveKeychainData(KeychainData data, String key) async {

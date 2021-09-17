@@ -1,11 +1,21 @@
 import 'package:dart_sdk/key_server/models/wallet_info.dart';
 
 abstract class WalletInfoPersistence {
-  void saveWalletInfo(WalletInfo data, String password);
+  /// [data] with filled [WalletInfo.secretSeed] field.
+  /// [password] for encryption
+  Future<void> saveWalletInfo(WalletInfo data, String password);
 
   WalletInfo? loadWalletInfo(String email, String password);
 
-  //TODO: implement loadWalletInfoMaybe if needed
+  /// See loadWalletInfo
+  Future<WalletInfo>? loadFutureWalletInfo(String email, String password) {
+    var res = loadWalletInfo(email, password);
+    if (res != null)
+      return Future.value(res);
+    else
+      return null;
+  }
 
+  /// Clears stored data
   void clear();
 }
