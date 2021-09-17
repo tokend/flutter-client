@@ -29,8 +29,6 @@ class App extends StatelessWidget {
       routes: {
         'sign_in': (context) => SignInScreen(),
         'sign_up': (context) => SignUpScaffold(),
-        // 'sign_up': (context) => SignUpScreen(),
-        // '/home': (context) => HomeScaffold(),
       },
       home: SignInScreen(),
       getPages: [GetPage(name: '/signIn', page: () => SignInScreen(), binding: MainBindings(env))],
