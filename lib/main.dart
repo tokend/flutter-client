@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_screen.dart';
-import 'package:flutter_template/features/sign_up/sign_up_scaffold.dart';
+import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
 import 'package:get/get.dart';
 
@@ -24,7 +24,8 @@ class App extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Client',
       locale: Get.deviceLocale,
-      translationsKeys: AppTranslation.translationsKeys,
+      translations: AppTranslation(),
+      fallbackLocale: Locale('en', 'US'),
       routes: {
         'sign_in': (context) => SignInScreen(),
         'sign_up': (context) => SignUpScaffold(),

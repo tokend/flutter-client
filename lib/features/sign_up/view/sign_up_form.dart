@@ -6,14 +6,14 @@ import 'package:flutter_template/features/sign_up/model/confirm_password.dart';
 import 'package:flutter_template/features/sign_up/model/email.dart';
 import 'package:flutter_template/features/sign_up/model/password.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
-import 'package:flutter_template/utils/view/sign_in_screen_template.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import 'logic/sign_up_bloc.dart';
+import '../logic/sign_up_bloc.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -31,7 +31,7 @@ class SignUpForm extends StatelessWidget {
             Navigator.of(context).pushNamed('sign_in');
           }
         },
-        child: SignInScreenTemplate(
+        child: AuthScreenTemplate(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
             child: Column(
@@ -47,9 +47,9 @@ class SignUpForm extends StatelessWidget {
                       child: Text(
                         'title_sign_up'.tr,
                         style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: Sizes.textSizeTitle,
-                            color: colorTheme.primary),
+                            fontWeight: FontWeight.w400,
+                            fontSize: Sizes.textSizeHeadingLarge,
+                            color: colorTheme.accent),
                       ),
                     ),
                     Container(
@@ -81,14 +81,14 @@ class SignUpForm extends StatelessWidget {
                     GestureDetector(
                       child: RichText(
                         text: TextSpan(
-                          text: 'Already have account? ',
+                          text: 'already_have_account'.tr,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: Sizes.textSizeHint,
                               color: colorTheme.hint),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "Sign in",
+                              text: 'sign_in'.tr,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: Sizes.textSizeHint,
@@ -121,7 +121,8 @@ class _EmailInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            hint: 'Email',
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
             inputType: TextInputType.emailAddress,
             key: const Key('signUpForm_emailInput_textField'),
             error: state.email.error != null ? state.email.error!.name : null,
@@ -146,7 +147,8 @@ class _PasswordInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: PasswordTextField(
-            hint: 'Password',
+            label: 'password_label'.tr,
+            hint: 'password_hint'.tr,
             key: const Key('signUpForm_passwordInput_textField'),
             error: state.password.error != null
                 ? state.password.error!.name
@@ -171,10 +173,9 @@ class _ConfirmPasswordInput extends StatelessWidget {
           previous.password != current.password ||
           previous.confirmPassword != current.confirmPassword,
       builder: (context, state) {
-        print(
-            "TEST CONFITM -> ${state.confirmPassword.error != null ? state.confirmPassword.error!.name : null}");
         return PasswordTextField(
-          hint: 'Confirm Password',
+          label: 'confirm_password_label'.tr,
+          hint: 'password_hint'.tr,
           key: const Key('signUpForm_confirmedPasswordInput_textField'),
           error: state.confirmPassword.error != null
               ? state.confirmPassword.error!.name
@@ -199,7 +200,7 @@ class _SignUpButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
-          text: 'Sign Up',
+          text: 'continue_button'.tr,
           onPressed: () {
             state.status.isValidated
                 ? context.read<SignUpBloc>().add(FormSubmitted())
