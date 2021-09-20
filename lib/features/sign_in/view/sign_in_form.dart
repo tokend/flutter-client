@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/utils/view/models/confirm_password.dart';
-import 'package:flutter_template/utils/view/models/email.dart';
-import 'package:flutter_template/utils/view/models/password.dart';
+import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
+import 'package:flutter_template/utils/view/models/email.dart';
+import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import '../logic/sign_up_bloc.dart';
-
-class SignUpForm extends StatelessWidget {
-  const SignUpForm({Key? key}) : super(key: key);
+class SignInForm extends StatelessWidget {
+  const SignInForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,17 @@ class SignUpForm extends StatelessWidget {
         .of(context)
         .size;
 
-    return BlocListener<SignUpBloc, SignUpState>(
+    return BlocListener<SignInBloc, SignInState>(
         listener: (context, state) {
           if (state.status.isSubmissionFailure) {
             print('submission failure');
           } else if (state.status.isSubmissionSuccess) {
-            Get.toNamed('/signIn');
-            Navigator.of(context).pushNamed('sign_in');
+            var scaffold = ScaffoldMessenger.of(context);
+            scaffold.showSnackBar(
+              SnackBar(
+                content: const Text('Signed in'),
+              ),
+            );
           }
         },
         child: AuthScreenTemplate(
@@ -49,7 +53,7 @@ class SignUpForm extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'title_sign_up'.tr,
+                        'title_sign_in'.tr,
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: Sizes.textSizeHeadingLarge,
@@ -63,15 +67,45 @@ class SignUpForm extends StatelessWidget {
                 ),
                 Column(
                   children: [
+                    _NetworkInputField(),
+                    Padding(
+                        padding:
+                        EdgeInsets.only(top: Sizes.halfStandartPadding)),
                     _EmailInputField(),
                     Padding(
                       padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
                     ),
                     _PasswordInputField(),
                     Padding(
-                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
+                      padding: EdgeInsets.only(
+                          top: Sizes.quartedStandartMargin),
                     ),
-                    _ConfirmPasswordInput(),
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'forgot_password'.tr,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: Sizes.textSizeHint,
+                                  color: colorTheme.hint),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'recover_it'.tr,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: Sizes.textSizeHint,
+                                      color: colorTheme.accent),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () =>
+                              Get.toNamed(
+                                  '/signUp'), //TODO transition to the recovery page
+                        ),
+                    ),
                   ],
                 ),
                 Container(
@@ -79,20 +113,20 @@ class SignUpForm extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    _SignUpButton(),
+                    _SignInButton(),
                     Padding(
                         padding: EdgeInsets.only(top: Sizes.standartMargin)),
                     GestureDetector(
                       child: RichText(
                         text: TextSpan(
-                          text: 'already_have_account'.tr,
+                          text: 'dont_have_account'.tr,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: Sizes.textSizeHint,
                               color: colorTheme.hint),
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'title_sign_in'.tr,
+                              text: 'action_register'.tr,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: Sizes.textSizeHint,
@@ -101,7 +135,7 @@ class SignUpForm extends StatelessWidget {
                           ],
                         ),
                       ),
-                      onTap: () => Get.toNamed('/signIn'),
+                      onTap: () => Get.toNamed('/signUp'),
                     ),
                     Container(
                       height: screenSize.height * 0.04,
@@ -115,11 +149,37 @@ class SignUpForm extends StatelessWidget {
   }
 }
 
+class _NetworkInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    Env env = Get.find();
+    return BlocBuilder<SignInBloc, SignInState>(
+        buildWhen: (previous, current) => previous.network != current.network,
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 0.0),
+            child: DefaultTextField(
+                key: const Key('SignInForm_networkInput_textField'),
+                onChanged: (network) =>
+                    context.read<SignInBloc>().add(NetworkChanged(network)),
+                label: "network_label".tr,
+                defaultText: env.apiUrl,
+                suffixIcon: IconButton(
+                  icon: Icon(CustomIcons.eye),
+                  onPressed: () {}, //TODO open qr-scanning
+                ),
+                colorTheme: colorTheme),
+          );
+        });
+  }
+}
+
 class _EmailInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<SignInBloc, SignInState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return Padding(
@@ -128,10 +188,10 @@ class _EmailInputField extends StatelessWidget {
             label: 'email_label'.tr,
             hint: 'email_hint'.tr,
             inputType: TextInputType.emailAddress,
-            key: const Key('signUpForm_emailInput_textField'),
+            key: const Key('SignInForm_emailInput_textField'),
             error: state.email.error != null ? state.email.error!.name : null,
             onChanged: (email) =>
-                context.read<SignUpBloc>().add(EmailChanged(email: email)),
+                context.read<SignInBloc>().add(EmailChanged(email)),
             colorTheme: colorTheme,
           ),
         );
@@ -144,7 +204,7 @@ class _PasswordInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<SignInBloc, SignInState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         print(state.password.error != null ? state.password.error!.name : null);
@@ -153,13 +213,13 @@ class _PasswordInputField extends StatelessWidget {
           child: PasswordTextField(
             label: 'password_label'.tr,
             hint: 'password_hint'.tr,
-            key: const Key('signUpForm_passwordInput_textField'),
+            key: const Key('SignInForm_passwordInput_textField'),
             error: state.password.error != null
                 ? state.password.error!.name
                 : null,
             onChanged: (password) =>
                 context
-                    .read<SignUpBloc>()
+                    .read<SignInBloc>()
                     .add(PasswordChanged(password: password)),
             colorTheme: colorTheme,
           ),
@@ -169,48 +229,20 @@ class _PasswordInputField extends StatelessWidget {
   }
 }
 
-class _ConfirmPasswordInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
-      buildWhen: (previous, current) =>
-      previous.password != current.password ||
-          previous.confirmPassword != current.confirmPassword,
-      builder: (context, state) {
-        return PasswordTextField(
-          label: 'confirm_password_label'.tr,
-          hint: 'password_hint'.tr,
-          key: const Key('signUpForm_confirmedPasswordInput_textField'),
-          error: state.confirmPassword.error != null
-              ? state.confirmPassword.error!.name
-              : null,
-          onChanged: (confirmPassword) =>
-              context
-                  .read<SignUpBloc>()
-                  .add(
-                  ConfirmPasswordChanged(confirmPassword: confirmPassword)),
-          colorTheme: colorTheme,
-        );
-      },
-    );
-  }
-}
-
-class _SignUpButton extends StatelessWidget {
-  const _SignUpButton({Key? key}) : super(key: key);
+class _SignInButton extends StatelessWidget {
+  const _SignInButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<SignInBloc, SignInState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
           text: 'action_continue'.tr,
           onPressed: () {
             state.status.isValidated
-                ? context.read<SignUpBloc>().add(FormSubmitted())
+                ? context.read<SignInBloc>().add(FormSubmitted())
                 : null;
           },
           colorTheme: colorTheme,

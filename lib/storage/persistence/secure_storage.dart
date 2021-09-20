@@ -14,7 +14,7 @@ const SECRET_KEY_NAME_PREFIX = "ss_";
 
 /// Represents secure storage based on [SharedPreferences].
 class SecureStorage {
-  SharedPreferences preferences;
+  Future<SharedPreferences> preferences;
 
   SecureStorage(this.preferences);
 
@@ -53,7 +53,7 @@ class SecureStorage {
     var secretKey = await _getSecretKey(key);
     if (secretKey == null) return null;
     try {
-      var keychainData = _loadKeychainData(secretKey)!;
+      var keychainData = (await _loadKeychainData(secretKey))!;
       return _getEncryptCipher(secretKey)
           .decrypt64(String.fromCharCodes(keychainData.cipherText));
     } catch (e, stacktrace) {
@@ -90,12 +90,12 @@ class SecureStorage {
 
   /// Loads data by given key and decrypts it with password.
   /// Return decrypted data or null if it is not exists or decryption failed
-  Uint8List? loadWithPassword(String key, String password) {
+  Future<Uint8List?> loadWithPassword(String key, String password) async{
     Uint8List keyBytes = Uint8List(0);
     var passwordBytes = Uint8List.fromList(password.codeUnits);
 
     try {
-      var keychainData = _loadKeychainData(key)!;
+      var keychainData =(await _loadKeychainData(key))!;
       var seed = keychainData.iv;
       keyBytes =
           _getKeyDerivation().derive(passwordBytes, seed, _kdfParams.bytes);
@@ -111,11 +111,11 @@ class SecureStorage {
 
   /// Clears encrypted data entry for given key.
   clear(String key) async {
-    await preferences.remove(key);
+    await (await preferences).remove(key);
   }
 
-  KeychainData? _loadKeychainData(String key) {
-    var jsonString = preferences.getString(key);
+  Future<KeychainData?> _loadKeychainData(String key) async {
+    var jsonString = (await preferences).getString(key);
     if (jsonString == null || jsonString.isEmpty == true) return null;
     try {
       return KeychainData.getFromJson(json.decode(jsonString));
@@ -146,7 +146,7 @@ class SecureStorage {
   }
 
   _saveKeychainData(KeychainData data, String key) async {
-    await preferences.setString(key, json.encode(data));
+    await (await preferences).setString(key, json.encode(data));
   }
 
   ScryptKeyDerivation _getKeyDerivation() {

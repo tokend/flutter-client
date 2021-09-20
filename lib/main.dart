@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
-import 'package:flutter_template/features/sign_in/view/sign_in_screen.dart';
+import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
 import 'package:get/get.dart';
@@ -27,11 +27,20 @@ class App extends StatelessWidget {
       translations: AppTranslation(),
       fallbackLocale: Locale('en', 'US'),
       routes: {
-        'sign_in': (context) => SignInScreen(),
+        'sign_in': (context) => SignInScaffold(),
         'sign_up': (context) => SignUpScaffold(),
       },
-      home: SignInScreen(),
-      getPages: [GetPage(name: '/signIn', page: () => SignInScreen(), binding: MainBindings(env))],
+      home: SignInScaffold(),
+      getPages: [
+        GetPage(
+            name: '/signIn',
+            page: () => SignInScaffold(),
+            binding: MainBindings(env)),
+        GetPage(
+            name: '/signUp',
+            page: () => SignUpScaffold(),
+            binding: MainBindings(env)),
+      ],
     );
   }
 }

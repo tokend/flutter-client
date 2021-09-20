@@ -5,15 +5,15 @@ abstract class WalletInfoPersistence {
   /// [password] for encryption
   Future<void> saveWalletInfo(WalletInfo data, String password);
 
-  WalletInfo? loadWalletInfo(String email, String password);
+  Future<WalletInfo?> loadWalletInfo(String email, String password);
 
   /// See loadWalletInfo
-  Future<WalletInfo>? loadFutureWalletInfo(String email, String password) {
+  Future<WalletInfo?> loadFutureWalletInfo(String email, String password) {
     var res = loadWalletInfo(email, password);
     if (res != null)
-      return Future.value(res);
+      return res;
     else
-      return null;
+      return Future.value();
   }
 
   /// Clears stored data

@@ -1,32 +1,29 @@
-import 'dart:async';
-import 'dart:developer';
-
-import 'package:bloc/bloc.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/base/base_bloc.dart';
-import 'package:flutter_template/features/sign_up/logic/sign_up_usecase.dart';
-import 'package:flutter_template/utils/view/models/confirm_password.dart';
+import 'package:flutter_template/config/env.dart';
+import 'package:flutter_template/features/sign_in/logic/sign_in_usecase.dart';
 import 'package:flutter_template/utils/view/models/email.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
 
-part 'sign_up_event.dart';
-part 'sign_up_state.dart';
+part 'sign_in_event.dart';
 
-class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpState());
+part 'sign_in_state.dart';
 
+class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
+  SignInBloc(this.env) : super(SignInState());
+  Env env;
   @override
-  void onTransition(Transition<SignUpEvent, SignUpState> transition) {
+  Future<void> onTransition(Transition<SignInEvent, SignInState> transition) async {
     super.onTransition(transition);
     print(transition);
   }
 
   @override
-  Stream<SignUpState> mapEventToState(
-    SignUpEvent event,
+  Stream<SignInState> mapEventToState(
+    SignInEvent event,
   ) async* {
     if (event is EmailChanged) {
       final email = Email.dirty(event.email!);
@@ -35,34 +32,21 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
         status: Formz.validate([
           email,
           state.password,
-          state.confirmPassword,
         ]),
       );
     } else if (event is PasswordChanged) {
       final password = Password.dirty(event.password!);
-      final confirm = ConfirmPassword.dirty(
-        password: password.value,
-        value: state.confirmPassword.value,
-      );
       yield state.copyWith(
         password: password,
         status: Formz.validate([
           state.email,
           password,
-          confirm,
         ]),
       );
-    } else if (event is ConfirmPasswordChanged) {
-      print("ConfPassEvent -> $event");
-      final password = ConfirmPassword.dirty(
-          password: state.password.value, value: event.confirmPassword!);
+    } else if (event is NetworkChanged) {
+      env.apiUrl = event.network!;
       yield state.copyWith(
-        confirmPassword: password,
-        status: Formz.validate([
-          state.email,
-          state.password,
-          password,
-        ]),
+        network: event.network,
       );
     } else if (event is FormSubmitted) {
       if (!state.status.isValidated) return;
@@ -70,10 +54,10 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
       try {
         var api = apiProvider.getApi();
         var keyServer = KeyServer(api.wallets);
-        await SignUpUseCase(
-                state.email.value, state.password.value, keyServer, api)
-            .perform()
-            .then((wallet) => log('ID:  ${wallet.walletData.id}'));
+        await SignInUseCase(state.email.value, state.password.value, keyServer,
+                session, credentialsPersistence, walletInfoPersistence)
+            .perform();
+
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } on Exception {
         yield state.copyWith(status: FormzStatus.submissionFailure);

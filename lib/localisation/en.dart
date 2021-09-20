@@ -1,41 +1,31 @@
 final Map<String, String> en = {
   "app_title": "Test",
-  "sign_in_text": "SignInText",
-  "title_sign_up": "SignUp",
-  "continue_button": "Continue",
+
+  //sign in
+  "title_sign_in": "Sign In",
+  "dont_have_account": "Don’t have an account? ",
+  "forgot_password": "Forgot your password? ",
+  "network_label": "Network",
+  "recover_it": "Recover it",
+
+  //sign up
+  "title_sign_up": "Sign Up",
   "already_have_account": "Already have account? ",
-  "sign_in": "Sign In",
   "sign_up": "Sign Up",
+
   "email_label": "Email",
   "email_hint": "email@mail.com",
   "password_label": "Password",
   "password_hint": "•••••••••••••",
   "confirm_password_label": "Confirm Password",
 
-  "email": "Email",
-  "password": "Password",
-  "errorInvalidEmail": "Invalid email",
-  "actionContinue": "Continue",
-  "errorMustNotBeEmpty": "Must not be empty",
-  "errorInvalidCardNumberFormat": "Invalid card number format",
+  //actions
+  "action_continue": "Continue",
+  "action_register": "Register now",
 
-  "errorSamePasswords": "Passwords must be the same",
-  "errorWeakPassword": "Password must be at least 6 characters",
-
-  "titleSignIn": "Log-in",
-  "enterPasswordTitle": "Enter password",
-  "confirmPasswordTitle": "Confirm password",
-  "dontHaveAccount": "Don’t have an account?",
-  "forgotPassword": "Forgot your password?",
-  "recoverAction": "Recover it",
-  "registerAction": "Register now",
-  "loginAction": "Log in",
-
-  "newPasswordHint": "New password",
-  "confirmPasswordHint": "Confirm password",
-  "titleSingUp": "Sign Up",
-  "alreadyHaveAccount": "Already have an account?",
-  "signInAction": "Sign in",
-
-  "title_sign_up": "SignUp"
+  //errors
+  "error_same_passwords": "Passwords must be the same",
+  "error_weak_password": "Password must be at least 6 characters",
+  "error_invalid_email": "Invalid email",
+  "error_must_not_be_empty": "Must not be empty",
 };

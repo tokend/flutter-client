@@ -7,7 +7,7 @@ abstract class CredentialsPersistence extends CredentialsProvider {
   void saveCredentials(String email, String password);
 
   /// @return saved email or null if it's missing
-  String? getSavedEmail();
+  Future<String?> getSavedEmail();
 
   /// @return true if there is a securely saved password
   Future<bool> hasSavedPassword();
@@ -23,7 +23,8 @@ abstract class CredentialsPersistence extends CredentialsProvider {
   @override
   Future<Tuple2<String, String>> getCredentials() async {
     var password = await getSavedPassword();
-    return Tuple2(getSavedEmail()!, password!);
+    var email = await getSavedEmail();
+    return Tuple2(email!, password!);
   }
 
   @override

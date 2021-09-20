@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
+import 'package:get/get.dart';
 
 class DefaultTextField extends StatefulWidget {
   final String title;
   final String hint;
   final String label;
+  final String defaultText;
   final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
@@ -16,19 +19,19 @@ class DefaultTextField extends StatefulWidget {
   final List<TextInputFormatter>? textInputFormatters;
   final Color background;
 
-  const DefaultTextField(
-      {Key? key,
-      this.background = Colors.transparent,
-      this.textInputFormatters,
-      this.title = "",
-      this.error,
-      required this.onChanged,
-      required this.colorTheme,
-      this.hint = "",
-      this.label = "",
-      this.inputType = TextInputType.text,
-      this.suffixIcon,
-      this.showText = true})
+  const DefaultTextField({Key? key,
+    this.background = Colors.transparent,
+    this.textInputFormatters,
+    this.title = "",
+    this.error,
+    required this.onChanged,
+    required this.colorTheme,
+    this.hint = "",
+    this.label = "",
+    this.defaultText = "",
+    this.inputType = TextInputType.text,
+    this.suffixIcon,
+    this.showText = true})
       : super(key: key);
 
   @override
@@ -36,9 +39,12 @@ class DefaultTextField extends StatefulWidget {
 }
 
 class DefaultTextFieldState extends State<DefaultTextField> {
+  Env env = Get.find();
   final _error = ValueNotifier<String?>(null);
 
   final _key = GlobalKey<FormState>();
+
+
 
   @override
   void dispose() {
@@ -48,6 +54,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   @override
   Widget build(BuildContext context) {
+   // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -67,6 +74,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
               valueListenable: _error,
               builder: (context, String? value, child) {
                 return TextFormField(
+                  initialValue: widget.defaultText,
                   inputFormatters: widget.textInputFormatters,
                   keyboardType: widget.inputType,
                   onChanged: widget.onChanged,
@@ -83,16 +91,14 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                       errorText: widget.error,
                       errorBorder: _borderStyle(widget.colorTheme.negative),
                       focusedErrorBorder:
-                          _borderStyle(widget.colorTheme.negative),
+                      _borderStyle(widget.colorTheme.negative),
                       hintText: widget.hint,
-                      // labelText: widget.label,
-                      // floatingLabelBehavior: FloatingLabelBehavior.always,
                       isDense: true,
                       hintStyle: TextStyle(
                           color: widget.colorTheme.hint,
                           fontWeight: FontWeight.w400),
                       enabledBorder:
-                          _borderStyle(widget.colorTheme.borderUnfocused),
+                      _borderStyle(widget.colorTheme.borderUnfocused),
                       focusedBorder: _borderStyle(widget.colorTheme.accent),
                       suffixIcon: widget.suffixIcon),
                 );
