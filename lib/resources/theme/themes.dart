@@ -15,6 +15,7 @@ abstract class BaseColorTheme {
   final Color negative = Color(0xFFFFFFFF);
   final Color positive = Color(0xFFFFFFFF);
   final Color basic = Color(0xFFFFFFFF);
+  final Color loading = Color(0xFFFFFFFF);
 }
 
 class LightColorTheme implements BaseColorTheme {
@@ -67,6 +68,9 @@ class LightColorTheme implements BaseColorTheme {
 
   @override
   final Color basic = Color(0xFF656CEE);
+
+  @override
+  Color get loading => Color(0x80656CEE);
 }
 
 class DarkColorTheme implements BaseColorTheme {
@@ -120,4 +124,7 @@ class DarkColorTheme implements BaseColorTheme {
 
   @override
   final Color basic = Color(0xFFFFFFFF);
+
+  @override
+  Color get loading => Color(0x77656CEE);
 }
