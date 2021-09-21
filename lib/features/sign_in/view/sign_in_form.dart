@@ -22,9 +22,7 @@ class SignInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
+    final screenSize = MediaQuery.of(context).size;
 
     return BlocListener<SignInBloc, SignInState>(
         listener: (context, state) {
@@ -70,41 +68,40 @@ class SignInForm extends StatelessWidget {
                     _NetworkInputField(),
                     Padding(
                         padding:
-                        EdgeInsets.only(top: Sizes.halfStandartPadding)),
+                            EdgeInsets.only(top: Sizes.halfStandartPadding)),
                     _EmailInputField(),
                     Padding(
                       padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
                     ),
                     _PasswordInputField(),
                     Padding(
-                      padding: EdgeInsets.only(
-                          top: Sizes.quartedStandartMargin),
+                      padding:
+                          EdgeInsets.only(top: Sizes.quartedStandartMargin),
                     ),
                     Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'forgot_password'.tr,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: Sizes.textSizeHint,
-                                  color: colorTheme.hint),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'recover_it'.tr,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: Sizes.textSizeHint,
-                                      color: colorTheme.accent),
-                                ),
-                              ],
-                            ),
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'forgot_password'.tr,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: Sizes.textSizeHint,
+                                color: colorTheme.hint),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'recover_it'.tr,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: Sizes.textSizeHint,
+                                    color: colorTheme.accent),
+                              ),
+                            ],
                           ),
-                          onTap: () =>
-                              Get.toNamed(
-                                  '/signUp'), //TODO transition to the recovery page
                         ),
+                        onTap: () => Get.toNamed(
+                            '/signUp'), //TODO transition to the recovery page
+                      ),
                     ),
                   ],
                 ),
@@ -166,8 +163,10 @@ class _NetworkInputField extends StatelessWidget {
                 label: "network_label".tr,
                 defaultText: env.apiUrl,
                 suffixIcon: IconButton(
-                  icon: Icon(CustomIcons.eye),
-                  onPressed: () {}, //TODO open qr-scanning
+                  icon: Icon(CustomIcons.scan_barcode),
+                  onPressed: () {
+                    Get.toNamed('/qr', preventDuplicates: false);
+                  }, //TODO open qr-scanning
                 ),
                 colorTheme: colorTheme),
           );
@@ -217,10 +216,9 @@ class _PasswordInputField extends StatelessWidget {
             error: state.password.error != null
                 ? state.password.error!.name
                 : null,
-            onChanged: (password) =>
-                context
-                    .read<SignInBloc>()
-                    .add(PasswordChanged(password: password)),
+            onChanged: (password) => context
+                .read<SignInBloc>()
+                .add(PasswordChanged(password: password)),
             colorTheme: colorTheme,
           ),
         );
