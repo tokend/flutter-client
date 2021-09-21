@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/utils/view/models/confirm_password.dart';
-import 'package:flutter_template/utils/view/models/email.dart';
-import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
+import 'package:flutter_template/utils/view/models/confirm_password.dart';
+import 'package:flutter_template/utils/view/models/email.dart';
+import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
@@ -23,98 +23,104 @@ class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
-
-    return BlocListener<SignUpBloc, SignUpState>(
-        listener: (context, state) {
-          if (state.status.isSubmissionFailure) {
-            print('submission failure');
-          } else if (state.status.isSubmissionSuccess) {
-            Get.toNamed('/signIn');
-            Navigator.of(context).pushNamed('sign_in');
-          }
-        },
-        child: AuthScreenTemplate(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: screenSize.height * 0.1,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'title_sign_up'.tr,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: Sizes.textSizeHeadingLarge,
-                            color: colorTheme.accent),
-                      ),
-                    ),
-                    Container(
-                      height: screenSize.height * 0.01,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    _EmailInputField(),
-                    Padding(
-                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
-                    ),
-                    _PasswordInputField(),
-                    Padding(
-                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
-                    ),
-                    _ConfirmPasswordInput(),
-                  ],
-                ),
-                Container(
-                  height: screenSize.height * 0.027,
-                ),
-                Column(
-                  children: [
-                    _SignUpButton(),
-                    Padding(
-                        padding: EdgeInsets.only(top: Sizes.standartMargin)),
-                    GestureDetector(
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'already_have_account'.tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Sizes.textSizeHint,
-                              color: colorTheme.hint),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'title_sign_in'.tr,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: Sizes.textSizeHint,
-                                  color: colorTheme.accent),
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () => Get.toNamed('/signIn'),
-                    ),
-                    Container(
-                      height: screenSize.height * 0.04,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ));
     final screenSize = MediaQuery.of(context).size;
     var progress;
+
+    return Builder(builder: (contextBuilder) {
+      return BlocListener<SignUpBloc, SignUpState>(
+          listener: (context, state) {
+            progress = ProgressHUD.of(contextBuilder);
+            if (state.status.isSubmissionInProgress) {
+              progress.show();
+            } else if (state.status.isSubmissionFailure) {
+              progress.dismiss();
+              print('submission failure');
+            } else if (state.status.isSubmissionSuccess) {
+              progress.dismiss();
+              Get.toNamed('/signIn');
+            }
+          },
+          child: AuthScreenTemplate(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: screenSize.height * 0.1,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'title_sign_up'.tr,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: Sizes.textSizeHeadingLarge,
+                              color: colorTheme.accent),
+                        ),
+                      ),
+                      Container(
+                        height: screenSize.height * 0.01,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      _EmailInputField(),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(top: Sizes.halfStandartPadding),
+                      ),
+                      _PasswordInputField(),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(top: Sizes.halfStandartPadding),
+                      ),
+                      _ConfirmPasswordInput(),
+                    ],
+                  ),
+                  Container(
+                    height: screenSize.height * 0.027,
+                  ),
+                  Column(
+                    children: [
+                      _SignUpButton(),
+                      Padding(
+                          padding: EdgeInsets.only(top: Sizes.standartMargin)),
+                      GestureDetector(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'already_have_account'.tr,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: Sizes.textSizeHint,
+                                color: colorTheme.hint),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'title_sign_in'.tr,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: Sizes.textSizeHint,
+                                    color: colorTheme.accent),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () => Get.toNamed('/signIn'),
+                      ),
+                      Container(
+                        height: screenSize.height * 0.04,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ));
+    });
+
     return ProgressHUD(
       child: Builder(builder: (contextBuilder) {
         return BlocListener<SignUpBloc, SignUpState>(
@@ -258,10 +264,9 @@ class _PasswordInputField extends StatelessWidget {
             error: state.password.error != null
                 ? state.password.error!.name
                 : null,
-            onChanged: (password) =>
-                context
-                    .read<SignUpBloc>()
-                    .add(PasswordChanged(password: password)),
+            onChanged: (password) => context
+                .read<SignUpBloc>()
+                .add(PasswordChanged(password: password)),
             colorTheme: colorTheme,
           ),
         );
@@ -286,11 +291,9 @@ class _ConfirmPasswordInput extends StatelessWidget {
           error: state.confirmPassword.error != null
               ? state.confirmPassword.error!.name
               : null,
-          onChanged: (confirmPassword) =>
-              context
-                  .read<SignUpBloc>()
-                  .add(
-                  ConfirmPasswordChanged(confirmPassword: confirmPassword)),
+          onChanged: (confirmPassword) => context
+              .read<SignUpBloc>()
+              .add(ConfirmPasswordChanged(confirmPassword: confirmPassword)),
           colorTheme: colorTheme,
         );
       },
