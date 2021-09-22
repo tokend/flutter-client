@@ -1,6 +1,9 @@
 abstract class ObjectPersistence<T> {
-  T? loadItem();
+  Future<T?> loadItem();
+
   saveItem(T item);
+
   bool hasItem();
+
   clear();
 }

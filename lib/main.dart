@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
-import 'package:flutter_template/features/qr/view/qr_scaffold.dart';
+import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
 import 'package:get/get.dart';
 
 import 'config/env.dart';
-import 'features/qr/logic/qr_screen.dart';
 
 void main() {
   runApp(App(Development()));
@@ -44,7 +43,7 @@ class App extends StatelessWidget {
             binding: MainBindings(env)),
         GetPage(
             name: '/qr',
-            page: () => QrScaffold(),
+            page: () => ScanNetworkQrUseCase(),
             binding: MainBindings(env)),
       ],
     );

@@ -165,8 +165,8 @@ class _NetworkInputField extends StatelessWidget {
                 suffixIcon: IconButton(
                   icon: Icon(CustomIcons.scan_barcode),
                   onPressed: () {
-                    Get.toNamed('/qr', preventDuplicates: false);
-                  }, //TODO open qr-scanning
+                    Get.toNamed('/qr');
+                  },
                 ),
                 colorTheme: colorTheme),
           );
