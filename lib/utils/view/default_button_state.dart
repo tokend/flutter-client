@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
@@ -6,20 +8,28 @@ class DefaultButton extends StatefulWidget {
   final BaseColorTheme colorTheme;
   final String text;
   final Function onPressed;
+  final bool defaultState;
 
   DefaultButton(
       {Key? key,
       required this.colorTheme,
       required this.onPressed,
-      required this.text})
+      required this.text,
+      this.defaultState = false})
       : super(key: key);
 
   @override
-  DefaultButtonState createState() => DefaultButtonState();
+  DefaultButtonState createState() =>
+      DefaultButtonState(defaultState: defaultState);
 }
 
 class DefaultButtonState extends State<DefaultButton> {
-  final _isButtonEnabled = ValueNotifier(true);
+  bool defaultState;
+  var _isButtonEnabled = ValueNotifier(true);
+
+  DefaultButtonState({this.defaultState = true}) {
+    _isButtonEnabled = ValueNotifier(defaultState);
+  }
 
   bool getIsEnabled() {
     return _isButtonEnabled.value;

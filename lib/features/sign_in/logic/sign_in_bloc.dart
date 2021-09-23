@@ -9,14 +9,14 @@ import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
 
 part 'sign_in_event.dart';
-
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
-  SignInBloc(this.env) : super(SignInState());
+  SignInBloc(this.env) : super(SignInState(network: env.apiUrl));
   Env env;
   @override
-  Future<void> onTransition(Transition<SignInEvent, SignInState> transition) async {
+  Future<void> onTransition(
+      Transition<SignInEvent, SignInState> transition) async {
     super.onTransition(transition);
     print(transition);
   }

@@ -16,7 +16,7 @@ final Map<String, String> en = {
   "email_label": "Email",
   "email_hint": "email@mail.com",
   "password_label": "Password",
-  "password_hint": "•••••••••••••",
+  "password_hint": "••••••",
   "confirm_password_label": "Confirm Password",
 
   //actions
