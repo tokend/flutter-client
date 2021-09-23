@@ -99,8 +99,7 @@ class SignInForm extends StatelessWidget {
                             ],
                           ),
                         ),
-                        onTap: () => Get.toNamed(
-                            '/signUp'), //TODO transition to the recovery page
+                        onTap: () => Get.toNamed('/recovery'),
                       ),
                     ),
                   ],

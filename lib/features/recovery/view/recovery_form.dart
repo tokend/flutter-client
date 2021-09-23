@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/recovery/logic/recovery_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
@@ -12,14 +12,11 @@ import 'package:flutter_template/utils/view/models/email.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:formz/formz.dart';
-import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import '../logic/sign_up_bloc.dart';
-
-class SignUpForm extends StatelessWidget {
-  const SignUpForm({Key? key}) : super(key: key);
-
+class RecoveryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
@@ -28,7 +25,7 @@ class SignUpForm extends StatelessWidget {
 
     return ProgressHUD(
       child: Builder(builder: (contextBuilder) {
-        return BlocListener<SignUpBloc, SignUpState>(
+        return BlocListener<RecoveryBloc, RecoveryState>(
             listener: (context, state) {
               progress = ProgressHUD.of(contextBuilder);
               if (state.status.isSubmissionInProgress) {
@@ -56,7 +53,7 @@ class SignUpForm extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'title_sign_up'.tr,
+                            'title_recovery'.tr,
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: Sizes.textSizeHeadingLarge,
@@ -88,21 +85,21 @@ class SignUpForm extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        _SignUpButton(),
+                        _RecoveryButton(),
                         Padding(
                             padding:
                                 EdgeInsets.only(top: Sizes.standartMargin)),
                         GestureDetector(
                           child: RichText(
                             text: TextSpan(
-                              text: 'already_have_account'.tr,
+                              text: 'dont_have_account'.tr,
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: Sizes.textSizeHint,
                                   color: colorTheme.hint),
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: 'title_sign_in'.tr,
+                                  text: 'action_register'.tr,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: Sizes.textSizeHint,
@@ -111,7 +108,7 @@ class SignUpForm extends StatelessWidget {
                               ],
                             ),
                           ),
-                          onTap: () => Get.toNamed('/signIn'),
+                          onTap: () => Get.toNamed('/signUp'),
                         ),
                         Container(
                           height: screenSize.height * 0.04,
@@ -131,7 +128,7 @@ class _EmailInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<RecoveryBloc, RecoveryState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return Padding(
@@ -143,7 +140,7 @@ class _EmailInputField extends StatelessWidget {
             key: const Key('signUpForm_emailInput_textField'),
             error: state.email.error != null ? state.email.error!.name : null,
             onChanged: (email) =>
-                context.read<SignUpBloc>().add(EmailChanged(email: email)),
+                context.read<RecoveryBloc>().add(EmailChanged(email: email)),
             colorTheme: colorTheme,
           ),
         );
@@ -156,7 +153,7 @@ class _PasswordInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<RecoveryBloc, RecoveryState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         print(state.password.error != null ? state.password.error!.name : null);
@@ -170,7 +167,7 @@ class _PasswordInputField extends StatelessWidget {
                 ? state.password.error!.name
                 : null,
             onChanged: (password) => context
-                .read<SignUpBloc>()
+                .read<RecoveryBloc>()
                 .add(PasswordChanged(password: password)),
             colorTheme: colorTheme,
           ),
@@ -184,7 +181,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<RecoveryBloc, RecoveryState>(
       buildWhen: (previous, current) =>
           previous.password != current.password ||
           previous.confirmPassword != current.confirmPassword,
@@ -197,7 +194,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
               ? state.confirmPassword.error!.name
               : null,
           onChanged: (confirmPassword) => context
-              .read<SignUpBloc>()
+              .read<RecoveryBloc>()
               .add(ConfirmPasswordChanged(confirmPassword: confirmPassword)),
           colorTheme: colorTheme,
         );
@@ -206,20 +203,20 @@ class _ConfirmPasswordInput extends StatelessWidget {
   }
 }
 
-class _SignUpButton extends StatelessWidget {
-  const _SignUpButton({Key? key}) : super(key: key);
+class _RecoveryButton extends StatelessWidget {
+  const _RecoveryButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    return BlocBuilder<SignUpBloc, SignUpState>(
+    return BlocBuilder<RecoveryBloc, RecoveryState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
-          text: 'action_continue'.tr,
+          text: 'action_recovery'.tr,
           onPressed: () {
             state.status.isValidated
-                ? context.read<SignUpBloc>().add(FormSubmitted())
+                ? context.read<RecoveryBloc>().add(FormSubmitted())
                 : null;
           },
           colorTheme: colorTheme,
