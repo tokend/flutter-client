@@ -19,19 +19,20 @@ class DefaultTextField extends StatefulWidget {
   final List<TextInputFormatter>? textInputFormatters;
   final Color background;
 
-  const DefaultTextField({Key? key,
-    this.background = Colors.transparent,
-    this.textInputFormatters,
-    this.title = "",
-    this.error,
-    required this.onChanged,
-    required this.colorTheme,
-    this.hint = "",
-    this.label = "",
-    this.defaultText = "",
-    this.inputType = TextInputType.text,
-    this.suffixIcon,
-    this.showText = true})
+  const DefaultTextField(
+      {Key? key,
+      this.background = Colors.transparent,
+      this.textInputFormatters,
+      this.title = "",
+      this.error,
+      required this.onChanged,
+      required this.colorTheme,
+      this.hint = "",
+      this.label = "",
+      this.defaultText = "",
+      this.inputType = TextInputType.text,
+      this.suffixIcon,
+      this.showText = true})
       : super(key: key);
 
   @override
@@ -44,8 +45,6 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   final _key = GlobalKey<FormState>();
 
-
-
   @override
   void dispose() {
     _error.dispose();
@@ -54,7 +53,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   @override
   Widget build(BuildContext context) {
-   // controller.addListener(() { controller.text});
+    // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -91,14 +90,14 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                       errorText: widget.error,
                       errorBorder: _borderStyle(widget.colorTheme.negative),
                       focusedErrorBorder:
-                      _borderStyle(widget.colorTheme.negative),
+                          _borderStyle(widget.colorTheme.negative),
                       hintText: widget.hint,
                       isDense: true,
                       hintStyle: TextStyle(
                           color: widget.colorTheme.hint,
                           fontWeight: FontWeight.w400),
                       enabledBorder:
-                      _borderStyle(widget.colorTheme.borderUnfocused),
+                          _borderStyle(widget.colorTheme.borderUnfocused),
                       focusedBorder: _borderStyle(widget.colorTheme.accent),
                       suffixIcon: widget.suffixIcon),
                 );
