@@ -17,6 +17,9 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class RecoveryForm extends StatelessWidget {
+  GlobalKey<DefaultButtonState> _recoveryButtonKey =
+      GlobalKey<DefaultButtonState>();
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
@@ -30,6 +33,10 @@ class RecoveryForm extends StatelessWidget {
               progress = ProgressHUD.of(contextBuilder);
               if (state.status.isSubmissionInProgress) {
                 progress.show();
+              } else if (state.status.isValid) {
+                updateValidationState(_recoveryButtonKey, true);
+              } else if (state.status.isInvalid) {
+                updateValidationState(_recoveryButtonKey, false);
               } else if (state.status.isSubmissionFailure) {
                 progress.dismiss();
                 print('submission failure');
@@ -41,7 +48,7 @@ class RecoveryForm extends StatelessWidget {
             child: AuthScreenTemplate(
               child: Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
+                EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -70,12 +77,12 @@ class RecoveryForm extends StatelessWidget {
                         _EmailInputField(),
                         Padding(
                           padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          EdgeInsets.only(top: Sizes.halfStandartPadding),
                         ),
                         _PasswordInputField(),
                         Padding(
                           padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          EdgeInsets.only(top: Sizes.halfStandartPadding),
                         ),
                         _ConfirmPasswordInput(),
                       ],
@@ -85,7 +92,7 @@ class RecoveryForm extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        _RecoveryButton(),
+                        _RecoveryButton(_recoveryButtonKey),
                         Padding(
                             padding:
                                 EdgeInsets.only(top: Sizes.standartMargin)),
@@ -204,7 +211,9 @@ class _ConfirmPasswordInput extends StatelessWidget {
 }
 
 class _RecoveryButton extends StatelessWidget {
-  const _RecoveryButton({Key? key}) : super(key: key);
+  GlobalKey? parentKey;
+
+  _RecoveryButton(this.parentKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +222,7 @@ class _RecoveryButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
+          key: parentKey,
           text: 'action_recovery'.tr,
           onPressed: () {
             state.status.isValidated
@@ -224,4 +234,8 @@ class _RecoveryButton extends StatelessWidget {
       },
     );
   }
+}
+
+updateValidationState(GlobalKey<DefaultButtonState> key, bool isFormValid) {
+  key.currentState?.setIsEnabled(isFormValid);
 }
