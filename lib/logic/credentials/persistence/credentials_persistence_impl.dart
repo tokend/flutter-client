@@ -3,7 +3,7 @@ import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialsPersistenceImpl extends CredentialsPersistence {
-  final SharedPreferences _sharedPreferences;
+  final Future<SharedPreferences> _sharedPreferences;
 
   CredentialsPersistenceImpl(this._sharedPreferences) {
     this._secureStorage = SecureStorage(_sharedPreferences);
@@ -12,18 +12,20 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
   late SecureStorage _secureStorage;
 
   @override
-  void clear(bool keepEmail) {
+  Future<void> clear(bool keepEmail) async {
     _secureStorage.clear(PASSWORD_KEY);
     if (!keepEmail) {
-      _sharedPreferences.remove(EMAIL_KEY);
+      (await _sharedPreferences).remove(EMAIL_KEY);
     }
   }
 
   @override
-  String? getSavedEmail() {
-    return _sharedPreferences.getString(EMAIL_KEY) != null
-        ? _sharedPreferences.getString(EMAIL_KEY)
+  Future<String?> getSavedEmail() async {
+    var email = (await _sharedPreferences).getString(EMAIL_KEY) != null
+        ? (await _sharedPreferences).getString(EMAIL_KEY)
         : null;
+
+    return Future.value(email);
   }
 
   @override
@@ -42,16 +44,17 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
   }
 
   @override
-  void saveCredentials(String email, String password) {
+  Future<void> saveCredentials(String email, String password) async {
     _tryToSavePassword(password);
-    _sharedPreferences.setString(EMAIL_KEY, email);
+    (await _sharedPreferences).setString(EMAIL_KEY, email);
   }
 
   void _tryToSavePassword(String password) {
     _secureStorage.save(password, PASSWORD_KEY);
   }
 
-  static const PASSWORD_KEY = '(¬_¬)';
+  static const PASSWORD_KEY = 'my 32 length key................';
+      //'(¬_¬)'; ///TODO add key generation
   static const EMAIL_KEY = 'email';
 
 }

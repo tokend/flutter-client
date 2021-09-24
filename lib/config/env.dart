@@ -22,6 +22,8 @@ abstract class Env {
   // 0 means option is disabled
   abstract int logoutTime;
 
+  bool withLogs = true;
+
   //Theme color
   abstract Color primarySwatch;
 

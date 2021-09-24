@@ -1,7 +1,10 @@
+import 'package:get/get.dart';
+
 import 'en.dart';
 
-abstract class AppTranslation {
-  static Map<String, Map<String, String>> translationsKeys = {
-    "en": en,
-  };
+class AppTranslation extends Translations {
+  @override
+  Map<String, Map<String, String>> get keys => {
+        "en": en,
+      };
 }
