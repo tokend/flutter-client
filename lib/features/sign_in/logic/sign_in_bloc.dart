@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dart_sdk/api/wallets/model/exceptions.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:formz/formz.dart';
 import 'package:get/get.dart' as getX;
 
 part 'sign_in_event.dart';
+
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
@@ -62,11 +64,20 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         var keyServer = KeyServer(api.wallets);
         await SignInUseCase(state.email.value, state.password.value, keyServer,
                 session, credentialsPersistence, walletInfoPersistence)
-            .perform();
+            .perform()
+            .catchError((error, stackTrace) {
+              //TODO handle errors
+          if (error is InvalidCredentialsException) {
+            toastManager.showShortToast('error_invalid_password'.tr);
+          }
+        });
 
         yield state.copyWith(status: FormzStatus.submissionSuccess);
-      } on Exception {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
+      } catch (e, stacktrace) {
+        if (e is InvalidCredentialsException) {
+          toastManager.showShortToast('error_invalid_password'.tr);
+        }
+        yield state.copyWith(status: FormzStatus.submissionFailure, error: e);
       }
     }
   }

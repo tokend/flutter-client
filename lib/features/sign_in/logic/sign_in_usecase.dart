@@ -22,7 +22,10 @@ class SignInUseCase {
 
   Future<void> perform() {
     return _getWalletInfo(_email, _password)
-        .catchError((error, stacktrace) => {print(stacktrace)})
+        .onError((error, stackTrace) => Future.error(error!))
+        .catchError((error, stacktrace) {
+          return Future.error(error);
+        })
         .then((walletInfo) => this._walletInfo = walletInfo)
         .then((walletInfo) => _getAccountFromWalletInfo())
         .then((account) => this._account = account)

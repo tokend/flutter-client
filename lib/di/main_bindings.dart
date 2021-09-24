@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/config/model/url_config.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
@@ -16,6 +17,9 @@ import 'package:flutter_template/logic/credentials/persistence/credentials_persi
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence_impl.dart';
 import 'package:flutter_template/logic/session.dart';
+import 'package:flutter_template/utils/error_handler/default_error_handler.dart';
+import 'package:flutter_template/utils/error_handler/error_handler.dart';
+import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +50,8 @@ class MainBindings extends Bindings {
         CredentialsPersistenceImpl(sharedPreferences);
     WalletInfoPersistence walletInfoPersistence =
         WalletInfoPersistenceImpl(sharedPreferences);
-
+    ToastManager toastManager = ToastManager();
+    ErrorHandler errorHandler = DefaultErrorHandler(toastManager);
     //Put to GetX pool
     Get.put(env);
     Get.put(apiProvider);
@@ -55,6 +60,8 @@ class MainBindings extends Bindings {
     Get.put(urlConfigPersistence);
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);
+    Get.put(toastManager);
+    Get.put(errorHandler);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example
   }
 }
