@@ -18,7 +18,8 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import '../logic/sign_up_bloc.dart';
 
 class SignUpForm extends StatelessWidget {
-  const SignUpForm({Key? key}) : super(key: key);
+  SignUpForm({Key? key}) : super(key: key);
+  GlobalKey<DefaultButtonState> _signUpButtonKey = GlobalKey<DefaultButtonState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,11 @@ class SignUpForm extends StatelessWidget {
               progress = ProgressHUD.of(contextBuilder);
               if (state.status.isSubmissionInProgress) {
                 progress.show();
+              } else if (state.status.isInvalid) {
+                updateValidationState(_signUpButtonKey, false);
+              } else if (state.status.isValid) {
+                progress.dismiss();
+                updateValidationState(_signUpButtonKey, true);
               } else if (state.status.isSubmissionFailure) {
                 progress.dismiss();
                 print('submission failure');
@@ -88,7 +94,9 @@ class SignUpForm extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        _SignUpButton(),
+                        _SignUpButton(
+                          _signUpButtonKey,
+                        ),
                         Padding(
                             padding:
                                 EdgeInsets.only(top: Sizes.standartMargin)),
@@ -207,7 +215,8 @@ class _ConfirmPasswordInput extends StatelessWidget {
 }
 
 class _SignUpButton extends StatelessWidget {
-  const _SignUpButton({Key? key}) : super(key: key);
+  GlobalKey? parentKey;
+  _SignUpButton(this.parentKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +225,8 @@ class _SignUpButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return DefaultButton(
+          defaultState: false,
+          key: parentKey,
           text: 'action_continue'.tr,
           onPressed: () {
             state.status.isValidated
@@ -227,4 +238,8 @@ class _SignUpButton extends StatelessWidget {
       },
     );
   }
+}
+
+updateValidationState(GlobalKey<DefaultButtonState> key, bool isFormValid) {
+  (key.currentState as DefaultButtonState).setIsEnabled(isFormValid);
 }

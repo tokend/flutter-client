@@ -55,7 +55,7 @@ class LightColorTheme implements BaseColorTheme {
   final Color hint = Color(0xFF9695A8);
 
   @override
-  final Color buttonDisabled = Color(0xFF9695A8);
+  final Color buttonDisabled = Color(0xFFE0E0E0);
 
   @override
   final Color negative = Color(0xFFF86E6E);

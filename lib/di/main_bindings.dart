@@ -2,6 +2,8 @@ import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/config/model/url_config.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
 import 'package:flutter_template/config/providers/url_config_provider_impl.dart';
+import 'package:flutter_template/config/stotrage/url_config_persistence.dart';
+import 'package:flutter_template/data/storage%20/persistence/object_persistence.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/account_provider_impl.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
@@ -37,7 +39,9 @@ class MainBindings extends Bindings {
         accountProvider, walletInfoProvider, tfaCallback, env.withLogs);
     Session session = Session(walletInfoProvider, accountProvider);
     Future<SharedPreferences> sharedPreferences =
-    SharedPreferences.getInstance();
+        SharedPreferences.getInstance();
+    ObjectPersistence<UrlConfig> urlConfigPersistence =
+        UrlConfigPersistence(sharedPreferences);
     CredentialsPersistence credentialsPersistence =
         CredentialsPersistenceImpl(sharedPreferences);
     WalletInfoPersistence walletInfoPersistence =
@@ -48,6 +52,7 @@ class MainBindings extends Bindings {
     Get.put(apiProvider);
     Get.put(urlConfigProvider);
     Get.put(session);
+    Get.put(urlConfigPersistence);
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example

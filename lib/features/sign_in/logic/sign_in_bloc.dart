@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,16 +9,18 @@ import 'package:flutter_template/features/sign_in/logic/sign_in_usecase.dart';
 import 'package:flutter_template/utils/view/models/email.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
+import 'package:get/get.dart' as getX;
 
 part 'sign_in_event.dart';
-
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
-  SignInBloc(this.env) : super(SignInState());
+  SignInBloc(this.env) : super(SignInState(network: env.apiUrl));
   Env env;
+
   @override
-  Future<void> onTransition(Transition<SignInEvent, SignInState> transition) async {
+  Future<void> onTransition(
+      Transition<SignInEvent, SignInState> transition) async {
     super.onTransition(transition);
     print(transition);
   }
@@ -45,6 +49,8 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
       );
     } else if (event is NetworkChanged) {
       env.apiUrl = event.network!;
+      getX.Get.put(env);
+
       yield state.copyWith(
         network: event.network,
       );
