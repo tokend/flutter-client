@@ -19,9 +19,13 @@ final Map<String, String> en = {
   "password_hint": "••••••",
   "confirm_password_label": "Confirm Password",
 
+  //recovery
+  "title_recovery": "Recovery",
+
   //actions
   "action_continue": "Continue",
   "action_register": "Register now",
+  "action_recovery": "Recovery",
 
   //errors
   "error_same_passwords": "Passwords must be the same",
