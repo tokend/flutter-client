@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 abstract class BaseColorTheme {
   final Color background = Color(0xFFFFFFFF);
   final Color darkBackground = Color(0xFFF5F5F9);
+  final Color drawerBackground = Color(0xFFF5F5F9);
   final Color accent = Color(0xFFFFFFFF);
   final Color primary = Color(0xFFFFFFFF);
   final Color middlePrimary = Color(0xFFFFFFFF);
@@ -71,6 +72,9 @@ class LightColorTheme implements BaseColorTheme {
 
   @override
   Color get loading => Color(0x80656CEE);
+
+  @override
+  Color get drawerBackground => Color(0xFF0B2962);
 }
 
 class DarkColorTheme implements BaseColorTheme {
@@ -127,4 +131,7 @@ class DarkColorTheme implements BaseColorTheme {
 
   @override
   Color get loading => Color(0x77656CEE);
+
+  @override
+  Color get drawerBackground => Color(0xFF0B2962);
 }

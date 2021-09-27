@@ -27,6 +27,20 @@ final Map<String, String> en = {
   "action_register": "Register now",
   "action_recovery": "Recovery",
 
+  //drawer
+  "dashboard": "Dashboard",
+  "movements": "Movements",
+  "assets": "Assets",
+  "sales": "Sales",
+  "polls": "Polls",
+  "trade": "Trade",
+  "issuance_requests": "Issuance requests",
+  "limits": "Limits",
+  "fees": "Fees",
+  "settings": "Settings",
+  "log_out": "Log out",
+  "footer":"2021 © Distributed Lab.",
+
   //errors
   "error_same_passwords": "Passwords must be the same",
   "error_weak_password": "Password must be at least 6 characters",
