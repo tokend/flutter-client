@@ -7,7 +7,7 @@ abstract class CredentialsPersistence extends CredentialsProvider {
   void saveCredentials(String email, String password);
 
   /// @return saved email or null if it's missing
-  Future<String?> getSavedEmail();
+  String? getSavedEmail();
 
   /// @return true if there is a securely saved password
   Future<bool> hasSavedPassword();

@@ -3,7 +3,7 @@ import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialsPersistenceImpl extends CredentialsPersistence {
-  final Future<SharedPreferences> _sharedPreferences;
+  final SharedPreferences _sharedPreferences;
 
   CredentialsPersistenceImpl(this._sharedPreferences) {
     this._secureStorage = SecureStorage(_sharedPreferences);
@@ -15,17 +15,17 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
   Future<void> clear(bool keepEmail) async {
     _secureStorage.clear(PASSWORD_KEY);
     if (!keepEmail) {
-      (await _sharedPreferences).remove(EMAIL_KEY);
+      _sharedPreferences.remove(EMAIL_KEY);
     }
   }
 
   @override
-  Future<String?> getSavedEmail() async {
-    var email = (await _sharedPreferences).getString(EMAIL_KEY) != null
-        ? (await _sharedPreferences).getString(EMAIL_KEY)
+  String? getSavedEmail() {
+    var email = _sharedPreferences.getString(EMAIL_KEY) != null
+        ? _sharedPreferences.getString(EMAIL_KEY)
         : null;
 
-    return Future.value(email);
+    return email;
   }
 
   @override
@@ -46,7 +46,7 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
   @override
   Future<void> saveCredentials(String email, String password) async {
     _tryToSavePassword(password);
-    (await _sharedPreferences).setString(EMAIL_KEY, email);
+    _sharedPreferences.setString(EMAIL_KEY, email);
   }
 
   void _tryToSavePassword(String password) {
