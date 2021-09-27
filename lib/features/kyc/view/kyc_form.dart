@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/kyc/logic/kyc_bloc.dart';
+import 'package:flutter_template/features/sign_up/logic/sign_up_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
@@ -15,11 +17,10 @@ import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import '../logic/sign_up_bloc.dart';
-
-class SignUpForm extends StatelessWidget {
-  SignUpForm({Key? key}) : super(key: key);
-  GlobalKey<DefaultButtonState> _signUpButtonKey = GlobalKey<DefaultButtonState>();
+class KycForm extends StatelessWidget {
+  KycForm({Key? key}) : super(key: key);
+  GlobalKey<DefaultButtonState> _kycFormButtonKey =
+      GlobalKey<DefaultButtonState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +30,22 @@ class SignUpForm extends StatelessWidget {
 
     return ProgressHUD(
       child: Builder(builder: (contextBuilder) {
-        return BlocListener<SignUpBloc, SignUpState>(
+        return BlocListener<KycBloc, KycState>(
             listener: (context, state) {
               progress = ProgressHUD.of(contextBuilder);
               if (state.status.isSubmissionInProgress) {
                 progress.show();
               } else if (state.status.isInvalid) {
-                updateValidationState(_signUpButtonKey, false);
+                updateValidationState(_kycFormButtonKey, false);
               } else if (state.status.isValid) {
                 progress.dismiss();
-                updateValidationState(_signUpButtonKey, true);
+                updateValidationState(_kycFormButtonKey, true);
               } else if (state.status.isSubmissionFailure) {
                 progress.dismiss();
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.toNamed('/kycForm');
+                Get.toNamed('/signIn'); //TODO: change route
               }
             },
             child: AuthScreenTemplate(
@@ -94,8 +95,8 @@ class SignUpForm extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        _SignUpButton(
-                          _signUpButtonKey,
+                        _KycSubmitButton(
+                          _kycFormButtonKey,
                         ),
                         Padding(
                             padding:
@@ -214,9 +215,10 @@ class _ConfirmPasswordInput extends StatelessWidget {
   }
 }
 
-class _SignUpButton extends StatelessWidget {
+class _KycSubmitButton extends StatelessWidget {
   GlobalKey? parentKey;
-  _SignUpButton(this.parentKey, {Key? key}) : super(key: key);
+
+  _KycSubmitButton(this.parentKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
