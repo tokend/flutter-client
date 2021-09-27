@@ -5,7 +5,7 @@ class KycState extends Equatable {
     this.firstName = const FirstName.pure(),
     this.lastName = const LastName.pure(),
     this.nationality = const StringField.pure(),
-    this.phoneNumber = "",
+    this.phoneNumber = const StringField.pure(),
     this.nationalInsuranceNumber = const StringField.pure(),
     this.taxId = const StringField.pure(),
     this.identityCardNumber = const StringField.pure(),
@@ -15,15 +15,15 @@ class KycState extends Equatable {
     this.sex = const StringField.pure(),
     this.dateOfBirth = const StringField.pure(),
     this.iban = const StringField.pure(),
-    this.image = "",
+    this.image = const StringField.pure(),
     this.status = FormzStatus.pure,
   });
 
-  final String image;
+  final StringField image;
   final FirstName firstName;
   final LastName lastName;
   final StringField nationality;
-  final String phoneNumber;
+  final StringField phoneNumber;
   final StringField nationalInsuranceNumber;
   final StringField taxId;
   final StringField identityCardNumber;
@@ -55,11 +55,11 @@ class KycState extends Equatable {
       ];
 
   KycState copyWith(
-      {String? image,
+      {StringField? image,
       FirstName? firstName,
       LastName? lastName,
       StringField? nationality,
-      String? phoneNumber,
+      StringField? phoneNumber,
       StringField? nationalInsuranceNumber,
       StringField? taxId,
       StringField? identityCardNumber,
