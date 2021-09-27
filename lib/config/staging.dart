@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'env.dart';
 
-void main() => Staging();
-
 class Staging extends Env {
+  SharedPreferences sp;
+
   @override
   String apiUrl = '';
 
@@ -23,4 +24,8 @@ class Staging extends Env {
   @override
   int logoutTime = 0;
 
+  @override
+  SharedPreferences sharedPreferences;
+
+  Staging(this.sp) : sharedPreferences = sp;
 }

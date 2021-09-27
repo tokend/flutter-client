@@ -14,7 +14,7 @@ const SECRET_KEY_NAME_PREFIX = "ss_";
 
 /// Represents secure storage based on [SharedPreferences].
 class SecureStorage {
-  Future<SharedPreferences> preferences;
+  SharedPreferences preferences;
 
   SecureStorage(this.preferences);
 
@@ -111,11 +111,11 @@ class SecureStorage {
 
   /// Clears encrypted data entry for given key.
   clear(String key) async {
-    await (await preferences).remove(key);
+    await preferences.remove(key);
   }
 
   Future<KeychainData?> _loadKeychainData(String key) async {
-    var jsonString = (await preferences).getString(key);
+    var jsonString = preferences.getString(key);
     if (jsonString == null || jsonString.isEmpty == true) return null;
     try {
       return KeychainData.getFromJson(json.decode(jsonString));
@@ -146,7 +146,7 @@ class SecureStorage {
   }
 
   _saveKeychainData(KeychainData data, String key) async {
-    await (await preferences).setString(key, json.encode(data));
+    await preferences.setString(key, json.encode(data));
   }
 
   ScryptKeyDerivation _getKeyDerivation() {

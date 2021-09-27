@@ -7,26 +7,33 @@ import 'package:flutter_template/features/home/logic/drawer_event.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final List<NavigationItemData> listItems = [
+  //TODO update icons
+  NavigationItemData(true, null, null, CustomIcons.dashboard),
+  NavigationItemData(
+      false, NavItem.dashboard, 'dashboard'.tr, CustomIcons.dashboard),
+  NavigationItemData(
+      false, NavItem.movements, 'movements'.tr, CustomIcons.movements),
+  NavigationItemData(false, NavItem.assets, 'assets'.tr, CustomIcons.assets),
+  NavigationItemData(false, NavItem.sales, 'sales'.tr, CustomIcons.sales),
+  NavigationItemData(false, NavItem.polls, 'polls'.tr, CustomIcons.polls),
+  NavigationItemData(false, NavItem.trade, 'trade'.tr, CustomIcons.trade),
+  NavigationItemData(false, NavItem.issuance_request, 'issuance_requests'.tr,
+      CustomIcons.request_issuance),
+  NavigationItemData(false, NavItem.limits, 'limits'.tr, CustomIcons.limits),
+  NavigationItemData(false, NavItem.fees, 'fees'.tr, CustomIcons.fees),
+  NavigationItemData(
+      false, NavItem.settings, 'settings'.tr, CustomIcons.setting),
+  NavigationItemData(false, NavItem.log_out, 'log_out'.tr, CustomIcons.logout),
+];
 
 class DrawerContent extends StatelessWidget {
   final String accountName;
   final String accountEmail;
-  final List<_NavigationItem> _listItems = [
-    //TODO update icons
-    _NavigationItem(true, NavItem.dashboard, 'dashboard'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.movements, 'movements'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.assets, 'assets'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.sales, 'sales'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.polls, 'polls'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.trade, 'trade'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.issuance_request, 'issuance_requests'.tr,
-        CustomIcons.eye),
-    _NavigationItem(false, NavItem.limits, 'limits'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.fees, 'fees'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.settings, 'settings'.tr, CustomIcons.eye),
-    _NavigationItem(false, NavItem.log_out, 'log_out'.tr, CustomIcons.eye),
-  ];
 
   DrawerContent(this.accountName, this.accountEmail);
 
@@ -44,11 +51,11 @@ class DrawerContent extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(left: 10.0),
-                  itemCount: _listItems.length,
+                  itemCount: listItems.length,
                   itemBuilder: (BuildContext context, int index) =>
                       BlocBuilder<DrawerBloc, DrawerState>(
                         builder: (BuildContext context, DrawerState state) =>
-                            _buildItem(_listItems[index], state, context),
+                            _buildItem(listItems[index], state, context),
                       )),
               Positioned(
                 bottom: 24.0,
@@ -61,7 +68,7 @@ class DrawerContent extends StatelessWidget {
           )));
 
   Widget _buildItem(
-          _NavigationItem data, DrawerState state, BuildContext context) =>
+          NavigationItemData data, DrawerState state, BuildContext context) =>
       data.header
           // if the item is a header return the header widget
           ? makeHeader(context)
@@ -71,7 +78,7 @@ class DrawerContent extends StatelessWidget {
   Widget makeHeader(BuildContext context) {
     return Card(
       color: context.colorTheme.drawerBackground,
-      margin: EdgeInsets.only(top: 100.0, left: 30.0),
+      margin: EdgeInsets.only(top: 100.0, left: 20.0),
       //shape: ContinuousRectangleBorder(borderRadius: BorderRadius.zero),
       elevation: 0,
       child: Row(
@@ -94,7 +101,8 @@ class DrawerContent extends StatelessWidget {
             children: [
               Text(
                 "Dafna Shvimer", //TODO
-                style: TextStyle(color: context.colorTheme.secondaryText),
+                style: TextStyle(
+                    color: context.colorTheme.secondaryText, fontSize: 17.0),
               ),
               Row(
                 children: [
@@ -118,28 +126,15 @@ class DrawerContent extends StatelessWidget {
     );
   }
 
-  Widget _makeHeaderItem(BuildContext context) => UserAccountsDrawerHeader(
-        accountName: Text(accountName, style: TextStyle(color: Colors.white)),
-        accountEmail: Text(accountEmail, style: TextStyle(color: Colors.white)),
-        decoration: BoxDecoration(color: Colors.blueGrey),
-        currentAccountPicture: CircleAvatar(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.amber,
-          child: Icon(
-            Icons.person,
-            size: 54,
-          ),
-        ),
-      );
-
   Widget _makeListItem(
-          _NavigationItem data, DrawerState state, BuildContext context) =>
+          NavigationItemData data, DrawerState state, BuildContext context) =>
       Card(
         color: context.colorTheme.drawerBackground,
         elevation: 0,
         margin: EdgeInsets.zero,
         child: Builder(
           builder: (BuildContext context) => ListTile(
+            minLeadingWidth: 10,
             title: Text(
               data.title!,
               style: TextStyle(
@@ -158,8 +153,28 @@ class DrawerContent extends StatelessWidget {
 
   void _handleItemClick(BuildContext context, NavItem? item) {
     if (item != null) {
-      BlocProvider.of<DrawerBloc>(context).add(NavigateTo(item));
-      Navigator.pop(context);
+      if (item == NavItem.log_out) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('confirm_sign_out'.tr),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text('cancel'.tr),
+                  ),
+                  TextButton(
+                    onPressed: () => signOut(),
+                    child: Text('ok'.tr),
+                  ),
+                ],
+              );
+            });
+      } else {
+        BlocProvider.of<DrawerBloc>(context).add(NavigateTo(item));
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -171,14 +186,20 @@ class DrawerContent extends StatelessWidget {
           fontSize: Sizes.textSizeHint),
     );
   }
+
+  signOut({bool soft = false}) {
+    SharedPreferences sharedPreferences = Get.find();
+    sharedPreferences.clear();
+    Get.offAllNamed('/signIn');
+  }
 }
 
 // helper class used to represent navigation list items
-class _NavigationItem {
+class NavigationItemData {
   final bool header;
   final NavItem? item;
   final String? title;
   final IconData? icon;
 
-  _NavigationItem(this.header, this.item, this.title, this.icon);
+  NavigationItemData(this.header, this.item, this.title, this.icon);
 }

@@ -29,27 +29,27 @@ class CustomIcons {
       IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData baseline_sync_24px =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData blend_2 =
+  static const IconData assets =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData calendar_2 =
       IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData camera_3_fill =
       IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData chart =
+  static const IconData request_issuance =
       IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData clipboard_tick =
+  static const IconData polls =
       IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData close =
       IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData copy =
       IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData diagram =
+  static const IconData sales =
       IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData document_copy =
       IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData done =
       IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData element_3 =
+  static const IconData dashboard =
       IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData error =
       IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -57,13 +57,13 @@ class CustomIcons {
       IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData eye =
       IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData favorite_chart =
+  static const IconData limits =
       IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData filter_active =
       IconData(0xe813, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData filter =
       IconData(0xe814, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData graph =
+  static const IconData fees =
       IconData(0xe815, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData ic_actions_remove_simple =
       IconData(0xe816, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -79,7 +79,7 @@ class CustomIcons {
       IconData(0xe81b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logout =
       IconData(0xe81c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData message_text =
+  static const IconData movements =
       IconData(0xe81d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData network_passphrase =
       IconData(0xe81e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -91,8 +91,8 @@ class CustomIcons {
       IconData(0xe821, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData secret_seed =
       IconData(0xe822, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData setting_2 =
+  static const IconData setting =
       IconData(0xe823, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData status_up =
+  static const IconData trade =
       IconData(0xe824, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

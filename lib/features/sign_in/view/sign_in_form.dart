@@ -5,6 +5,7 @@ import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
+import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
@@ -44,12 +45,7 @@ class SignInForm extends StatelessWidget {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                var scaffold = ScaffoldMessenger.of(context);
-                scaffold.showSnackBar(
-                  SnackBar(
-                    content: const Text('Signed in'),
-                  ),
-                );
+                Get.offAllNamed('/home');
               }
             },
             child: AuthScreenTemplate(
@@ -117,7 +113,7 @@ class SignInForm extends StatelessWidget {
                               ),
                             ),
                             onTap: () => Get.toNamed('/recovery'),
-                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -280,4 +276,16 @@ class _SignInButton extends StatelessWidget {
 updateValidationState(
     GlobalKey<DefaultButtonState> key, bool isFormValid, String network) {
   key.currentState?.setIsEnabled(isFormValid && network.isNotEmpty);
+}
+
+Future<BlocBuilder<SignInBloc, SignInState>> isSignedIn() async {
+  CredentialsPersistence credentialsPersistence = Get.find();
+  if (credentialsPersistence.getSavedEmail() != null) {
+    Get.offAllNamed('/home');
+  }
+  return BlocBuilder(builder: (context, state) {
+    return Padding(
+      padding: EdgeInsets.zero,
+    );
+  });
 }

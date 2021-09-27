@@ -4,7 +4,7 @@ import 'package:flutter_template/data/storage%20/persistence/object_persistence.
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ObjectPersistenceOnPrefs<T> implements ObjectPersistence<T> {
-  Future<SharedPreferences> sharedPreferences;
+  SharedPreferences sharedPreferences;
   String key;
 
   ObjectPersistenceOnPrefs(this.sharedPreferences, this.key);
@@ -14,7 +14,7 @@ class ObjectPersistenceOnPrefs<T> implements ObjectPersistence<T> {
   @override
   clear() async {
     loadedItem = null;
-    (await sharedPreferences).remove(key);
+    sharedPreferences.remove(key);
   }
 
   @override
@@ -26,7 +26,7 @@ class ObjectPersistenceOnPrefs<T> implements ObjectPersistence<T> {
   Future<T?> loadItem() async {
     var item = loadedItem;
     if (item == null) {
-      var savedItemJson = (await sharedPreferences).getString(key);
+      var savedItemJson = sharedPreferences.getString(key);
       if (savedItemJson == null) savedItemJson = '';
       item = json.decode(savedItemJson);
       if (item != null) loadedItem = item;
@@ -36,6 +36,6 @@ class ObjectPersistenceOnPrefs<T> implements ObjectPersistence<T> {
   @override
   saveItem(T item) async {
     loadedItem = item;
-    (await sharedPreferences).setString(key, json.encode(item));
+    sharedPreferences.setString(key, json.encode(item));
   }
 }

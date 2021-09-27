@@ -22,8 +22,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MainBindings extends Bindings {
   Env env;
+  SharedPreferences sharedPreferences;
 
-  MainBindings(this.env);
+  MainBindings(this.env, this.sharedPreferences);
 
   @override
   void dependencies() {
@@ -38,8 +39,6 @@ class MainBindings extends Bindings {
     ApiProvider apiProvider = ApiProviderImpl(urlConfigProvider,
         accountProvider, walletInfoProvider, tfaCallback, env.withLogs);
     Session session = Session(walletInfoProvider, accountProvider);
-    Future<SharedPreferences> sharedPreferences =
-        SharedPreferences.getInstance();
     ObjectPersistence<UrlConfig> urlConfigPersistence =
         UrlConfigPersistence(sharedPreferences);
     CredentialsPersistence credentialsPersistence =
@@ -52,6 +51,7 @@ class MainBindings extends Bindings {
     Get.put(apiProvider);
     Get.put(urlConfigProvider);
     Get.put(session);
+    Get.put(sharedPreferences);
     Get.put(urlConfigPersistence);
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);

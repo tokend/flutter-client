@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class Env {
   static late Env value;
@@ -27,9 +28,10 @@ abstract class Env {
   //Theme color
   abstract Color primarySwatch;
 
+  abstract SharedPreferences sharedPreferences;
   Env() {
     value = this;
-    runApp(App(this));
+    runApp(App(this, sharedPreferences));
   }
 
   // Current env name

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'env.dart';
 
-void main() => Production();
 
 class Production extends Env {
+  SharedPreferences sp;
+
   @override
   String apiUrl = 'https://api.demo.tokend.io';
 
@@ -22,4 +24,9 @@ class Production extends Env {
 
   @override
   int logoutTime = 0;
+
+  @override
+  SharedPreferences sharedPreferences;
+
+  Production(this.sp) : sharedPreferences = sp;
 }

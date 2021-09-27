@@ -40,6 +40,9 @@ final Map<String, String> en = {
   "settings": "Settings",
   "log_out": "Log out",
   "footer":"2021 © Distributed Lab.",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "confirm_sign_out": "Are you sure, you want to sign out?",
 
   //errors
   "error_same_passwords": "Passwords must be the same",

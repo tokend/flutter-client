@@ -3,6 +3,6 @@ import 'package:flutter_template/data/storage%20/persistence/object_persitence_o
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UrlConfigPersistence extends ObjectPersistenceOnPrefs<UrlConfig> {
-  UrlConfigPersistence(Future<SharedPreferences> sharedPreferences)
+  UrlConfigPersistence(SharedPreferences sharedPreferences)
       : super(sharedPreferences, 'url_config');
 }
