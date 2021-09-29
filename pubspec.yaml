@@ -41,6 +41,7 @@ dependencies:
   equatable: ^2.0.0
   flutter_bloc: ^7.0.0
   formz: ^0.4.0
+  image_picker: ^0.8.4+2
 
   #Shared preferences
   flutter_secure_storage: ^4.2.1

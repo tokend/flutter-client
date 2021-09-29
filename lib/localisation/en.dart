@@ -19,6 +19,9 @@ final Map<String, String> en = {
   "password_hint": "••••••",
   "confirm_password_label": "Confirm Password",
 
+  //kyc_procedure
+  "kyc_procedure_title": "KYC Procedure",
+
   //recovery
   "title_recovery": "Recovery",
 
