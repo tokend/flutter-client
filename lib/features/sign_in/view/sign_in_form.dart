@@ -278,7 +278,7 @@ updateValidationState(
   key.currentState?.setIsEnabled(isFormValid && network.isNotEmpty);
 }
 
-Future<BlocBuilder<SignInBloc, SignInState>> isSignedIn() async {
+BlocBuilder<SignInBloc, SignInState> isSignedIn() {
   CredentialsPersistence credentialsPersistence = Get.find();
   if (credentialsPersistence.getSavedEmail() != null) {
     Get.offAllNamed('/home');

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:dart_sdk/key_server/models/wallet_info.dart';
 import 'package:dart_wallet/account.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_template/features/sign_in/logic/sign_in_method.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
 import 'package:flutter_template/logic/session.dart';
+import 'package:get/get.dart';
 
 class SignInUseCase {
   String _email;
@@ -53,6 +56,9 @@ class SignInUseCase {
     _credentialsPersistence?.saveCredentials(_walletInfo.email, _password);
     _session.accountProvider.setAccount(_account);
     _session.signInMethod = SignInMethod.CREDENTIALS;
+    Get.lazyPut(() => _session); //TODO refactor
+    Get.lazyPut(() => _session.accountProvider);
+    Get.lazyPut(() => _session.walletInfoProvider);
     return Future.value(true);
   }
 

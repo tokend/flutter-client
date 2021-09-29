@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
@@ -13,10 +15,18 @@ class HomeScreen extends StatelessWidget {
           DrawerBloc(DrawerState(NavItem.dashboard)),
       child: BlocBuilder<DrawerBloc, DrawerState>(
         builder: (BuildContext context, DrawerState state) => Scaffold(
+          body: _getCurrentPage(state.selectedItem),
           drawer: DrawerContent("Joe Shmoe", "shmoe@joesemail.com"),
           //TODO kyc data
           appBar: AppBar(
-            title: Text(_getTextForItem(state.selectedItem)),
+            backgroundColor: context.colorTheme.background,
+            iconTheme: IconThemeData(color: context.colorTheme.accent),
+            title: Text(
+              _getTextForItem(state.selectedItem),
+              style:
+                  TextStyle(color: context.colorTheme.accent, fontSize: 28.0),
+            ),
+            elevation: 0,
           ),
         ),
       ));
@@ -27,5 +37,46 @@ class HomeScreen extends StatelessWidget {
       return listItems.firstWhere((element) => element.item == item).title!;
     }
     return defaultTitle;
+  }
+
+  Widget _getCurrentPage(NavItem item) {
+    switch (item) {
+      case NavItem.dashboard:
+        return BalancesScreen();
+      case NavItem.dashboard:
+        return BalancesScreen();
+      case NavItem.movements:
+        // TODO: Handle this case.
+        break;
+      case NavItem.assets:
+        // TODO: Handle this case.
+        break;
+      case NavItem.sales:
+        // TODO: Handle this case.
+        break;
+      case NavItem.polls:
+        // TODO: Handle this case.
+        break;
+      case NavItem.trade:
+        // TODO: Handle this case.
+        break;
+      case NavItem.issuance_request:
+        // TODO: Handle this case.
+        break;
+      case NavItem.limits:
+        // TODO: Handle this case.
+        break;
+      case NavItem.fees:
+        // TODO: Handle this case.
+        break;
+      case NavItem.settings:
+        // TODO: Handle this case.
+        break;
+      case NavItem.log_out:
+        // TODO: Handle this case.
+        break;
+    }
+
+    return BalancesScreen();
   }
 }

@@ -4,23 +4,20 @@ import 'package:dart_sdk/signing/account_request_signer.dart';
 import 'package:dart_sdk/tfa/tfa_callback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
-import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
-import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/logic/session.dart';
+import 'package:get/get.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:tuple/tuple.dart';
 
 class ApiProviderImpl implements ApiProvider {
   UrlConfigProvider _urlConfigProvider;
-  AccountProvider _accountProvider;
-  WalletInfoProvider _walletInfoProvider;
   TfaCallback? _tfaCallback;
   bool _withLogs = true;
 
   Lock lock = new Lock();
 
-  ApiProviderImpl(this._urlConfigProvider, this._accountProvider,
-      this._walletInfoProvider, this._tfaCallback, this._withLogs);
+  ApiProviderImpl(this._urlConfigProvider, this._tfaCallback, this._withLogs);
 
   String get _url => _urlConfigProvider.getConfig().api;
 
@@ -49,26 +46,28 @@ class ApiProviderImpl implements ApiProvider {
 
   @override
   TokenDApi? getSignedApi() {
-    lock.synchronized(() {
-      var account = _accountProvider.getAccount();
-      if (account == null) return null;
-      var originalAccountId = _walletInfoProvider.getWalletInfo()?.accountId;
-      if (originalAccountId == null) return null;
-      var hash = hashValues(account.accountId, _url);
+    Session session = Get.find();
+    var account = session.accountProvider.getAccount();
+    if (account == null) return null;
 
-      var signedApi;
-      if (signedApiByHash != null && signedApiByHash!.item1 == hash) {
-        signedApi = signedApiByHash!.item2;
-      } else {
-        signedApi = TokenDApi(_url,
-            requestSigner:
-                AccountRequestSigner(account, accountId: originalAccountId),
-            tfaCallback: _tfaCallback,
-            withLogs: _withLogs);
-      }
-      signedApiByHash = Tuple2(hash, signedApi);
-      return signedApi;
-    });
+    var originalAccountId =
+        session.walletInfoProvider.getWalletInfo()?.accountId;
+    if (originalAccountId == null) return null;
+
+    var hash = hashValues(account.accountId, _url);
+
+    var signedApi;
+    if (signedApiByHash != null && signedApiByHash!.item1 == hash) {
+      signedApi = signedApiByHash!.item2;
+    } else {
+      signedApi = TokenDApi(_url,
+          requestSigner:
+              AccountRequestSigner(account, accountId: originalAccountId),
+          tfaCallback: _tfaCallback,
+          withLogs: _withLogs);
+    }
+    signedApiByHash = Tuple2(hash, signedApi);
+    return signedApi;
   }
 
   @override

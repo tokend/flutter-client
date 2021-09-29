@@ -139,12 +139,14 @@ class DrawerContent extends StatelessWidget {
               data.title!,
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 17.0,
               ),
             ),
             leading: Icon(
               data.icon,
               // if it's selected change the color
               color: Colors.white,
+              size: 24.0,
             ),
             onTap: () => _handleItemClick(context, data.item),
           ),

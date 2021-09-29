@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
+import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/home/view/home_screen.dart';
 import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
 import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
@@ -30,6 +31,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MainBindings(env, sharedPreferences).dependencies();
+    var binding = MainBindings(env, sharedPreferences);
     return GetMaterialApp(
       title: 'Flutter Client',
       locale: Get.deviceLocale,
@@ -39,28 +41,21 @@ class App extends StatelessWidget {
         'sign_in': (context) => SignInScaffold(),
         'sign_up': (context) => SignUpScaffold(),
       },
-      home: getHomeWidget(),
+      home: SignInScaffold(),
       getPages: [
         GetPage(
-            name: '/signIn',
-            page: () => SignInScaffold(),
-            binding: MainBindings(env, sharedPreferences)),
+            name: '/signIn', page: () => SignInScaffold(), binding: binding),
         GetPage(
-            name: '/signUp',
-            page: () => SignUpScaffold(),
-            binding: MainBindings(env, sharedPreferences)),
+            name: '/signUp', page: () => SignUpScaffold(), binding: binding),
         GetPage(
-            name: '/qr',
-            page: () => ScanNetworkQrUseCase(),
-            binding: MainBindings(env, sharedPreferences)),
+            name: '/qr', page: () => ScanNetworkQrUseCase(), binding: binding),
         GetPage(
             name: '/recovery',
             page: () => RecoveryScaffold(),
-            binding: MainBindings(env, sharedPreferences)),
+            binding: binding),
+        GetPage(name: '/home', page: () => HomeScreen(), binding: binding),
         GetPage(
-            name: '/home',
-            page: () => HomeScreen(),
-            binding: MainBindings(env, sharedPreferences)),
+            name: '/balances', page: () => BalancesScreen(), binding: binding),
       ],
     );
   }

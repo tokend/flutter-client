@@ -38,7 +38,7 @@ class LightColorTheme implements BaseColorTheme {
   final Color middlePrimary = Color(0xFF5B5B7E);
 
   @override
-  final Color background = Color(0xFFFFFFFF);
+  final Color background = Color(0xFFF5F8FB);
 
   @override
   final Color darkBackground = Color(0xFFF5F5F9);

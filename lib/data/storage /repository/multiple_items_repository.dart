@@ -4,7 +4,7 @@ import 'package:flutter_template/data/storage%20/repository/repository.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Repository that holds a list of [T] items.
-abstract class MultipleItemsRepository<T> implements Repository {
+abstract class MultipleItemsRepository<T> extends Repository {
   Future<List<T>> getItems();
 
   Lock lock = new Lock();

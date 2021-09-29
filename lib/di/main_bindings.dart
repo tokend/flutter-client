@@ -36,8 +36,8 @@ class MainBindings extends Bindings {
     UrlConfigProvider urlConfigProvider = UrlConfigProviderImpl()
       ..setConfig(defaultUrlConfig);
     AppTfaCallback tfaCallback = AppTfaCallback();
-    ApiProvider apiProvider = ApiProviderImpl(urlConfigProvider,
-        accountProvider, walletInfoProvider, tfaCallback, env.withLogs);
+    ApiProvider apiProvider =
+        ApiProviderImpl(urlConfigProvider, tfaCallback, env.withLogs);
     Session session = Session(walletInfoProvider, accountProvider);
     ObjectPersistence<UrlConfig> urlConfigPersistence =
         UrlConfigPersistence(sharedPreferences);

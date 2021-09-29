@@ -26,6 +26,7 @@ final Map<String, String> en = {
   "action_continue": "Continue",
   "action_register": "Register now",
   "action_recovery": "Recovery",
+  "action_send": "Send",
 
   //drawer
   "dashboard": "Dashboard",
