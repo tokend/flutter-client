@@ -5,6 +5,7 @@ import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/kyc/logic/kyc_bloc.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
+import 'package:flutter_template/utils/view/add_image.dart';
 import 'package:flutter_template/utils/view/default_appbar.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:formz/formz.dart';
@@ -55,13 +56,33 @@ class KycForm extends StatelessWidget {
                 child: Column(
                   children: [
                     Center(
-                      child: _AvatarPicker(),
+                      child: _ImageInputField(),
                     )
                   ],
                 ),
               ),
             ));
       }),
+    );
+  }
+}
+
+class _ImageInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.image != current.image,
+      builder: (context, state) {
+        return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: AddImageForm(
+              key: const Key('signUpForm_imageInput_profileImage'),
+              imagePath: state.image.value == '' ? null : state.image.value,
+              onChanged: (image) => context
+                  .read<KycBloc>()
+                  .add(ProfileImageChanged(image: image)),
+            ));
+      },
     );
   }
 }
