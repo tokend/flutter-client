@@ -37,3 +37,16 @@ class LastName extends FormzInput<String, NameError> {
     return _nameRegExp.hasMatch(value) ? null : NameError.invalid;
   }
 }
+
+extension Explanation on NameError {
+  String? get name {
+    switch (this) {
+      case NameError.empty:
+        return 'Field must not be empty';
+      case NameError.invalid:
+        return 'Invalid name';
+      default:
+        return null;
+    }
+  }
+}

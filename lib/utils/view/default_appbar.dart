@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/resources/theme/themes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 
 class DefaultAppBar extends AppBar {
   DefaultAppBar(
-      {required String title,
+      {required BaseColorTheme colorTheme,
+      required String title,
       required Color color,
       required Function onBackPressed})
       : super(
@@ -26,9 +28,9 @@ class DefaultAppBar extends AppBar {
           title: Text(
             title,
             style: TextStyle(
-                color: color,
-                fontSize: Sizes.textSizeDialog,
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w400,
+                fontSize: Sizes.textSizeHeadingLarge,
+                color: colorTheme.accent),
           ),
           centerTitle: true,
         );

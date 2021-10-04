@@ -4,16 +4,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/kyc/logic/kyc_bloc.dart';
-import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
+import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/add_image.dart';
+import 'package:flutter_template/utils/view/base_state.dart';
 import 'package:flutter_template/utils/view/default_appbar.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
+import 'package:flutter_template/utils/view/default_text_field.dart';
+import 'package:flutter_template/utils/view/models/name.dart';
+import 'package:flutter_template/utils/view/models/string_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-class KycForm extends StatelessWidget {
-  KycForm({Key? key}) : super(key: key);
+class KycForm extends StatefulWidget {
+  @override
+  _SetKycFormState createState() => _SetKycFormState();
+}
+
+class _SetKycFormState extends BaseState<KycForm>
+    with AutomaticKeepAliveClientMixin {
   GlobalKey<DefaultButtonState> _kycFormButtonKey =
       GlobalKey<DefaultButtonState>();
 
@@ -45,6 +54,7 @@ class KycForm extends StatelessWidget {
             },
             child: Scaffold(
               appBar: DefaultAppBar(
+                colorTheme: colorTheme,
                 color: colorTheme.primaryText,
                 title: "kyc_procedure_title".tr,
                 onBackPressed: () {
@@ -52,19 +62,93 @@ class KycForm extends StatelessWidget {
                 },
               ),
               body: SafeArea(
-                bottom: false,
-                child: Column(
-                  children: [
-                    Center(
-                      child: _ImageInputField(),
-                    )
-                  ],
-                ),
-              ),
+                  bottom: true,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: _ImageInputField(),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _FirstNameInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _LastNameInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _NationalityInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _PhoneNumberInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _NationalInsuranceInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _TaxIdInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _IdentityCardNumberInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _HighestSchoolNumberInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _VocationTradingCertificateInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _AddressInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _SexInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _DateOfBirthInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _IbanInputField(),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: Sizes.halfStandartPadding),
+                        ),
+                        _KycSubmitButton(_kycFormButtonKey)
+                      ],
+                    ),
+                  )),
             ));
       }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _ImageInputField extends StatelessWidget {
@@ -76,7 +160,7 @@ class _ImageInputField extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: AddImageForm(
-              key: const Key('signUpForm_imageInput_profileImage'),
+              key: const Key('kycForm_imageInput_profileImage'),
               imagePath: state.image.value == '' ? null : state.image.value,
               onChanged: (image) => context
                   .read<KycBloc>()
@@ -87,28 +171,365 @@ class _ImageInputField extends StatelessWidget {
   }
 }
 
-class _AvatarPicker extends StatelessWidget {
-  var _image = null;
-
+class _FirstNameInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () => {},
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: CircleAvatar(
-              backgroundColor: Colors.black,
-              radius: 40.0,
-              child: CircleAvatar(
-                radius: 38.0,
-                child: ClipOval(
-                  child: (_image != null)
-                      ? Image.file(_image)
-                      : Icon(CustomIcons.camera_3_fill),
-                ),
-                backgroundColor: Colors.white,
-              )),
-        ));
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.firstName != current.firstName,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_firstNameInput_profileImage'),
+            error: state.firstName.error != null
+                ? state.firstName.error!.name
+                : null,
+            onChanged: (firstName) => context
+                .read<KycBloc>()
+                .add(FirstNameChanged(firstName: firstName)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LastNameInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.lastName != current.lastName,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_lastNameInput_profileImage'),
+            error: state.lastName.error != null
+                ? state.lastName.error!.name
+                : null,
+            onChanged: (lastName) => context
+                .read<KycBloc>()
+                .add(LastNameChanged(lastName: lastName)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _NationalityInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.nationality != current.nationality,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_nationalityInput_profileImage'),
+            error: state.nationality.error != null
+                ? state.nationality.error!.name
+                : null,
+            onChanged: (nationality) => context
+                .read<KycBloc>()
+                .add(NationalityChanged(nationality: nationality)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PhoneNumberInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.phoneNumber != current.phoneNumber,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_phoneInput_profileImage'),
+            error: state.phoneNumber.error != null
+                ? state.phoneNumber.error!.name
+                : null,
+            onChanged: (phoneNumber) => context
+                .read<KycBloc>()
+                .add(PhoneNumberChanged(phoneNumber: phoneNumber)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _NationalInsuranceInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.nationalInsuranceNumber != current.nationalInsuranceNumber,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('signUpForm_nationalInsuranceInput_textField'),
+            error: state.nationalInsuranceNumber.error != null
+                ? state.nationalInsuranceNumber.error!.name
+                : null,
+            onChanged: (nationalInsuranceNumber) => context.read<KycBloc>().add(
+                NationalInsuranceNumberChanged(
+                    nationalInsuranceNumber: nationalInsuranceNumber)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TaxIdInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.taxId != current.taxId,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_taxIdInput_profileImage'),
+            error: state.taxId.error != null ? state.taxId.error!.name : null,
+            onChanged: (taxId) =>
+                context.read<KycBloc>().add(TaxIdChanged(taxId: taxId)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _IdentityCardNumberInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.identityCardNumber != current.identityCardNumber,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_identityCardInput_profileImage'),
+            error: state.identityCardNumber.error != null
+                ? state.identityCardNumber.error!.name
+                : null,
+            onChanged: (identityCardNumber) => context.read<KycBloc>().add(
+                IdentityCardNumberChanged(
+                    identityCardNumber: identityCardNumber)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _HighestSchoolNumberInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.highestSchoolNumber != current.highestSchoolNumber,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_schoolNumberInput_profileImage'),
+            error: state.highestSchoolNumber.error != null
+                ? state.highestSchoolNumber.error!.name
+                : null,
+            onChanged: (highestSchoolNumber) => context.read<KycBloc>().add(
+                HighestSchoolNumberChanged(
+                    highestSchoolNumber: highestSchoolNumber)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _VocationTradingCertificateInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.vocationTrainingCertificate !=
+          current.vocationTrainingCertificate,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_vocationInput_profileImage'),
+            error: state.vocationTrainingCertificate.error != null
+                ? state.vocationTrainingCertificate.error!.name
+                : null,
+            onChanged: (vocationTrainingCertificate) => context
+                .read<KycBloc>()
+                .add(VocationTrainingCertificateChanged(
+                    vocationTrainingCertificate: vocationTrainingCertificate)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _AddressInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.address != current.address,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_addressInput_profileImage'),
+            error:
+                state.address.error != null ? state.address.error!.name : null,
+            onChanged: (address) =>
+                context.read<KycBloc>().add(AddressChanged(address: address)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SexInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.sex != current.sex,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_sexInput_profileImage'),
+            error: state.sex.error != null ? state.sex.error!.name : null,
+            onChanged: (sex) =>
+                context.read<KycBloc>().add(SexChanged(sex: sex)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DateOfBirthInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) =>
+          previous.dateOfBirth != current.dateOfBirth,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_dateOfBirthInput_profileImage'),
+            error: state.dateOfBirth.error != null
+                ? state.dateOfBirth.error!.name
+                : null,
+            onChanged: (dateOfBirth) => context
+                .read<KycBloc>()
+                .add(DateOfBirthChanged(dateOfBirth: dateOfBirth)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _IbanInputField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return BlocBuilder<KycBloc, KycState>(
+      buildWhen: (previous, current) => previous.iban != current.iban,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DefaultTextField(
+            label: 'email_label'.tr,
+            hint: 'email_hint'.tr,
+            inputType: TextInputType.emailAddress,
+            key: const Key('kycForm_ibanInput_profileImage'),
+            error: state.iban.error != null ? state.iban.error!.name : null,
+            onChanged: (iban) =>
+                context.read<KycBloc>().add(IbanChanged(iban: iban)),
+            colorTheme: colorTheme,
+          ),
+        );
+      },
+    );
   }
 }
 
