@@ -73,7 +73,11 @@ class DefaultTextFieldState extends State<DefaultTextField> {
               valueListenable: _error,
               builder: (context, String? value, child) {
                 return TextFormField(
-                  initialValue: widget.defaultText,
+                  /*decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(15),
+                    suffixText: '${textLength.toString()}/${maxLength.toString()}',
+                    counterText: "",
+                  ),         */         initialValue: widget.defaultText,
                   inputFormatters: widget.textInputFormatters,
                   keyboardType: widget.inputType,
                   onChanged: widget.onChanged,

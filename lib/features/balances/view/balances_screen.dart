@@ -5,31 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/balances/view/balance_item.dart';
+import 'package:flutter_template/features/send/view/send_bottom_dialog.dart';
 import 'package:flutter_template/logic/session.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
-
-final List<BalanceRecord> listOfBalances = [
-  BalanceRecord(
-      '1',
-      AssetRecord(
-          'UAH', 'Hryvnia', 6, 'https://picsum.photos/250?image=9', '1'),
-      5),
-  BalanceRecord(
-      '2',
-      AssetRecord(
-          'BTC', 'Bitcoin', 6, 'https://picsum.photos/250?image=9', '1'),
-      5),
-  BalanceRecord(
-      '3',
-      AssetRecord(
-          'ETH', 'Ethereum', 6, 'https://picsum.photos/250?image=9', '1'),
-      5),
-];
 
 class BalancesScreen extends StatelessWidget {
   @override
@@ -51,25 +33,37 @@ class BalancesScreen extends StatelessWidget {
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(height: 2),
                       scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Builder(
                             builder: (BuildContext context) =>
                                 BalanceItem(snapshot.data![index]));
                       }),
-
-                  Positioned(
-                    bottom: 24.0,
+                  Align(
+                    alignment: FractionalOffset.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 24.0,  right: 24.0),
+                      padding: EdgeInsets.only(
+                          left: 24.0, right: 24.0, bottom: 24.0),
                       child: DefaultButton(
                         colorTheme: context.colorTheme,
                         text: 'action_send'.tr,
-                        onPressed: () {}, //TODO
+                        onPressed: () {
+                          showModalBottomSheet(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12.0),
+                                ),
+                              ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SendScaffold();
+                              });
+                        },
+                        defaultState: true,
                       ),
                     ),
                   )
-                  //TODO: Send button
                 ],
               ),
             );

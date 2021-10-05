@@ -10,6 +10,8 @@ abstract class BaseColorTheme {
   final Color borderUnfocused = Color(0xFFFFFFFF);
   final Color primaryText = Color(0xFFFFFFFF);
   final Color secondaryText = Color(0xFFFFFFFF);
+  final Color headerText = Color(0xFFFFFFFF);
+  final Color grayText = Color(0xFFFFFFFF);
   final Color suffixIcons = Color(0xFFFFFFFF);
   final Color hint = Color(0xFFFFFFFF);
   final Color buttonDisabled = Color(0xFFFFFFFF);
@@ -75,6 +77,12 @@ class LightColorTheme implements BaseColorTheme {
 
   @override
   Color get drawerBackground => Color(0xFF0B2962);
+
+  @override
+  Color get headerText => Color(0xFF200E32);
+
+  @override
+  Color get grayText => Color(0xFF7D8592);
 }
 
 class DarkColorTheme implements BaseColorTheme {
@@ -134,4 +142,9 @@ class DarkColorTheme implements BaseColorTheme {
 
   @override
   Color get drawerBackground => Color(0xFF0B2962);
+
+  @override
+  Color get headerText => Color(0xFF200E32);
+
+  Color get grayText => Color(0xFF7D8592);
 }

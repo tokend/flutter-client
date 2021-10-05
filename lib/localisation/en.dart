@@ -40,7 +40,7 @@ final Map<String, String> en = {
   "fees": "Fees",
   "settings": "Settings",
   "log_out": "Log out",
-  "footer":"2021 © Distributed Lab.",
+  "footer": "2021 © Distributed Lab.",
   "ok": "OK",
   "cancel": "Cancel",
   "confirm_sign_out": "Are you sure, you want to sign out?",
@@ -50,4 +50,13 @@ final Map<String, String> en = {
   "error_weak_password": "Password must be at least 6 characters",
   "error_invalid_email": "Invalid email",
   "error_must_not_be_empty": "Must not be empty",
+
+  //send
+  "send_to": "Send to",
+  "asset": "Asset",
+  "amount": "Amount",
+  "recipient_acc_id": "Recipient email or account ID",
+  "recipient_acc_id_hint": "Enter your email or account ID",
+  "note_hint": "Add note",
+  "confirm_send_op": "Please, confirm sending operation",
 };

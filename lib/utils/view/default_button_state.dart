@@ -26,7 +26,7 @@ class DefaultButtonState extends State<DefaultButton> {
   var _isButtonEnabled = ValueNotifier(true);
 
   DefaultButtonState({this.defaultState = true}) {
-    _isButtonEnabled = ValueNotifier(defaultState);
+    _isButtonEnabled = ValueNotifier(true);
   }
 
   bool getIsEnabled() {
