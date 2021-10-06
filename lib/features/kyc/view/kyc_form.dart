@@ -10,6 +10,7 @@ import 'package:flutter_template/utils/view/base_state.dart';
 import 'package:flutter_template/utils/view/default_appbar.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
+import 'package:flutter_template/utils/view/drop_down_field.dart';
 import 'package:flutter_template/utils/view/models/name.dart';
 import 'package:flutter_template/utils/view/models/string_field.dart';
 import 'package:formz/formz.dart';
@@ -64,82 +65,85 @@ class _SetKycFormState extends BaseState<KycForm>
               body: SafeArea(
                   bottom: true,
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Center(
-                          child: _ImageInputField(),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _FirstNameInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _LastNameInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _NationalityInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _PhoneNumberInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _NationalInsuranceInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _TaxIdInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _IdentityCardNumberInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _HighestSchoolNumberInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _VocationTradingCertificateInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _AddressInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _SexInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _DateOfBirthInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _IbanInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _KycSubmitButton(_kycFormButtonKey)
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: _ImageInputField(),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _FirstNameInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _LastNameInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _NationalityInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _PhoneNumberInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _NationalInsuranceInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _TaxIdInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _IdentityCardNumberInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _HighestSchoolNumberInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _VocationTradingCertificateInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _AddressInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _SexInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _DateOfBirthInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _IbanInputField(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: Sizes.halfStandartPadding),
+                          ),
+                          _KycSubmitButton(_kycFormButtonKey)
+                        ],
+                      ),
                     ),
                   )),
             ));
@@ -181,9 +185,9 @@ class _FirstNameInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'first_name_label'.tr,
+            hint: 'first_name_hint'.tr,
+            inputType: TextInputType.name,
             key: const Key('kycForm_firstNameInput_profileImage'),
             error: state.firstName.error != null
                 ? state.firstName.error!.name
@@ -209,9 +213,9 @@ class _LastNameInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'last_name_label'.tr,
+            hint: 'last_name_hint'.tr,
+            inputType: TextInputType.name,
             key: const Key('kycForm_lastNameInput_profileImage'),
             error: state.lastName.error != null
                 ? state.lastName.error!.name
@@ -238,9 +242,9 @@ class _NationalityInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'nationality_label'.tr,
+            hint: 'nationality_hint'.tr,
+            inputType: TextInputType.name,
             key: const Key('kycForm_nationalityInput_profileImage'),
             error: state.nationality.error != null
                 ? state.nationality.error!.name
@@ -267,9 +271,9 @@ class _PhoneNumberInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'phone_number_label'.tr,
+            hint: 'phone_number_hint'.tr,
+            inputType: TextInputType.phone,
             key: const Key('kycForm_phoneInput_profileImage'),
             error: state.phoneNumber.error != null
                 ? state.phoneNumber.error!.name
@@ -296,9 +300,8 @@ class _NationalInsuranceInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'national_insurance_number_label'.tr,
+            hint: 'national_insurance_number_hint'.tr,
             key: const Key('signUpForm_nationalInsuranceInput_textField'),
             error: state.nationalInsuranceNumber.error != null
                 ? state.nationalInsuranceNumber.error!.name
@@ -324,9 +327,8 @@ class _TaxIdInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'tax_id_label'.tr,
+            hint: 'tax_id_hint'.tr,
             key: const Key('kycForm_taxIdInput_profileImage'),
             error: state.taxId.error != null ? state.taxId.error!.name : null,
             onChanged: (taxId) =>
@@ -350,9 +352,8 @@ class _IdentityCardNumberInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'identity_card_number_label'.tr,
+            hint: 'identity_card_number_hint'.tr,
             key: const Key('kycForm_identityCardInput_profileImage'),
             error: state.identityCardNumber.error != null
                 ? state.identityCardNumber.error!.name
@@ -379,9 +380,8 @@ class _HighestSchoolNumberInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'highest_school_number_label'.tr,
+            hint: 'highest_school_number_hint'.tr,
             key: const Key('kycForm_schoolNumberInput_profileImage'),
             error: state.highestSchoolNumber.error != null
                 ? state.highestSchoolNumber.error!.name
@@ -409,9 +409,8 @@ class _VocationTradingCertificateInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'vocation_training_certificate_label'.tr,
+            hint: 'vocation_training_certificate_hint'.tr,
             key: const Key('kycForm_vocationInput_profileImage'),
             error: state.vocationTrainingCertificate.error != null
                 ? state.vocationTrainingCertificate.error!.name
@@ -438,9 +437,9 @@ class _AddressInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'address_label'.tr,
+            hint: 'address_hint'.tr,
+            inputType: TextInputType.streetAddress,
             key: const Key('kycForm_addressInput_profileImage'),
             error:
                 state.address.error != null ? state.address.error!.name : null,
@@ -458,22 +457,25 @@ class _SexInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
+    var _currencies = [
+      "Male",
+      "Female",
+    ];
     return BlocBuilder<KycBloc, KycState>(
       buildWhen: (previous, current) => previous.sex != current.sex,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: 0.0),
-          child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
-            key: const Key('kycForm_sexInput_profileImage'),
-            error: state.sex.error != null ? state.sex.error!.name : null,
-            onChanged: (sex) =>
-                context.read<KycBloc>().add(SexChanged(sex: sex)),
-            colorTheme: colorTheme,
-          ),
-        );
+            padding: const EdgeInsets.only(bottom: 0.0),
+            child: DropDownField(
+                colorTheme: colorTheme,
+                hintText: "Hint",
+                labelText: "Label",
+                errorText: state.sex.error?.name,
+                currentValue: state.sex.value,
+                onChanged: (String? newValue) {
+                  context.read<KycBloc>().add(SexChanged(sex: newValue));
+                },
+                list: _currencies));
       },
     );
   }
@@ -490,9 +492,9 @@ class _DateOfBirthInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'date_of_birth_label'.tr,
+            hint: 'date_of_birth_hint'.tr,
+            inputType: TextInputType.datetime,
             key: const Key('kycForm_dateOfBirthInput_profileImage'),
             error: state.dateOfBirth.error != null
                 ? state.dateOfBirth.error!.name
@@ -518,9 +520,8 @@ class _IbanInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
-            label: 'email_label'.tr,
-            hint: 'email_hint'.tr,
-            inputType: TextInputType.emailAddress,
+            label: 'iban_label'.tr,
+            hint: 'iban_hint'.tr,
             key: const Key('kycForm_ibanInput_profileImage'),
             error: state.iban.error != null ? state.iban.error!.name : null,
             onChanged: (iban) =>

@@ -9,7 +9,7 @@ class StringField extends FormzInput<String, StringFieldError> {
 
   @override
   StringFieldError? validator(String value) {
-    if (value?.isNotEmpty == false) {
+    if (value.isNotEmpty == false) {
       return StringFieldError.empty;
     } else {
       return null;
