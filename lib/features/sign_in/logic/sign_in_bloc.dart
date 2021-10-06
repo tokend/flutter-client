@@ -10,6 +10,7 @@ import 'package:formz/formz.dart';
 import 'package:get/get.dart' as getX;
 
 part 'sign_in_event.dart';
+
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
@@ -60,6 +61,19 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         var keyServer = KeyServer(api.wallets);
         await SignInUseCase(state.email.value, state.password.value, keyServer,
                 session, credentialsPersistence, walletInfoPersistence)
+            .perform();
+
+        yield state.copyWith(status: FormzStatus.submissionSuccess);
+      } on Exception {
+        yield state.copyWith(status: FormzStatus.submissionFailure);
+      }
+    } else if (event is NotFirstLogIn) {
+      try {
+        var api = apiProvider.getApi();
+        var keyServer = KeyServer(api.wallets);
+        var savedPassword = await event.password;
+        await SignInUseCase(event.email!, savedPassword!, keyServer, session,
+                credentialsPersistence, walletInfoPersistence)
             .perform();
 
         yield state.copyWith(status: FormzStatus.submissionSuccess);

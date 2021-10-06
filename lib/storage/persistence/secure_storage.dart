@@ -54,8 +54,11 @@ class SecureStorage {
     if (secretKey == null) return null;
     try {
       var keychainData = (await _loadKeychainData(secretKey))!;
-      return _getEncryptCipher(secretKey)
-          .decrypt64(String.fromCharCodes(keychainData.cipherText));
+      var iv = IV.fromLength(16);
+
+      return _getEncryptCipher(secretKey).decrypt(
+          Encrypted(base64Decode(keychainData.encodedCipherText)),
+          iv: iv);
     } catch (e, stacktrace) {
       print(stacktrace);
       throw e;
@@ -90,12 +93,12 @@ class SecureStorage {
 
   /// Loads data by given key and decrypts it with password.
   /// Return decrypted data or null if it is not exists or decryption failed
-  Future<Uint8List?> loadWithPassword(String key, String password) async{
+  Future<Uint8List?> loadWithPassword(String key, String password) async {
     Uint8List keyBytes = Uint8List(0);
     var passwordBytes = Uint8List.fromList(password.codeUnits);
 
     try {
-      var keychainData =(await _loadKeychainData(key))!;
+      var keychainData = (await _loadKeychainData(key))!;
       var seed = keychainData.iv;
       keyBytes =
           _getKeyDerivation().derive(passwordBytes, seed, _kdfParams.bytes);

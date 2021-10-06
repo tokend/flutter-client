@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
-import 'package:get/get.dart';
 
-class DefaultTextField extends StatefulWidget {
+class CounterTextField extends StatefulWidget {
   final String title;
   final String hint;
   final String label;
@@ -13,13 +11,14 @@ class DefaultTextField extends StatefulWidget {
   final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
+  final String? suffixText;
   final Widget? suffixIcon;
   final bool showText;
   final ValueChanged<String> onChanged;
   final List<TextInputFormatter>? textInputFormatters;
   final Color background;
 
-  const DefaultTextField(
+  const CounterTextField(
       {Key? key,
       this.background = Colors.transparent,
       this.textInputFormatters,
@@ -31,16 +30,16 @@ class DefaultTextField extends StatefulWidget {
       this.label = "",
       this.defaultText = "",
       this.inputType = TextInputType.text,
+      this.suffixText,
       this.suffixIcon,
       this.showText = true})
       : super(key: key);
 
   @override
-  DefaultTextFieldState createState() => DefaultTextFieldState();
+  CounterTextFieldState createState() => CounterTextFieldState();
 }
 
-class DefaultTextFieldState extends State<DefaultTextField> {
-  Env env = Get.find();
+class CounterTextFieldState extends State<CounterTextField> {
   final _error = ValueNotifier<String?>(null);
 
   final _key = GlobalKey<FormState>();
@@ -53,6 +52,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -83,6 +83,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                     fontWeight: FontWeight.w400,
                     fontSize: Sizes.textSizeDialog,
                   ),
+                  //maxLength: 50,
                   decoration: InputDecoration(
                       filled: false,
                       fillColor: widget.background,
@@ -98,6 +99,8 @@ class DefaultTextFieldState extends State<DefaultTextField> {
                       enabledBorder:
                           _borderStyle(widget.colorTheme.borderUnfocused),
                       focusedBorder: _borderStyle(widget.colorTheme.accent),
+                      counterText: widget.suffixText,
+                      border: OutlineInputBorder(),
                       suffixIcon: widget.suffixIcon),
                 );
               }),

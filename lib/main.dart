@@ -9,7 +9,6 @@ import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
-import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,14 +57,5 @@ class App extends StatelessWidget {
             name: '/balances', page: () => BalancesScreen(), binding: binding),
       ],
     );
-  }
-
-  Widget getHomeWidget() {
-    CredentialsPersistence credentialsPersistence = Get.find();
-    if (credentialsPersistence.getSavedEmail() != null) {
-      return HomeScreen();
-    } else {
-      return SignInScaffold();
-    }
   }
 }

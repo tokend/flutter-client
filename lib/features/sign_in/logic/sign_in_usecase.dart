@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:dart_sdk/key_server/models/wallet_info.dart';
 import 'package:dart_wallet/account.dart';
@@ -53,7 +51,8 @@ class SignInUseCase {
   Future<bool> _updateProviders() async {
     _session.walletInfoProvider.setWalletInfo(_walletInfo);
     await _walletInfoPersistence?.saveWalletInfo(_walletInfo, _password);
-    _credentialsPersistence?.saveCredentials(_walletInfo.email, _password);
+    await _credentialsPersistence?.saveCredentials(
+        _walletInfo.email, _password);
     _session.accountProvider.setAccount(_account);
     _session.signInMethod = SignInMethod.CREDENTIALS;
     Get.lazyPut(() => _session); //TODO refactor

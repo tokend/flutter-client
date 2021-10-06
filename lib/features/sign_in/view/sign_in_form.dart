@@ -31,6 +31,116 @@ class SignInForm extends StatelessWidget {
 
     return ProgressHUD(
       child: Builder(builder: (contextBuilder) {
+        Widget signInWidget = AuthScreenTemplate(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'title_sign_in'.tr,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: Sizes.textSizeHeadingLarge,
+                            color: colorTheme.accent),
+                      ),
+                    ),
+                    Container(
+                      height: screenSize.height * 0.01,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    _NetworkInputField(),
+                    Padding(
+                        padding:
+                            EdgeInsets.only(top: Sizes.halfStandartPadding)),
+                    _EmailInputField(),
+                    Padding(
+                      padding: EdgeInsets.only(top: Sizes.halfStandartPadding),
+                    ),
+                    _PasswordInputField(),
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: Sizes.quartedStandartMargin),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'forgot_password'.tr,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: Sizes.textSizeHint,
+                                color: colorTheme.hint),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'recover_it'.tr,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: Sizes.textSizeHint,
+                                    color: colorTheme.accent),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () => Get.toNamed('/recovery'),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: screenSize.height * 0.027,
+                ),
+                Column(
+                  children: [
+                    _SignInButton(_signInButtonKey),
+                    Padding(
+                        padding: EdgeInsets.only(top: Sizes.standartMargin)),
+                    GestureDetector(
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'dont_have_account'.tr,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: Sizes.textSizeHint,
+                              color: colorTheme.hint),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'action_register'.tr,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: Sizes.textSizeHint,
+                                  color: colorTheme.accent),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () => Get.toNamed('/signUp'),
+                    ),
+                    Container(
+                      height: screenSize.height * 0.04,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+        if (isSignedIn()) { //TODO simplify
+          signInWidget = _LoggedInUseCase(); // Actually no widget, but going to Home screen
+        }
+
         return BlocListener<SignInBloc, SignInState>(
             listener: (context, state) {
               progress = ProgressHUD.of(contextBuilder);
@@ -48,114 +158,7 @@ class SignInForm extends StatelessWidget {
                 Get.offAllNamed('/home');
               }
             },
-            child: AuthScreenTemplate(
-              child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: Sizes.standartPadding),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          height: screenSize.height * 0.1,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'title_sign_in'.tr,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: Sizes.textSizeHeadingLarge,
-                                color: colorTheme.accent),
-                          ),
-                        ),
-                        Container(
-                          height: screenSize.height * 0.01,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        _NetworkInputField(),
-                        Padding(
-                            padding: EdgeInsets.only(
-                                top: Sizes.halfStandartPadding)),
-                        _EmailInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.halfStandartPadding),
-                        ),
-                        _PasswordInputField(),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: Sizes.quartedStandartMargin),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'forgot_password'.tr,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: Sizes.textSizeHint,
-                                    color: colorTheme.hint),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'recover_it'.tr,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: Sizes.textSizeHint,
-                                        color: colorTheme.accent),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () => Get.toNamed('/recovery'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: screenSize.height * 0.027,
-                    ),
-                    Column(
-                      children: [
-                        _SignInButton(_signInButtonKey),
-                        Padding(
-                            padding:
-                                EdgeInsets.only(top: Sizes.standartMargin)),
-                        GestureDetector(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'dont_have_account'.tr,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: Sizes.textSizeHint,
-                                  color: colorTheme.hint),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'action_register'.tr,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: Sizes.textSizeHint,
-                                      color: colorTheme.accent),
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: () => Get.toNamed('/signUp'),
-                        ),
-                        Container(
-                          height: screenSize.height * 0.04,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ));
+            child: signInWidget);
       }),
     );
   }
@@ -187,6 +190,24 @@ class _NetworkInputField extends StatelessWidget {
                 colorTheme: colorTheme),
           );
         });
+  }
+}
+
+class _LoggedInUseCase extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    CredentialsPersistence credentialsPersistence = Get.find();
+
+    return BlocBuilder<SignInBloc, SignInState>(
+      builder: (context, state) {
+        context.read<SignInBloc>().add(NotFirstLogIn(
+            email: credentialsPersistence.getSavedEmail(),
+            password: credentialsPersistence.getSavedPassword()));
+        return Padding(
+          padding: EdgeInsets.zero,
+        );
+      },
+    );
   }
 }
 
@@ -278,14 +299,10 @@ updateValidationState(
   key.currentState?.setIsEnabled(isFormValid && network.isNotEmpty);
 }
 
-BlocBuilder<SignInBloc, SignInState> isSignedIn() {
+bool isSignedIn() {
   CredentialsPersistence credentialsPersistence = Get.find();
   if (credentialsPersistence.getSavedEmail() != null) {
-    Get.offAllNamed('/home');
+    return true;
   }
-  return BlocBuilder(builder: (context, state) {
-    return Padding(
-      padding: EdgeInsets.zero,
-    );
-  });
+  return false;
 }

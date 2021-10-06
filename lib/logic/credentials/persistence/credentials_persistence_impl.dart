@@ -46,15 +46,15 @@ class CredentialsPersistenceImpl extends CredentialsPersistence {
   @override
   Future<void> saveCredentials(String email, String password) async {
     _tryToSavePassword(password);
-    _sharedPreferences.setString(EMAIL_KEY, email);
+    await _sharedPreferences.setString(EMAIL_KEY, email);
   }
 
-  void _tryToSavePassword(String password) {
-    _secureStorage.save(password, PASSWORD_KEY);
+  Future<bool> _tryToSavePassword(String password) async {
+    return await _secureStorage.save(password, PASSWORD_KEY);
   }
 
   static const PASSWORD_KEY = 'my 32 length key................';
-      //'(¬_¬)'; ///TODO add key generation
-  static const EMAIL_KEY = 'email';
 
+  //'(¬_¬)'; ///TODO add key generation
+  static const EMAIL_KEY = 'email';
 }

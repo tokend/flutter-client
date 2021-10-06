@@ -37,8 +37,7 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
       try {
         this.paymentRequest = await CreatePaymentRequestUseCase(
                 PaymentRecipient(
-                    'GBOHO26UF6IUECXAQ74C4NYUEJX72RER3SLETJXIU3F67YHLGIJXNUKO',
-                    'nickname is not set for now'),
+                    state.recipient, 'nickname is not set for now'),
                 state.amount,
                 state.balanceRecord!,
                 state.notes,
