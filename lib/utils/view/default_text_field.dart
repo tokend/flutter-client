@@ -9,31 +9,35 @@ class DefaultTextField extends StatefulWidget {
   final String title;
   final String hint;
   final String label;
-  final String defaultText;
   final String? error;
   final BaseColorTheme colorTheme;
   final TextInputType inputType;
   final Widget? suffixIcon;
   final bool showText;
+  final bool isEnabled;
   final ValueChanged<String> onChanged;
+  final Function()? onTap;
   final List<TextInputFormatter>? textInputFormatters;
+  final TextEditingController? textEditingController;
   final Color background;
 
-  const DefaultTextField(
-      {Key? key,
-      this.background = Colors.transparent,
-      this.textInputFormatters,
-      this.title = "",
-      this.error,
-      required this.onChanged,
-      required this.colorTheme,
-      this.hint = "",
-      this.label = "",
-      this.defaultText = "",
-      this.inputType = TextInputType.text,
-      this.suffixIcon,
-      this.showText = true})
-      : super(key: key);
+  const DefaultTextField({
+    Key? key,
+    this.background = Colors.transparent,
+    this.textInputFormatters,
+    this.title = "",
+    this.error,
+    this.onTap = null,
+    this.textEditingController,
+    required this.onChanged,
+    required this.colorTheme,
+    this.hint = "",
+    this.label = "",
+    this.inputType = TextInputType.text,
+    this.suffixIcon,
+    this.showText = true,
+    this.isEnabled = true,
+  }) : super(key: key);
 
   @override
   DefaultTextFieldState createState() => DefaultTextFieldState();
@@ -73,7 +77,10 @@ class DefaultTextFieldState extends State<DefaultTextField> {
               valueListenable: _error,
               builder: (context, String? value, child) {
                 return TextFormField(
-                  initialValue: widget.defaultText,
+                  controller: widget.textEditingController,
+                  onTap: widget.onTap,
+                  focusNode: widget.isEnabled ? null : FocusNode(),
+                  readOnly: !widget.isEnabled,
                   inputFormatters: widget.textInputFormatters,
                   keyboardType: widget.inputType,
                   onChanged: widget.onChanged,
@@ -113,4 +120,9 @@ class DefaultTextFieldState extends State<DefaultTextField> {
       borderRadius: BorderRadius.circular(Sizes.mediumRadius),
     );
   }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

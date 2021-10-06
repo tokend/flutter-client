@@ -5,8 +5,10 @@ import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/kyc/logic/kyc_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:flutter_template/utils/view/add_image.dart';
 import 'package:flutter_template/utils/view/base_state.dart';
+import 'package:flutter_template/utils/view/date/date_picker.dart';
 import 'package:flutter_template/utils/view/default_appbar.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_template/utils/view/models/string_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:intl/intl.dart';
 
 class KycForm extends StatefulWidget {
   @override
@@ -403,7 +406,7 @@ class _VocationTradingCertificateInputField extends StatelessWidget {
     final colorTheme = context.colorTheme;
     return BlocBuilder<KycBloc, KycState>(
       buildWhen: (previous, current) =>
-          previous.vocationTrainingCertificate !=
+      previous.vocationTrainingCertificate !=
           current.vocationTrainingCertificate,
       builder: (context, state) {
         return Padding(
@@ -482,9 +485,11 @@ class _SexInputField extends StatelessWidget {
 }
 
 class _DateOfBirthInputField extends StatelessWidget {
+  final TextEditingController _controller = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
-    final colorTheme = context.colorTheme;
+  Widget build(BuildContext buildContext) {
+    final colorTheme = buildContext.colorTheme;
     return BlocBuilder<KycBloc, KycState>(
       buildWhen: (previous, current) =>
           previous.dateOfBirth != current.dateOfBirth,
@@ -492,9 +497,21 @@ class _DateOfBirthInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: DefaultTextField(
+            isEnabled: false,
+            textEditingController: _controller,
+            onTap: () => selectDate(buildContext).then((value) {
+              if (value != null) {
+                context
+                    .read<KycBloc>()
+                    .add(DateOfBirthChanged(dateOfBirth: value));
+                _controller.text = DateFormat("dd.MM.yyyy").format(
+                    DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(value));
+              }
+            }),
             label: 'date_of_birth_label'.tr,
             hint: 'date_of_birth_hint'.tr,
-            inputType: TextInputType.datetime,
+            inputType: TextInputType.none,
+            suffixIcon: Icon(CustomIcons.calendar_2),
             key: const Key('kycForm_dateOfBirthInput_profileImage'),
             error: state.dateOfBirth.error != null
                 ? state.dateOfBirth.error!.name

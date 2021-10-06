@@ -181,7 +181,7 @@ class _NetworkInputField extends StatelessWidget {
                   context.read<SignInBloc>().add(NetworkChanged(network));
                 },
                 label: "network_label".tr,
-                defaultText: env.apiUrl,
+                textEditingController: TextEditingController(text: env.apiUrl),
                 suffixIcon: IconButton(
                   icon: Icon(CustomIcons.scan_barcode),
                   onPressed: () {
