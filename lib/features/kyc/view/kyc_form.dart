@@ -11,6 +11,7 @@ import 'package:flutter_template/utils/view/base_state.dart';
 import 'package:flutter_template/utils/view/date/date_picker.dart';
 import 'package:flutter_template/utils/view/default_appbar.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
+import 'package:flutter_template/utils/view/default_phone_number_field.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/drop_down_field.dart';
 import 'package:flutter_template/utils/view/models/name.dart';
@@ -29,6 +30,8 @@ class _SetKycFormState extends BaseState<KycForm>
     with AutomaticKeepAliveClientMixin {
   GlobalKey<DefaultButtonState> _kycFormButtonKey =
       GlobalKey<DefaultButtonState>();
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class _SetKycFormState extends BaseState<KycForm>
                             padding:
                                 EdgeInsets.only(top: Sizes.halfStandartPadding),
                           ),
-                          _PhoneNumberInputField(),
+                          _PhoneNumberInputField(formKey: formKey),
                           Padding(
                             padding:
                                 EdgeInsets.only(top: Sizes.halfStandartPadding),
@@ -264,6 +267,12 @@ class _NationalityInputField extends StatelessWidget {
 }
 
 class _PhoneNumberInputField extends StatelessWidget {
+  GlobalKey<FormState> formKey;
+
+  _PhoneNumberInputField({required this.formKey});
+
+  TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
@@ -273,18 +282,20 @@ class _PhoneNumberInputField extends StatelessWidget {
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
-          child: DefaultTextField(
-            label: 'phone_number_label'.tr,
-            hint: 'phone_number_hint'.tr,
-            inputType: TextInputType.phone,
-            key: const Key('kycForm_phoneInput_profileImage'),
+          child: DefaultPhoneNumberField(
+            formKey: formKey,
+            controller: controller,
+            onChanged: (String value) {
+              context
+                  .read<KycBloc>()
+                  .add(PhoneNumberChanged(phoneNumber: value));
+            },
+            colorTheme: colorTheme,
             error: state.phoneNumber.error != null
                 ? state.phoneNumber.error!.name
                 : null,
-            onChanged: (phoneNumber) => context
-                .read<KycBloc>()
-                .add(PhoneNumberChanged(phoneNumber: phoneNumber)),
-            colorTheme: colorTheme,
+            label: 'phone_number_label'.tr,
+            hint: 'phone_number_hint'.tr,
           ),
         );
       },
