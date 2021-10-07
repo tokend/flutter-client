@@ -55,11 +55,16 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
       RepositoryProvider repositoryProvider = Get.find();
 
       if (this.paymentRequest != null) {
-        await ConfirmPaymentRequestUseCase(this.paymentRequest!,
-                accountProvider, repositoryProvider, txManager)
-            .perform();
+        try {
+          await ConfirmPaymentRequestUseCase(this.paymentRequest!,
+                  accountProvider, repositoryProvider, txManager)
+              .perform();
+          yield state.copyWith(isFilled: event.isRequestCreated);
+        } catch (e, stacktrace) {
+          log(stacktrace.toString());
+          yield state.copyWith(error: e as Exception);
+        }
       }
-      yield state.copyWith(isFilled: event.isRequestCreated);
     }
   }
 }

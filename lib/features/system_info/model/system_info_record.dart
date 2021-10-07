@@ -19,9 +19,10 @@ class SystemInfoRecord {
   SystemInfoRecord.fromHorizonState(HorizonStateResource source)
       : passphrase = source.data.networkPassphrase,
         precisionMultiplier = source.data.precision,
-        timeOffsetSeconds = (source.data.currentTimeUnix -
-                DateTime.now().millisecondsSinceEpoch) ~/
-            1000,
+        timeOffsetSeconds =
+            (DateTime.parse(source.data.currentTime).millisecondsSinceEpoch -
+                    DateTime.now().millisecondsSinceEpoch) ~/
+                1000,
         latestBlock = source.data.core.latest;
 
   NetworkParams toNetworkParams() {

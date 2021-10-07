@@ -53,7 +53,7 @@ class ConfirmPaymentRequestUseCase {
       return Future.error(StateError('Cannot obtain current account'));
     }
 
-    transaction.addSignature(account);
+    await transaction.addSignature(account);
 
     return Future.value(transaction);
   }
