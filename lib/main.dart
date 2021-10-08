@@ -37,6 +37,7 @@ class App extends StatelessWidget {
         fallbackLocale: Locale('en', 'US'),
         // home: SignInScaffold(),
         home: KycScaffold(),
+        // home: SignUpScaffold(),
         getPages: getPageList(env));
   }
 }

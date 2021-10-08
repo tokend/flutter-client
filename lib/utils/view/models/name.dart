@@ -41,8 +41,8 @@ class LastName extends FormzInput<String, NameError> {
 extension Explanation on NameError {
   String? get name {
     switch (this) {
-      case NameError.empty:
-        return 'Field must not be empty';
+      /*case NameError.empty:
+        return 'Field must not be empty';*/
       case NameError.invalid:
         return 'Invalid name';
       default:

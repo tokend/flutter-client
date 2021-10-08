@@ -20,8 +20,8 @@ class StringField extends FormzInput<String, StringFieldError> {
 extension Explanation on StringFieldError {
   String? get name {
     switch (this) {
-      case StringFieldError.empty:
-        return 'Field must not be empty';
+      /*case StringFieldError.empty:
+        return 'Field must not be empty';*/
       default:
         return null;
     }
