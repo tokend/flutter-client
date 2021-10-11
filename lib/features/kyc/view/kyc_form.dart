@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/kyc/logic/kyc_bloc.dart';
+import 'package:flutter_template/features/kyc/logic/bloc/kyc_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:flutter_template/utils/view/add_image.dart';
