@@ -29,8 +29,8 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
 
   @override
   Stream<SignInState> mapEventToState(
-    SignInEvent event,
-  ) async* {
+      SignInEvent event,
+      ) async* {
     if (event is EmailChanged) {
       final email = Email.dirty(value: event.email!);
       yield state.copyWith(
@@ -63,7 +63,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         var api = apiProvider.getApi();
         var keyServer = KeyServer(api.wallets);
         await SignInUseCase(state.email.value, state.password.value, keyServer,
-                session, credentialsPersistence, walletInfoPersistence)
+            session, credentialsPersistence, walletInfoPersistence)
             .perform();
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } catch (e, stacktrace) {
@@ -80,7 +80,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         var keyServer = KeyServer(api.wallets);
         var savedPassword = await event.password;
         await SignInUseCase(event.email!, savedPassword!, keyServer, session,
-                credentialsPersistence, walletInfoPersistence)
+            credentialsPersistence, walletInfoPersistence)
             .perform();
 
         yield state.copyWith(status: FormzStatus.submissionSuccess);

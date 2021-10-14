@@ -22,6 +22,9 @@ import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_template/utils/error_handler/default_error_handler.dart';
+import 'package:flutter_template/utils/error_handler/error_handler.dart';
+import 'package:flutter_template/view/toast_manager.dart';
 
 class MainBindings extends Bindings {
   Env env;
@@ -54,6 +57,9 @@ class MainBindings extends Bindings {
         walletInfoProvider: walletInfoProvider,
         urlConfigProvider: urlConfigProvider,
         persistencePreferences: sharedPreferences);
+    ToastManager toastManager = ToastManager();
+    ErrorHandler errorHandler = DefaultErrorHandler(toastManager);
+
     //Put to GetX pool
     Get.put(env);
     Get.put(apiProvider);
@@ -65,6 +71,8 @@ class MainBindings extends Bindings {
     Get.put(walletInfoPersistence);
     Get.lazyPut(() => txManager);
     Get.lazyPut(() => repositoryProvider);
+    Get.put(toastManager);
+    Get.put(errorHandler);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example
   }
 }

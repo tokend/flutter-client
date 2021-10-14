@@ -6,13 +6,14 @@ class SignInState extends Equatable {
     this.password, {
     this.network = '',
     this.status = FormzStatus.pure,
+    this.error,
   });
 
   final String network;
   final Email email;
   final Password password;
   final FormzStatus status;
-
+  Object? error;
   @override
   List<Object> get props => [network, email, password, status];
 
@@ -21,12 +22,14 @@ class SignInState extends Equatable {
     Email? email,
     Password? password,
     FormzStatus? status,
+    Object? error,
   }) {
     return SignInState(
       email ?? this.email,
       password ?? this.password,
       network: network ?? this.network,
       status: status ?? this.status,
+      error: error ?? this.error,
     );
   }
 }
