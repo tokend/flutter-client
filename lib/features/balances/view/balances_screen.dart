@@ -7,6 +7,7 @@ import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/balances/view/balance_item.dart';
 import 'package:flutter_template/features/send/view/send_bottom_dialog.dart';
+import 'package:flutter_template/utils/view/default_bottom_dialog.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
 
@@ -48,21 +49,14 @@ class BalancesScreen extends StatelessWidget {
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
-                              builder: (context) => Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.9,
-                                    decoration: new BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: new BorderRadius.only(
-                                        topLeft: const Radius.circular(12.0),
-                                        topRight: const Radius.circular(12.0),
-                                      ),
-                                    ),
-                                    child: SendScaffold(
+                              builder: (context) => DefaultBottomDialog(
+                                    SendScaffold(
                                         snapshot.data!,
                                         snapshot.data!
                                             .map((item) => item.asset)
                                             .toList()),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.9,
                                   ));
                         },
                         defaultState: true,

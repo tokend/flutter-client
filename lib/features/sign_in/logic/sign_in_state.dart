@@ -1,10 +1,10 @@
 part of 'sign_in_bloc.dart';
 
 class SignInState extends Equatable {
-  SignInState({
+  SignInState(
+    this.email,
+    this.password, {
     this.network = '',
-    this.email = const Email.pure(),
-    this.password = const Password.pure(),
     this.status = FormzStatus.pure,
   });
 
@@ -23,15 +23,10 @@ class SignInState extends Equatable {
     FormzStatus? status,
   }) {
     return SignInState(
+      email ?? this.email,
+      password ?? this.password,
       network: network ?? this.network,
-      email: email ?? this.email,
-      password: password ?? this.password,
       status: status ?? this.status,
     );
   }
-}
-
-class SignInInitial extends SignInState {
-  @override
-  List<Object> get props => [];
 }

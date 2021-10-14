@@ -1,11 +1,14 @@
 import 'package:formz/formz.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-enum EmailValidationError { empty, invalid }
+enum EmailValidationError { empty, invalid, alreadyTaken }
 
 class Email extends FormzInput<String, EmailValidationError> {
-  const Email.pure() : super.pure('');
+  Email.pure() : super.pure('');
 
-  const Email.dirty([String value = '']) : super.dirty(value);
+  Email.dirty({String value = '', this.serverError}) : super.dirty(value);
+
+  Exception? serverError;
 
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
@@ -13,6 +16,9 @@ class Email extends FormzInput<String, EmailValidationError> {
 
   @override
   EmailValidationError? validator(String value) {
+    if (serverError != null) {
+      return EmailValidationError.alreadyTaken;
+    }
     if (value.isEmpty) {
       return EmailValidationError.empty;
     }
@@ -23,8 +29,10 @@ class Email extends FormzInput<String, EmailValidationError> {
 extension Explanation on EmailValidationError {
   String? get name {
     switch (this) {
+      case EmailValidationError.alreadyTaken:
+        return 'error_already_taken_email'.tr;
       case EmailValidationError.invalid:
-        return "This is not a valid email";
+        return 'error_invalid_email'.tr;
       default:
         return null;
     }

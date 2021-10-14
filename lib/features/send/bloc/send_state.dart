@@ -1,8 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
-import 'package:flutter_template/features/assets/model/asset_record.dart';
-import 'package:flutter_template/features/assets/model/simple_asset.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 
 class SendState extends Equatable {
@@ -14,6 +12,7 @@ class SendState extends Equatable {
   final bool isFormFilled;
   final bool isRequestReady;
   final bool isRequestConfirmed;
+  final bool isRequestSubmitted;
   final Exception? error;
 
   SendState({
@@ -25,6 +24,7 @@ class SendState extends Equatable {
     this.isFormFilled = false,
     this.isRequestReady = false,
     this.isRequestConfirmed = false,
+    this.isRequestSubmitted = false,
     this.error,
   });
 
@@ -37,7 +37,9 @@ class SendState extends Equatable {
         notes,
         isFormFilled,
         isRequestReady,
-        isRequestConfirmed
+        isRequestConfirmed,
+        isRequestSubmitted,
+        error
       ];
 
   SendState copyWith({
@@ -49,6 +51,7 @@ class SendState extends Equatable {
     bool? isFilled,
     bool? isRequestReady,
     bool? isRequestConfirmed,
+    bool? isRequestSubmitted,
     Exception? error,
   }) {
     return SendState(
@@ -60,19 +63,16 @@ class SendState extends Equatable {
       isFormFilled: isFilled ?? this.isFormFilled,
       isRequestReady: isRequestReady ?? this.isRequestReady,
       isRequestConfirmed: isRequestConfirmed ?? this.isRequestConfirmed,
+      isRequestSubmitted: isRequestSubmitted ?? this.isRequestSubmitted,
       error: error ?? this.error,
     );
   }
 }
 
 class SendInitial extends SendState {
-  SendInitial()
-      : super(
-            asset: SimpleAsset('BTC', 'Bitcoin', 6),
-            amount: Decimal.fromInt(0),
-            balanceRecord: BalanceRecord(
-                'BAWKBCNP7XTLGO5YXTRMC6M2AIYQP6LDHKYHASDLAOGRXRLA7I74HWHZ',
-                AssetRecord('BTC', 'Bitcoin', 6, null,
-                    'GBA4EX43M25UPV4WIE6RRMQOFTWXZZRIPFAI5VPY6Z2ZVVXVWZ6NEOOB'),
-                100));//TODO
+  Asset asset;
+  BalanceRecord balanceRecord;
+
+  SendInitial(this.asset, this.balanceRecord)
+      : super(asset: asset, amount: Decimal.zero, balanceRecord: balanceRecord);
 }

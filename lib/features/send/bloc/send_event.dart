@@ -64,13 +64,24 @@ class FormFilled extends SendEvent {
   List<Object?> get props => [isFilled];
 }
 
-class RequestCreated extends SendEvent {
-  const RequestCreated(
-    this.isRequestCreated,
+class RequestConfirmed extends SendEvent {
+  const RequestConfirmed(
+    this.isRequestConfirmed,
   );
 
-  final bool? isRequestCreated;
+  final bool? isRequestConfirmed;
 
   @override
-  List<Object?> get props => [isRequestCreated];
+  List<Object?> get props => [isRequestConfirmed];
+}
+
+class RequestSubmitted extends SendEvent {
+  const RequestSubmitted(
+    this.isRequestSubmitted,
+  );
+
+  final bool? isRequestSubmitted;
+
+  @override
+  List<Object?> get props => [isRequestSubmitted];
 }

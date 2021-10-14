@@ -49,7 +49,9 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         log(stacktrace.toString());
         yield state.copyWith(error: e as Exception);
       }
-    } else if (event is RequestCreated) {
+    } else if (event is RequestConfirmed) {
+      yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
+
       AccountProvider accountProvider = Get.find();
       TxManager txManager = Get.find();
       RepositoryProvider repositoryProvider = Get.find();
@@ -59,9 +61,10 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
           await ConfirmPaymentRequestUseCase(this.paymentRequest!,
                   accountProvider, repositoryProvider, txManager)
               .perform();
-          yield state.copyWith(isFilled: event.isRequestCreated);
+          yield state.copyWith(isRequestSubmitted: true);
         } catch (e, stacktrace) {
           log(stacktrace.toString());
+          //yield state.copyWith(isRequestSubmitted: false);
           yield state.copyWith(error: e as Exception);
         }
       }

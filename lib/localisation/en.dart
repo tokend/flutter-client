@@ -48,8 +48,9 @@ final Map<String, String> en = {
   //errors
   "error_same_passwords": "Passwords must be the same",
   "error_weak_password": "Password must be at least 6 characters",
-  "error_invalid_email": "Invalid email",
+  "error_invalid_email": "This is not a valid email",
   "error_must_not_be_empty": "Must not be empty",
+  "error_already_taken_email": "Email is already taken",
 
   //send
   "send_to": "Send to",

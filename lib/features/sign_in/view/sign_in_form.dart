@@ -137,8 +137,10 @@ class SignInForm extends StatelessWidget {
           ),
         );
 
-        if (isSignedIn()) { //TODO simplify
-          signInWidget = _LoggedInUseCase(); // Actually no widget, but going to Home screen
+        if (isSignedIn()) {
+          //TODO simplify
+          signInWidget =
+              _LoggedInUseCase(); // Actually no widget, but going to Home screen
         }
 
         return BlocListener<SignInBloc, SignInState>(
@@ -284,7 +286,8 @@ class _SignInButton extends StatelessWidget {
           defaultState: false,
           onPressed: () {
             state.status.isValidated
-                ? context.read<SignInBloc>().add(FormSubmitted())
+                ? context.read<SignInBloc>().add(FormSubmitted(
+                    email: state.email.value, password: state.password.value))
                 : null;
           },
           colorTheme: colorTheme,

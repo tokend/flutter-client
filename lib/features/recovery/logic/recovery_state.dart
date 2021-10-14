@@ -1,9 +1,9 @@
 part of 'recovery_bloc.dart';
 
 class RecoveryState extends Equatable {
-  const RecoveryState({
-    this.email = const Email.pure(),
-    this.password = const Password.pure(),
+  const RecoveryState(
+    this.email,
+    this.password, {
     this.confirmPassword = const ConfirmPassword.pure(),
     this.status = FormzStatus.pure,
   });
@@ -23,15 +23,16 @@ class RecoveryState extends Equatable {
     FormzStatus? status,
   }) {
     return RecoveryState(
-      email: email ?? this.email,
-      password: password ?? this.password,
+      email ?? this.email,
+      password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       status: status ?? this.status,
     );
   }
-}
+} /*
 
 class RecoveryInitial extends RecoveryState {
   @override
   List<Object> get props => [];
 }
+*/

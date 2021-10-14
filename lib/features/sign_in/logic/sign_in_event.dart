@@ -48,4 +48,12 @@ class NotFirstLogIn extends SignInEvent {
   List<Object?> get props => [email, password];
 }
 
-class FormSubmitted extends SignInEvent {}
+class FormSubmitted extends SignInEvent {
+  const FormSubmitted({required this.email, required this.password});
+
+  final String? email;
+  final String? password;
+
+  @override
+  List<Object?> get props => [email, password];
+}

@@ -23,11 +23,10 @@ class SignInUseCase {
 
   Future<void> perform() {
     return _getWalletInfo(_email, _password)
-        .catchError((error, stacktrace) => {print(stacktrace)})
         .then((walletInfo) => this._walletInfo = walletInfo)
         .then((walletInfo) => _getAccountFromWalletInfo())
         .then((account) => this._account = account)
-        .whenComplete(() => _updateProviders());
+        .then((_) => _updateProviders());
 
     //TODO add postSignIn invoking
   }
@@ -49,16 +48,21 @@ class SignInUseCase {
   }
 
   Future<bool> _updateProviders() async {
-    _session.walletInfoProvider.setWalletInfo(_walletInfo);
-    await _walletInfoPersistence?.saveWalletInfo(_walletInfo, _password);
-    await _credentialsPersistence?.saveCredentials(
-        _walletInfo.email, _password);
-    _session.accountProvider.setAccount(_account);
-    _session.signInMethod = SignInMethod.CREDENTIALS;
-    Get.lazyPut(() => _session); //TODO refactor
-    Get.lazyPut(() => _session.accountProvider);
-    Get.lazyPut(() => _session.walletInfoProvider);
-    return Future.value(true);
+    try {
+      _session.walletInfoProvider.setWalletInfo(_walletInfo);
+      await _walletInfoPersistence?.saveWalletInfo(_walletInfo, _password);
+      await _credentialsPersistence?.saveCredentials(
+          _walletInfo.email, _password);
+      _session.accountProvider.setAccount(_account);
+      _session.signInMethod = SignInMethod.CREDENTIALS;
+      Get.lazyPut(() => _session); //TODO refactor
+      Get.lazyPut(() => _session.accountProvider);
+      Get.lazyPut(() => _session.walletInfoProvider);
+      return Future.value(true);
+    } catch (e, s) {
+      print(s);
+      return Future.value(false);
+    }
   }
 
 //TODO performPostSignIn
