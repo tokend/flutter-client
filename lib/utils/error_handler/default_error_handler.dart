@@ -12,14 +12,14 @@ class DefaultErrorHandler implements ErrorHandler {
   @override
   String? getErrorMessage(Exception error) {
     String message = 'error_try_again'.tr;
-    if (error is DioError) {
+    if (error is TransactionFailedException) {
+      message = getTransactionFailedMessage(error);
+    } else if (error is DioError) {
       if (error.type == DioErrorType.connectTimeout) {
         message = 'error_connection_try_again'.tr;
       } else if (error.response?.statusCode == 401) {
         message = 'error_unauthorized'.tr;
       }
-    } else if (error is TransactionFailedException) {
-      message = getTransactionFailedMessage(error);
     }
 
     return message;

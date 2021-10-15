@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_wallet/network_params.dart';
 import 'package:dart_wallet/transaction.dart' as tr;
 import 'package:dart_wallet/transaction_builder.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/features/send/model/payment_request.dart';
 import 'package:flutter_template/logic/tx_manager.dart';
+
+class InvalidRecipientException implements Exception {}
 
 class ConfirmPaymentRequestUseCase {
   PaymentRequest _request;
@@ -32,30 +36,38 @@ class ConfirmPaymentRequestUseCase {
   }
 
   Future<tr.Transaction> getTransaction() async {
-    var operation = SimplePaymentOp.fromPubKeys(
-      _request.senderBalanceId,
-      _request.recipient.accountId,
-      Int64(_networkParams.amountToPrecised(_request.amount.toDouble())),
-      PaymentFeeData(
-          _request.fee.senderFee.toXdrFee(_networkParams),
-          _request.fee.recipientFee.toXdrFee(_networkParams),
-          _request.fee.senderPaysForRecipient,
-          PaymentFeeDataExtEmptyVersion()),
-    );
+    try {
+      var operation = SimplePaymentOp.fromPubKeys(
+        _request.senderBalanceId,
+        _request.recipient.accountId,
+        Int64(_networkParams.amountToPrecised(_request.amount.toDouble())),
+        PaymentFeeData(
+            _request.fee.senderFee.toXdrFee(_networkParams),
+            _request.fee.recipientFee.toXdrFee(_networkParams),
+            _request.fee.senderPaysForRecipient,
+            PaymentFeeDataExtEmptyVersion()),
+      );
 
-    var transaction = await TransactionBuilder.FromPubKey(
-            _networkParams, _request.senderAccountId)
-        .addOperation(OperationBodyPayment(operation))
-        .build();
+      var transaction = await TransactionBuilder.FromPubKey(
+              _networkParams, _request.senderAccountId)
+          .addOperation(OperationBodyPayment(operation))
+          .build();
 
-    var account = _accountProvider.getAccount();
-    if (account == null) {
-      return Future.error(StateError('Cannot obtain current account'));
+      var account = _accountProvider.getAccount();
+      if (account == null) {
+        return Future.error(StateError('Cannot obtain current account'));
+      }
+
+      await transaction.addSignature(account);
+
+      return Future.value(transaction);
+    } catch (e, s) {
+      log(s.toString());
+      if (e is ArgumentError) {
+        throw InvalidRecipientException();
+      }
+      throw e;
     }
-
-    await transaction.addSignature(account);
-
-    return Future.value(transaction);
   }
 
   Future<NetworkParams> getNetworkParams() {

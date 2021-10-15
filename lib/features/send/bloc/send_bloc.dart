@@ -13,6 +13,8 @@ import 'package:flutter_template/features/send/model/payment_fee.dart';
 import 'package:flutter_template/features/send/model/payment_recipient.dart';
 import 'package:flutter_template/features/send/model/payment_request.dart';
 import 'package:flutter_template/logic/tx_manager.dart';
+import 'package:flutter_template/utils/error_handler/error_handler.dart';
+import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 
 class SendBloc extends BaseBloc<SendEvent, SendState> {
@@ -38,6 +40,7 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         this.paymentRequest = await CreatePaymentRequestUseCase(
                 PaymentRecipient(
                     state.recipient, 'nickname is not set for now'),
+                //TODO handle nickname setting
                 state.amount,
                 state.balanceRecord!,
                 state.notes,
@@ -47,7 +50,7 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         yield state.copyWith(isRequestReady: true);
       } catch (e, stacktrace) {
         log(stacktrace.toString());
-        yield state.copyWith(error: e as Exception);
+        yield SendInitial(state.asset, state.balanceRecord!);
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
@@ -55,7 +58,8 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
       AccountProvider accountProvider = Get.find();
       TxManager txManager = Get.find();
       RepositoryProvider repositoryProvider = Get.find();
-
+      ErrorHandler errorHandler = Get.find();
+      ToastManager toastManager = Get.find();
       if (this.paymentRequest != null) {
         try {
           await ConfirmPaymentRequestUseCase(this.paymentRequest!,
@@ -64,7 +68,12 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
           yield state.copyWith(isRequestSubmitted: true);
         } catch (e, stacktrace) {
           log(stacktrace.toString());
-          //yield state.copyWith(isRequestSubmitted: false);
+          if (e is InvalidRecipientException) {
+            toastManager.showShortToast('Invalid recipient');
+          } else if (e is Exception) {
+            errorHandler.handle(e);
+          }
+          yield SendInitial(state.asset, state.balanceRecord!);
           yield state.copyWith(error: e as Exception);
         }
       }

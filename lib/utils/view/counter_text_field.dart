@@ -17,6 +17,8 @@ class CounterTextField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final List<TextInputFormatter>? textInputFormatters;
   final Color background;
+  final int? maxLines;
+  final int? maxLength;
 
   const CounterTextField(
       {Key? key,
@@ -30,6 +32,8 @@ class CounterTextField extends StatefulWidget {
       this.label = "",
       this.defaultText = "",
       this.inputType = TextInputType.text,
+      this.maxLines,
+      this.maxLength = 50,
       this.suffixText,
       this.suffixIcon,
       this.showText = true})
@@ -52,7 +56,6 @@ class CounterTextFieldState extends State<CounterTextField> {
 
   @override
   Widget build(BuildContext context) {
-    // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -72,6 +75,8 @@ class CounterTextFieldState extends State<CounterTextField> {
               valueListenable: _error,
               builder: (context, String? value, child) {
                 return TextFormField(
+                  maxLength: widget.maxLength,
+                  maxLines: widget.maxLines,
                   initialValue: widget.defaultText,
                   inputFormatters: widget.textInputFormatters,
                   keyboardType: widget.inputType,

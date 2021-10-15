@@ -38,6 +38,8 @@ class SendScaffold extends StatelessWidget {
 class SendBottomDialog extends StatelessWidget {
   List<BalanceRecord> balances;
   List<Asset> assets;
+  GlobalKey<DefaultButtonState> _sendButtonKey =
+      GlobalKey<DefaultButtonState>();
 
   SendBottomDialog(this.balances, this.assets);
 
@@ -50,6 +52,7 @@ class SendBottomDialog extends StatelessWidget {
         return Container(
             child: BlocListener<SendBloc, SendState>(
                 listener: (context, state) {
+                  updateValidationState(_sendButtonKey, state.recipient);
                   progress = ProgressHUD.of(contextBuilder);
                   if (state.error != null) {
                     progress.dismiss();
@@ -82,9 +85,6 @@ class SendBottomDialog extends StatelessWidget {
                             ],
                           );
                         });
-                  } else if (state.error != null) {
-                    progress.dismiss();
-                    log(state.error.toString());
                   }
                 },
                 child: Padding(
@@ -135,7 +135,7 @@ class SendBottomDialog extends StatelessWidget {
                       ),
                       Align(
                         alignment: FractionalOffset.bottomCenter,
-                        child: _SendButton(),
+                        child: _SendButton(_sendButtonKey),
                       )
                     ],
                   ),
@@ -146,16 +146,20 @@ class SendBottomDialog extends StatelessWidget {
 }
 
 class _SendButton extends StatelessWidget {
-  _SendButton({Key? key}) : super(key: key);
+  GlobalKey? parentKey;
+
+  _SendButton(this.parentKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
     return BlocBuilder<SendBloc, SendState>(
+      buildWhen: (previous, current) => previous.recipient != current.recipient,
       builder: (context, state) {
         return DefaultButton(
+          key: parentKey,
           text: 'action_continue'.tr,
-          defaultState: false,
+          defaultState: true,
           onPressed: () {
             FocusScope.of(context).requestFocus(FocusNode());
             context.read<SendBloc>().add(FormFilled(true));
@@ -225,7 +229,7 @@ class _AssetDropDown extends StatelessWidget {
     final colorTheme = context.colorTheme;
     var assetCodes = balances.map((balance) => balance.asset.code).toList();
     return BlocBuilder<SendBloc, SendState>(
-      buildWhen: (previous, current) => previous.asset != current.asset,
+      buildWhen: (previous, current) => current.error != null,
       builder: (context, state) {
         return Padding(
             padding: const EdgeInsets.only(bottom: 0.0),
@@ -270,6 +274,7 @@ class _AmountInputField extends StatelessWidget {
           },
           inputType: TextInputType.number,
           hint: '0',
+          defaultText: '0',
           label: 'amount'.tr,
         );
       },
@@ -293,4 +298,8 @@ class _NotesInputField extends StatelessWidget {
       },
     );
   }
+}
+
+updateValidationState(GlobalKey<DefaultButtonState> key, String recipient) {
+  key.currentState?.setIsEnabled(recipient.isNotEmpty);
 }

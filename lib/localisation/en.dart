@@ -19,9 +19,31 @@ final Map<String, String> en = {
   "password_hint": "••••••",
   "confirm_password_label": "Confirm Password",
 
+  //recovery
+  "title_recovery": "Recovery",
+
   //actions
   "action_continue": "Continue",
   "action_register": "Register now",
+  "action_recovery": "Recovery",
+  "action_send": "Send",
+
+  //drawer
+  "dashboard": "Dashboard",
+  "movements": "Movements",
+  "assets": "Assets",
+  "sales": "Sales",
+  "polls": "Polls",
+  "trade": "Trade",
+  "issuance_requests": "Issuance requests",
+  "limits": "Limits",
+  "fees": "Fees",
+  "settings": "Settings",
+  "log_out": "Log out",
+  "footer": "2021 © Distributed Lab.",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "confirm_sign_out": "Are you sure, you want to sign out?",
 
   //errors
   "error_same_passwords": "Passwords must be the same",
@@ -39,5 +61,16 @@ final Map<String, String> en = {
   "error_tx_not_allowed": "You are not allowed to perform this action",
   "error_tx_cross_self": "Current order crosses one of your existing orders",
   "error_tx_not_found": "Requested entry not found",
+  "error_try_again": "An error occurred. Try again later",
+  "error_connection_try_again": "Connection error. Try again later",
+  "error_unauthorized": "The session has been expired",
 
+  //send
+  "send_to": "Send to",
+  "asset": "Asset",
+  "amount": "Amount",
+  "recipient_acc_id": "Recipient email or account ID",
+  "recipient_acc_id_hint": "Enter your email or account ID",
+  "note_hint": "Add note",
+  "confirm_send_op": "Please, confirm sending operation",
 };
