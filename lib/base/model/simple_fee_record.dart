@@ -7,7 +7,11 @@ class SimpleFeeRecord {
   Decimal fixed;
   Decimal percent;
 
-  SimpleFeeRecord(this.fixed, this.percent);
+  late Decimal total;
+
+  SimpleFeeRecord(this.fixed, this.percent) {
+    total = fixed + percent;
+  }
 
   static var zero = SimpleFeeRecord(Decimal.zero, Decimal.zero);
 

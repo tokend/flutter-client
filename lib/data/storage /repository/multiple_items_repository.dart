@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
@@ -9,6 +10,8 @@ abstract class MultipleItemsRepository<T> extends Repository {
 
   Lock lock = new Lock();
 
+  final streamController = StreamController<List<T>>(); //TODO close stream
+
   //TODO implement items ensuring
 
   Future<void> update() {
@@ -19,6 +22,8 @@ abstract class MultipleItemsRepository<T> extends Repository {
 
       //TODO add loading from db
       await getItems().then((items) {
+        streamController.sink.add(items);
+
         onNewItems(items);
         isLoading = false;
       }).onError((error, stackTrace) {

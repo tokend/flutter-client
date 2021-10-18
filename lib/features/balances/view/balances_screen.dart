@@ -16,54 +16,64 @@ class BalancesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     RepositoryProvider repositoryProvider = Get.find();
     var balanceRepo = repositoryProvider.balances;
-
+    var stream = balanceRepo.getItems().asStream();
+    if (balanceRepo.streamController.sink.isBlank!= null && !balanceRepo.streamController.sink.isBlank!) {
+      stream = balanceRepo.streamController.stream;
+    }
     return StreamBuilder<List<BalanceRecord>>(
-        stream: balanceRepo.getItems().asStream(),
+        initialData: [],
+        stream: stream,
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
           if (snapshot.hasData) {
             return Container(
               color: context.colorTheme.background,
-              child: Stack(
-                children: [
-                  ListView.separated(
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(height: 2),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Builder(
-                            builder: (BuildContext context) =>
-                                BalanceItem(snapshot.data![index]));
-                      }),
-                  Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: 24.0, right: 24.0, bottom: 24.0),
-                      child: DefaultButton(
-                        colorTheme: context.colorTheme,
-                        text: 'action_send'.tr,
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => DefaultBottomDialog(
-                                    SendScaffold(
-                                        snapshot.data!,
-                                        snapshot.data!
-                                            .map((item) => item.asset)
-                                            .toList()),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.9,
-                                  ));
-                        },
-                        defaultState: true,
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return balanceRepo.update();
+                },
+                child: Stack(
+                  children: [
+                    ListView.separated(
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(height: 2),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Builder(
+                              builder: (BuildContext context) =>
+                                  BalanceItem(snapshot.data![index]));
+                        }),
+                    Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 24.0, right: 24.0, bottom: 24.0),
+                        child: DefaultButton(
+                          colorTheme: context.colorTheme,
+                          text: 'action_send'.tr,
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => DefaultBottomDialog(
+                                      SendScaffold(
+                                          snapshot.data!,
+                                          snapshot.data!
+                                              .map((item) => item.asset)
+                                              .toList()),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.9,
+                                    ));
+                          },
+                          defaultState: true,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             );
           } else if (snapshot.hasError) {

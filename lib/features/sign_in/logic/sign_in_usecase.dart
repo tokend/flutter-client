@@ -55,9 +55,9 @@ class SignInUseCase {
           _walletInfo.email, _password);
       _session.accountProvider.setAccount(_account);
       _session.signInMethod = SignInMethod.CREDENTIALS;
-      Get.lazyPut(() => _session); //TODO refactor
-      Get.lazyPut(() => _session.accountProvider);
-      Get.lazyPut(() => _session.walletInfoProvider);
+      Get.put(_session); //TODO refactor
+      Get.put(_session.accountProvider);
+      Get.put(_session.walletInfoProvider);
       return Future.value(true);
     } catch (e, s) {
       print(s);

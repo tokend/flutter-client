@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -8,6 +9,7 @@ import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/account/model/account_params.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
+import 'package:get/get.dart';
 
 class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
   ApiProvider _apiProvider;
@@ -18,15 +20,16 @@ class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
       this._apiProvider, this._walletInfoProvider, this._urlConfigProvider);
 
   @override
-  Future<List<BalanceRecord>> getItems() {
+  Future<List<BalanceRecord>> getItems() async {
     var signedApi = _apiProvider.getSignedApi();
     if (signedApi == null)
       return Future.error(StateError('No signed API instance found'));
+    _walletInfoProvider = Get.find();
     var accountId = _walletInfoProvider.getWalletInfo()?.accountId;
     if (accountId == null)
       return Future.error(StateError('No wallet info found'));
 
-    return signedApi
+    var itemsList = signedApi
         .getService()
         .get('v3/accounts/$accountId',
             query: AccountParams(List.of([
@@ -56,5 +59,8 @@ class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
                       ['id'])['attributes']['available'])))
           .toList();
     });
+
+    streamController.sink.add((await itemsList));
+    return itemsList;
   }
 }

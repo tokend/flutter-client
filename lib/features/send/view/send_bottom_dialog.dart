@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:flutter_template/di/providers/repository_provider.dart' as Repo;
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_template/utils/view/counter_text_field.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/drop_down_field.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SendScaffold extends StatelessWidget {
@@ -58,6 +60,8 @@ class SendBottomDialog extends StatelessWidget {
                     progress.dismiss();
                   } else if (state.isRequestSubmitted) {
                     progress.dismiss();
+                    Repo.RepositoryProvider repositoryProvider = Get.find();
+                    repositoryProvider.balances.update();
                     Navigator.pop(contextBuilder, false);
                   } else if (state.isRequestConfirmed) {
                     progress.show();
@@ -87,11 +91,59 @@ class SendBottomDialog extends StatelessWidget {
                         });
                   }
                 },
-                child: Padding(
+                child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: Sizes.standartPadding, vertical: 36.0),
                   child: Stack(
                     children: [
+                      Container(
+                        height: MediaQuery.of(buildContext).size.height * 0.8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'send_to'.tr,
+                                  style: TextStyle(
+                                      fontSize: 17.0,
+                                      color:
+                                          buildContext.colorTheme.headerText),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: Sizes.standartPadding),
+                            ),
+                            _AssetDropDown(balances),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: Sizes.halfStandartMargin),
+                            ),
+                            _AvailableBalanceField(balances),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: Sizes.standartMargin),
+                            ),
+                            _AmountInputField(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: Sizes.standartMargin),
+                            ),
+                            _RecipientInputField(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: Sizes.standartMargin),
+                            ),
+                            _NotesInputField(),
+                            Padding(
+                                padding:
+                                    EdgeInsets.only(top: Sizes.standartMargin)),
+                          ],
+                        ),
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
