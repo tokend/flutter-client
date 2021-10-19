@@ -227,6 +227,13 @@ packages:
       url: "https://github.com/tokend/dart-crypto-kit"
     source: git
     version: "0.0.1"
+  dart_numerics:
+    dependency: "direct main"
+    description:
+      name: dart_numerics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   dart_sdk:
     dependency: "direct main"
     description:
