@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
 import 'package:flutter_template/data/storage%20/repository/multiple_items_repository.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
@@ -53,7 +54,7 @@ class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
                       asset['id'] ==
                       balance['relationships']['asset']['data']['id']),
                   _urlConfigProvider.getConfig()),
-              double.parse(balancesStates.firstWhere((state) =>
+              Decimal.parse(balancesStates.firstWhere((state) =>
                   state['id'] ==
                   balance['relationships']['state']['data']
                       ['id'])['attributes']['available'])))

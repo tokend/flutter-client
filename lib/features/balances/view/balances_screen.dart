@@ -17,14 +17,15 @@ class BalancesScreen extends StatelessWidget {
     RepositoryProvider repositoryProvider = Get.find();
     var balanceRepo = repositoryProvider.balances;
     var stream = balanceRepo.getItems().asStream();
-    if (balanceRepo.streamController.sink.isBlank!= null && !balanceRepo.streamController.sink.isBlank!) {
+    if (balanceRepo.streamController.sink.isBlank != null &&
+        !balanceRepo.streamController.sink.isBlank!) {
       stream = balanceRepo.streamController.stream;
     }
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
         stream: stream,
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
             return Container(
               color: context.colorTheme.background,
               child: RefreshIndicator(

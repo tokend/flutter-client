@@ -2,6 +2,7 @@ import 'package:dart_wallet/network_params.dart';
 import 'package:dart_wallet/xdr/utils/dependencies.dart';
 import 'package:dart_wallet/xdr/xdr_types.dart';
 import 'package:decimal/decimal.dart';
+import 'package:flutter_template/base/model/fee.dart' as FeeResource;
 
 class SimpleFeeRecord {
   Decimal fixed;
@@ -10,6 +11,12 @@ class SimpleFeeRecord {
   late Decimal total;
 
   SimpleFeeRecord(this.fixed, this.percent) {
+    total = fixed + percent;
+  }
+
+  SimpleFeeRecord.fromFee(FeeResource.Fee fee)
+      : fixed = fee.fixed,
+        percent = fee.calculatedPercent {
     total = fixed + percent;
   }
 

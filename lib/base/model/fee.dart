@@ -5,6 +5,6 @@ class Fee {
   Decimal fixed;
 
   Fee.fromJson(Map<String, dynamic> json)
-      : calculatedPercent = json['calculated_percent'],
-        fixed = json['fixed'];
+      : calculatedPercent = Decimal.parse(json['calculated_percent']),
+        fixed = Decimal.parse(json['fixed']);
 }

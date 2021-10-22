@@ -30,6 +30,7 @@ class ParticipantEffectsPageParamsBuilder extends pageQuery.Builder {
   String? account;
   String? balance;
   String? asset;
+  List<String>? include;
 
   withAccount(String account) {
     this.account = account;
@@ -52,9 +53,14 @@ class ParticipantEffectsPageParamsBuilder extends pageQuery.Builder {
     return super.withInclude(include);
   }
 
+  withInc(List<String>? include) {
+    this.include = include;
+  }
+
   @override
   ParticipantEffectsPageParams build() {
-    return ParticipantEffectsPageParams(account, balance, asset, include, pagingParams);
+    return ParticipantEffectsPageParams(
+        account, balance, asset, include, pagingParams);
   }
 }
 

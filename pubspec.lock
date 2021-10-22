@@ -442,6 +442,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0"
   io:
     dependency: transitive
     description:
@@ -450,7 +457,7 @@ packages:
     source: hosted
     version: "1.0.3"
   japx:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: japx
       url: "https://pub.dartlang.org"

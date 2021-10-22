@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter_template/config/model/url_config.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_template/features/assets/model/asset_record.dart';
 class BalanceRecord {
   String id;
   AssetRecord asset;
-  double available;
+  Decimal available;
   Asset? conversionAsset;
   int? convertedAmount;
   int? conversionPrice;

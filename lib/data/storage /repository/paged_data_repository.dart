@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:flutter_template/data/storage%20/model/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
@@ -18,10 +20,20 @@ abstract class PagedDataRepository<T> extends Repository {
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
 
+  final streamController = StreamController<List<T>>(); //TODO close stream
+
   @override
-  update() {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<DataPage<T>> update() async {
+    try {
+      return await loadMore(true).then((dataPage) {
+        streamController.sink.add(dataPage.items);
+        return Future.value(dataPage);
+      });
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return Future.error(e);
+    }
   }
 
   Future<DataPage<T>> getCachedPage(int? nextCursor) {
@@ -46,15 +58,17 @@ abstract class PagedDataRepository<T> extends Repository {
     cache?.cachePage(page);
   }
 
-  bool loadMore(bool force) {
+  Future<DataPage<T>> loadMore(bool force) async {
     if ((noMoreItems || (isLoading && !isLoadingTopPages)) && !force) {
-      return false;
+      return Future.value();
     }
     var getPage;
-    getCachedPage(nextCursor).then((cachedPage) {
+    await getCachedPage(nextCursor).then((cachedPage) {
       if (cachedPage.isLast) {
         print('Cached page is last');
-        if (cachedPage.items.isNotEmpty) {}
+        if (cachedPage.items.isNotEmpty) {
+
+        }
         var wasOnFirstPage = isOnFirstPage;
         getPage = getAndCacheRemotePage(nextCursor, pagingOrder).then((page) {
           if ((pagingOrder == PagingOrder.asc || wasOnFirstPage) &&
@@ -67,6 +81,6 @@ abstract class PagedDataRepository<T> extends Repository {
       }
     });
 
-    return true;
+    return getPage;
   }
 }

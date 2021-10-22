@@ -91,59 +91,11 @@ class SendBottomDialog extends StatelessWidget {
                         });
                   }
                 },
-                child: Container(
+                child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: Sizes.standartPadding, vertical: 36.0),
                   child: Stack(
                     children: [
-                      Container(
-                        height: MediaQuery.of(buildContext).size.height * 0.8,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'send_to'.tr,
-                                  style: TextStyle(
-                                      fontSize: 17.0,
-                                      color:
-                                          buildContext.colorTheme.headerText),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: Sizes.standartPadding),
-                            ),
-                            _AssetDropDown(balances),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: Sizes.halfStandartMargin),
-                            ),
-                            _AvailableBalanceField(balances),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: Sizes.standartMargin),
-                            ),
-                            _AmountInputField(),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: Sizes.standartMargin),
-                            ),
-                            _RecipientInputField(),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: Sizes.standartMargin),
-                            ),
-                            _NotesInputField(),
-                            Padding(
-                                padding:
-                                    EdgeInsets.only(top: Sizes.standartMargin)),
-                          ],
-                        ),
-                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -281,7 +233,7 @@ class _AssetDropDown extends StatelessWidget {
     final colorTheme = context.colorTheme;
     var assetCodes = balances.map((balance) => balance.asset.code).toList();
     return BlocBuilder<SendBloc, SendState>(
-      buildWhen: (previous, current) => current.error != null,
+      buildWhen: (previous, current) => previous.asset != current.asset,
       builder: (context, state) {
         return Padding(
             padding: const EdgeInsets.only(bottom: 0.0),
@@ -326,7 +278,6 @@ class _AmountInputField extends StatelessWidget {
           },
           inputType: TextInputType.number,
           hint: '0',
-          defaultText: '0',
           label: 'amount'.tr,
         );
       },

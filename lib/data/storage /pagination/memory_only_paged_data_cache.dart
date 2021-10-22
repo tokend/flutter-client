@@ -3,7 +3,7 @@ import 'package:flutter_template/data/storage%20/model/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/pagination/paging_record.dart';
 
-class MemoryOnlyPagedDataCache<T> implements PagedDataCache {
+class MemoryOnlyPagedDataCache<T> implements PagedDataCache<T> {
   var _items = List<T>.empty();
 
   @override
@@ -24,7 +24,7 @@ class MemoryOnlyPagedDataCache<T> implements PagedDataCache {
   }
 
   @override
-  Future<DataPage> getPage(int limit, int? cursor, PagingOrder order) {
+  Future<DataPage<T>> getPage(int limit, int? cursor, PagingOrder order) {
     int? actualCursor = cursor;
     if (actualCursor == null) {
       if (order == PagingOrder.desc) {
@@ -50,10 +50,12 @@ class MemoryOnlyPagedDataCache<T> implements PagedDataCache {
           (element) => (element as PagingRecord).getPagingId() > actualCursor!);
     }
 
-    return Future.value(DataPage(
-        (pageItems.last as PagingRecord).getPagingId().toString(),
-        pageItems,
-        pageItems.length < limit));
+    var nextCursor = cursor?.toString();
+    if (pageItems.isNotEmpty) {
+      nextCursor = (pageItems.last as PagingRecord).getPagingId().toString();
+    }
+    return Future.value(
+        DataPage(nextCursor, pageItems, pageItems.length < limit));
   }
 
   @override
