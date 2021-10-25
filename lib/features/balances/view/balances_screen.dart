@@ -25,7 +25,15 @@ class BalancesScreen extends StatelessWidget {
         initialData: [],
         stream: stream,
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
-          if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
+          if (snapshot.data?.isEmpty == true &&
+              snapshot.connectionState != ConnectionState.waiting) {
+            return Center(
+                child: Text(
+              'empty_balances_list'.tr,
+              style: TextStyle(fontSize: 17.0),
+            ));
+          } else if (snapshot.connectionState != ConnectionState.waiting &&
+              snapshot.hasData) {
             return Container(
               color: context.colorTheme.background,
               child: RefreshIndicator(

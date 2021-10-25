@@ -21,15 +21,22 @@ class BalanceHistory extends StatelessWidget {
     BalanceChangesRepository balanceChangesRepo =
         repositoryProvider.balanceChanges(balanceRecord.id);
     var stream = balanceChangesRepo.getItems().asStream();
-    if (balanceChangesRepo.streamController.sink.isBlank != null &&
-        !balanceChangesRepo.streamController.sink.isBlank!) {
+    if (balanceChangesRepo.streamController.isBlank == true) {
       stream = balanceChangesRepo.streamController.stream;
     }
     return StreamBuilder<List<BalanceChange>>(
         initialData: [],
         stream: stream,
         builder: (context, AsyncSnapshot<List<BalanceChange>> snapshot) {
-          if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
+          if (snapshot.data?.isEmpty == true &&
+              snapshot.connectionState != ConnectionState.waiting) {
+            return Center(
+                child: Text(
+              'empty_history'.tr,
+              style: TextStyle(fontSize: 17.0),
+            ));
+          } else if (snapshot.connectionState != ConnectionState.waiting &&
+              snapshot.hasData) {
             return Container(
               color: context.colorTheme.background,
               child: RefreshIndicator(

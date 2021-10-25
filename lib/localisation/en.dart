@@ -73,4 +73,6 @@ final Map<String, String> en = {
   "recipient_acc_id_hint": "Enter your email or account ID",
   "note_hint": "Add note",
   "confirm_send_op": "Please, confirm sending operation",
+  "empty_history": "Movements history is empty",
+  "empty_balances_list": "No balances found",
 };
