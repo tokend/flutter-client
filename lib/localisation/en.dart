@@ -68,6 +68,7 @@ final Map<String, String> en = {
   //send
   "send_to": "Send to",
   "asset": "Asset",
+  "balance": "Balance",
   "amount": "Amount",
   "recipient_acc_id": "Recipient email or account ID",
   "recipient_acc_id_hint": "Enter your email or account ID",
@@ -75,4 +76,5 @@ final Map<String, String> en = {
   "confirm_send_op": "Please, confirm sending operation",
   "empty_history": "Movements history is empty",
   "empty_balances_list": "No balances found",
+  "latest_activity": "Latest activity",
 };

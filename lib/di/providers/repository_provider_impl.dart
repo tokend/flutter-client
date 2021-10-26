@@ -10,6 +10,7 @@ import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
+import 'package:lazy_evaluation/lazy_evaluation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RepositoryProviderImpl implements RepositoryProvider {
@@ -19,19 +20,20 @@ class RepositoryProviderImpl implements RepositoryProvider {
   SharedPreferences? persistencePreferences;
 
   @override
-  late BalancesRepository balances;
+  late var balances;
 
   @override
-  late SystemInfoRepository systemInfo;
+  late var systemInfo;
 
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
       required this.urlConfigProvider,
       this.persistencePreferences}) {
-    balances =
-        BalancesRepository(apiProvider, walletInfoProvider, urlConfigProvider);
-    systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
+    balances = Lazy(() =>
+        BalancesRepository(apiProvider, walletInfoProvider, urlConfigProvider));
+    systemInfo = Lazy(
+        () => SystemInfoRepository(apiProvider, getSystemInfoPersistence()));
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

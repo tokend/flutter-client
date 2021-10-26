@@ -23,8 +23,8 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
 
   @override
   Stream<SendState> mapEventToState(SendEvent event) async* {
-    if (event is AssetChanged) {
-      yield state.copyWith(asset: event.asset, balanceRecord: event.balance);
+    if (event is BalanceChanged) {
+      yield state.copyWith(balanceRecord: event.balance);
     } else if (event is AmountChanged) {
       yield state.copyWith(amount: event.amount);
     } else if (event is RecipientChanged) {

@@ -42,12 +42,9 @@ class HomeScreen extends StatelessWidget {
   Widget _getCurrentPage(NavItem item) {
     switch (item) {
       case NavItem.dashboard:
-        return BalancesScreen();
-      case NavItem.dashboard:
-        return BalancesScreen();
+        return BalancesScreen(false);
       case NavItem.movements:
-        // TODO: Handle this case.
-        break;
+        return BalancesScreen(true);
       case NavItem.assets:
         // TODO: Handle this case.
         break;
@@ -77,6 +74,6 @@ class HomeScreen extends StatelessWidget {
         break;
     }
 
-    return BalancesScreen();
+    return BalancesScreen(false);
   }
 }

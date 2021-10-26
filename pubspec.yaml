@@ -57,6 +57,7 @@ dependencies:
   dart_numerics: ^0.0.2
   japx: ^2.0.3
   intl: ^0.17.0
+  lazy_evaluation: ^1.1.0
 
 
 

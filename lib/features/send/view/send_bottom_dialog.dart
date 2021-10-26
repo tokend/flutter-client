@@ -8,7 +8,6 @@ import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart' as Repo;
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
-import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/send/bloc/send_bloc.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
@@ -23,9 +22,11 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SendScaffold extends StatelessWidget {
   List<BalanceRecord> balances;
-  List<Asset> assets;
+  late List<Asset> assets;
 
-  SendScaffold(this.balances, this.assets);
+  SendScaffold(this.balances) {
+    this.assets = balances.map((balance) => balance.asset).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class SendBottomDialog extends StatelessWidget {
                   } else if (state.isRequestSubmitted) {
                     progress.dismiss();
                     Repo.RepositoryProvider repositoryProvider = Get.find();
-                    repositoryProvider.balances.update();
+                    repositoryProvider.balances.value.update();
                     Navigator.pop(contextBuilder, false);
                   } else if (state.isRequestConfirmed) {
                     progress.show();
@@ -114,12 +115,7 @@ class SendBottomDialog extends StatelessWidget {
                             padding:
                                 EdgeInsets.only(top: Sizes.standartPadding),
                           ),
-                          _AssetDropDown(balances),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: Sizes.halfStandartMargin),
-                          ),
-                          _AvailableBalanceField(balances),
+                          _BalanceDropDown(balances),
                           Padding(
                             padding: EdgeInsets.only(top: Sizes.standartMargin),
                           ),
@@ -223,37 +219,26 @@ BalanceRecord getBalanceByAssetCode(
   }
 }
 
-class _AssetDropDown extends StatelessWidget {
+class _BalanceDropDown extends StatelessWidget {
   List<BalanceRecord> balances;
 
-  _AssetDropDown(this.balances);
+  _BalanceDropDown(this.balances);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    var assetCodes = balances.map((balance) => balance.asset.code).toList();
     return BlocBuilder<SendBloc, SendState>(
-      buildWhen: (previous, current) => previous.asset != current.asset,
       builder: (context, state) {
         return Padding(
             padding: const EdgeInsets.only(bottom: 0.0),
-            child: DropDownField(
+            child: BalanceDropDownField(
                 colorTheme: colorTheme,
-                labelText: 'asset'.tr,
-                currentValue: state.asset.code,
-                onChanged: (String? newAsset) {
-                  context.read<SendBloc>().add(AssetChanged(
-                      AssetRecord(
-                          newAsset!,
-                          getBalanceByAssetCode(balances, newAsset).asset.name,
-                          getBalanceByAssetCode(balances, newAsset)
-                              .asset
-                              .trailingDigits,
-                          'logoUrl', //TODO
-                          'ownerAccountId'),
-                      getBalanceByAssetCode(balances, newAsset)));
+                labelText: 'balance'.tr,
+                currentValue: state.balanceRecord,
+                onChanged: (BalanceRecord? newBalance) {
+                  context.read<SendBloc>().add(BalanceChanged(newBalance));
                 },
-                list: assetCodes));
+                list: balances));
       },
     );
   }

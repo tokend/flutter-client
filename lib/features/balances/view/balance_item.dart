@@ -6,8 +6,9 @@ import 'package:flutter_template/features/history/view/balance_history_screen.da
 
 class BalanceItem extends StatelessWidget {
   BalanceRecord balanceRecord;
+  bool isMovementsScreen;
 
-  BalanceItem(this.balanceRecord);
+  BalanceItem(this.balanceRecord, this.isMovementsScreen);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,8 @@ class BalanceItem extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BalanceHistoryScreen(balanceRecord)));
+                    builder: (context) => BalanceHistoryScreen(
+                        balanceRecord, isMovementsScreen)));
           },
           child: ListTile(
             minLeadingWidth: 12,

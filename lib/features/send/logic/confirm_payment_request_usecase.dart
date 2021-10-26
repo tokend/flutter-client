@@ -71,7 +71,7 @@ class ConfirmPaymentRequestUseCase {
   }
 
   Future<NetworkParams> getNetworkParams() {
-    return _repositoryProvider.systemInfo
+    return _repositoryProvider.systemInfo.value
         .getItem()
         .then((systemInfo) => systemInfo.toNetworkParams());
   }

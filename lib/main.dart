@@ -56,7 +56,7 @@ class App extends StatelessWidget {
             binding: binding),
         GetPage(name: '/home', page: () => HomeScreen(), binding: binding),
         GetPage(
-            name: '/balances', page: () => BalancesScreen(), binding: binding),
+            name: '/balances', page: () => BalancesScreen(false), binding: binding),
       ],
     );
   }

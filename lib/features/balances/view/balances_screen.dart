@@ -12,14 +12,18 @@ import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
 
 class BalancesScreen extends StatelessWidget {
+  bool isMovementsScreen;
+
+  BalancesScreen(this.isMovementsScreen);
+
   @override
   Widget build(BuildContext context) {
     RepositoryProvider repositoryProvider = Get.find();
     var balanceRepo = repositoryProvider.balances;
-    var stream = balanceRepo.getItems().asStream();
-    if (balanceRepo.streamController.sink.isBlank != null &&
-        !balanceRepo.streamController.sink.isBlank!) {
-      stream = balanceRepo.streamController.stream;
+    var stream;
+    if (balanceRepo.value.isNeverUpdated == true) {
+      stream = balanceRepo.value.getItems().asStream();
+      balanceRepo.value.isNeverUpdated = false;
     }
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
@@ -38,7 +42,7 @@ class BalancesScreen extends StatelessWidget {
               color: context.colorTheme.background,
               child: RefreshIndicator(
                 onRefresh: () {
-                  return balanceRepo.update();
+                  return balanceRepo.value.update();
                 },
                 child: Stack(
                   children: [
@@ -50,8 +54,9 @@ class BalancesScreen extends StatelessWidget {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Builder(
-                              builder: (BuildContext context) =>
-                                  BalanceItem(snapshot.data![index]));
+                              builder: (BuildContext context) => BalanceItem(
+                                  snapshot.data![index],
+                                  this.isMovementsScreen));
                         }),
                     Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -68,10 +73,7 @@ class BalancesScreen extends StatelessWidget {
                                 backgroundColor: Colors.transparent,
                                 builder: (context) => DefaultBottomDialog(
                                       SendScaffold(
-                                          snapshot.data!,
-                                          snapshot.data!
-                                              .map((item) => item.asset)
-                                              .toList()),
+                                          snapshot.data!,),
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.9,
