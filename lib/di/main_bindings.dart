@@ -55,6 +55,7 @@ class MainBindings extends Bindings {
     Get.put(urlConfigPersistence);
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);
+    Get.put(walletInfoProvider);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example
   }
 }

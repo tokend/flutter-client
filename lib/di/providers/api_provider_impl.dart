@@ -49,26 +49,26 @@ class ApiProviderImpl implements ApiProvider {
 
   @override
   TokenDApi? getSignedApi() {
-    lock.synchronized(() {
-      var account = _accountProvider.getAccount();
-      if (account == null) return null;
-      var originalAccountId = _walletInfoProvider.getWalletInfo()?.accountId;
-      if (originalAccountId == null) return null;
-      var hash = hashValues(account.accountId, _url);
+    var account = _accountProvider.getAccount();
+    if (account == null) return null;
+    var originalAccountId = _walletInfoProvider
+        .getWalletInfo()
+        ?.accountId;
+    if (originalAccountId == null) return null;
+    var hash = hashValues(account.accountId, _url);
 
-      var signedApi;
-      if (signedApiByHash != null && signedApiByHash!.item1 == hash) {
-        signedApi = signedApiByHash!.item2;
-      } else {
-        signedApi = TokenDApi(_url,
-            requestSigner:
-                AccountRequestSigner(account, accountId: originalAccountId),
-            tfaCallback: _tfaCallback,
-            withLogs: _withLogs);
-      }
-      signedApiByHash = Tuple2(hash, signedApi);
-      return signedApi;
-    });
+    var signedApi;
+    if (signedApiByHash != null && signedApiByHash!.item1 == hash) {
+      signedApi = signedApiByHash!.item2;
+    } else {
+      signedApi = TokenDApi(_url,
+          requestSigner:
+          AccountRequestSigner(account, accountId: originalAccountId),
+          tfaCallback: _tfaCallback,
+          withLogs: _withLogs);
+    }
+    signedApiByHash = Tuple2(hash, signedApi);
+    return signedApi;
   }
 
   @override

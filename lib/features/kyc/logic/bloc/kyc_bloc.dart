@@ -1,17 +1,27 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_sdk/api/tokend_api.dart';
+import 'package:dart_sdk/key_server/key_server.dart';
+import 'package:dart_sdk/signing/account_request_signer.dart';
+import 'package:dart_wallet/account.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_template/base/base_bloc.dart';
+import 'package:flutter_template/config/env.dart';
+import 'package:flutter_template/features/kyc/logic/submit_kyc_request_usecase.dart';
+import 'package:flutter_template/utils/file/local_file.dart';
 import 'package:flutter_template/utils/view/models/name.dart';
 import 'package:flutter_template/utils/view/models/string_field.dart';
 import 'package:formz/formz.dart';
 
 part 'kyc_event.dart';
+
 part 'kyc_state.dart';
 
-class KycBloc extends Bloc<KycEvent, KycState> {
-  KycBloc() : super(KycState());
+class KycBloc extends BaseBloc<KycEvent, KycState> {
+  KycBloc(this.env) : super(KycState());
+  Env env;
 
   @override
   void onTransition(Transition<KycEvent, KycState> transition) {
@@ -328,7 +338,31 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     } else if (event is FormSubmitted) {
       if (!state.status.isValidated) return;
       yield state.copyWith(status: FormzStatus.submissionInProgress);
-      Future.delayed(Duration(seconds: 3));
+      try {
+        var api = apiProvider.getApi();
+
+        // var walletInfo = walletInfoProvider;
+        var keyServer = KeyServer(api.wallets);
+        var walletInfo =
+            await keyServer.getWalletInfo("user1@gmail.com", "111111");
+        var account =
+            await Account.fromSecretSeed(walletInfo.secretSeeds.first);
+        session.accountProvider.setAccount(account);
+        var signedApi = TokenDApi("http://c663-193-19-228-94.ngrok.io/_/api/",
+            requestSigner: AccountRequestSigner(account), tfaCallback: null);
+
+        var result = await SubmitKycRequestUseCase(
+            keyServer: keyServer,
+            walletInfo: walletInfo,
+            api: api,
+            signedApi: signedApi,
+            newDocument: {
+              "kyc_avatar": LocalFile.fromPath(state.image.value)
+            }).uploadNewDocuments();
+        print(result);
+      } on Exception {
+        yield state.copyWith(status: FormzStatus.submissionFailure);
+      }
       yield state.copyWith(status: FormzStatus.submissionSuccess);
     }
   }
