@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Repository that holds a list of [T] items.
-abstract class MultipleItemsRepository<T> implements Repository {
+abstract class MultipleItemsRepository<T> extends Repository {
   Future<List<T>> getItems();
 
   Lock lock = new Lock();
+
+  final streamController = StreamController<List<T>>(); //TODO close stream
 
   //TODO implement items ensuring
 
@@ -19,6 +22,8 @@ abstract class MultipleItemsRepository<T> implements Repository {
 
       //TODO add loading from db
       await getItems().then((items) {
+        streamController.sink.add(items);
+
         onNewItems(items);
         isLoading = false;
       }).onError((error, stackTrace) {

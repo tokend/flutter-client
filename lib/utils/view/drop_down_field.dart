@@ -32,7 +32,7 @@ class DropDownField extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 2),
+                padding: const EdgeInsets.only(bottom: 5),
                 child: Text(
                   labelText,
                   style: TextStyle(
@@ -58,6 +58,7 @@ class DropDownField extends StatelessWidget {
               isEmpty: false,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton(
+                  //TODO change dropdown icon
                   value: currentValue == "" ? list.first : currentValue,
                   isDense: true,
                   onChanged: (newValue) {
@@ -90,7 +91,7 @@ class DropDownField extends StatelessWidget {
   OutlineInputBorder _borderStyle(Color color) {
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: Sizes.borderWidth),
-      borderRadius: BorderRadius.circular(Sizes.mediumRadius),
+      borderRadius: BorderRadius.circular(Sizes.xSmallRadius),
     );
   }
 }

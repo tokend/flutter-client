@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'env.dart';
 
-void main() => Development();
-
 class Development extends Env {
+  SharedPreferences sp;
   @override
   // String apiUrl = 'http://d631-193-19-228-94.ngrok.io/_/api/';
   String apiUrl = 'http://c663-193-19-228-94.ngrok.io/_/api/';
@@ -24,4 +24,9 @@ class Development extends Env {
 
   @override
   int logoutTime = 0;
+
+  @override
+  SharedPreferences sharedPreferences;
+
+  Development(this.sp) : sharedPreferences = sp;
 }

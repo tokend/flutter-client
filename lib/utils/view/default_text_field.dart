@@ -57,7 +57,6 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   @override
   Widget build(BuildContext context) {
-    // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -117,7 +116,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
   OutlineInputBorder _borderStyle(Color color) {
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: Sizes.borderWidth),
-      borderRadius: BorderRadius.circular(Sizes.mediumRadius),
+      borderRadius: BorderRadius.circular(Sizes.xSmallRadius),
     );
   }
 }

@@ -4,10 +4,10 @@ import 'package:tuple/tuple.dart';
 abstract class CredentialsPersistence extends CredentialsProvider {
   /// @param email that is retrieved from corresponding WalletInfo
   /// @param password password for encryption
-  void saveCredentials(String email, String password);
+  Future<void> saveCredentials(String email, String password);
 
   /// @return saved email or null if it's missing
-  Future<String?> getSavedEmail();
+  String? getSavedEmail();
 
   /// @return true if there is a securely saved password
   Future<bool> hasSavedPassword();

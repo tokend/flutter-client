@@ -4,6 +4,7 @@ import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
 import 'package:flutter_template/logic/session.dart';
+import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 
 abstract class BaseBloc<E, S> extends Bloc<E, S> {
@@ -14,4 +15,6 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> {
   WalletInfoPersistence walletInfoPersistence = Get.find();
   WalletInfoProvider walletInfoProvider = Get.find();
   CredentialsPersistence credentialsPersistence = Get.find();
+  ToastManager toastManager = Get.find();
+
 }

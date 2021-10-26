@@ -1,9 +1,9 @@
 part of 'sign_up_bloc.dart';
 
 class SignUpState extends Equatable {
-  const SignUpState({
-    this.email = const Email.pure(),
-    this.password = const Password.pure(),
+  const SignUpState(
+    this.email,
+    this.password, {
     this.confirmPassword = const ConfirmPassword.pure(),
     this.status = FormzStatus.pure,
   });
@@ -23,15 +23,10 @@ class SignUpState extends Equatable {
     FormzStatus? status,
   }) {
     return SignUpState(
-      email: email ?? this.email,
-      password: password ?? this.password,
+      email ?? this.email,
+      password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       status: status ?? this.status,
     );
   }
-}
-
-class SignUpInitial extends SignUpState {
-  @override
-  List<Object> get props => [];
 }

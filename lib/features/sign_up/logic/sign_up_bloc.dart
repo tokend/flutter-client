@@ -16,7 +16,7 @@ part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpState());
+  SignUpBloc() : super(SignUpState(Email.pure(), Password.pure()));
 
   @override
   void onTransition(Transition<SignUpEvent, SignUpState> transition) {
@@ -29,7 +29,7 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
     SignUpEvent event,
   ) async* {
     if (event is EmailChanged) {
-      final email = Email.dirty(event.email!);
+      final email = Email.dirty(value: event.email!);
       yield state.copyWith(
         email: email,
         status: Formz.validate([
@@ -39,7 +39,7 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
         ]),
       );
     } else if (event is PasswordChanged) {
-      final password = Password.dirty(event.password!);
+      final password = Password.dirty(value: event.password!);
       final confirm = ConfirmPassword.dirty(
         password: password.value,
         value: state.confirmPassword.value,
@@ -75,8 +75,11 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
             .perform()
             .then((wallet) => log('ID:  ${wallet.walletData.id}'));
         yield state.copyWith(status: FormzStatus.submissionSuccess);
-      } on Exception {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
+      } catch (e) {
+        yield state.copyWith(
+            //TODO add error type checking. Is absent now because of wrong server side error code (500)
+            status: FormzStatus.submissionFailure,
+            email: Email.dirty(serverError: e as Exception));
       }
     }
   }

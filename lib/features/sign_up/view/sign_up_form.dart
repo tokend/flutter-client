@@ -119,7 +119,7 @@ class SignUpForm extends StatelessWidget {
                               ],
                             ),
                           ),
-                          onTap: () => Get.toNamed('/signIn'),
+                          onTap: () => Get.offAllNamed('/signIn'),
                         ),
                         Container(
                           height: screenSize.height * 0.04,
