@@ -21,14 +21,18 @@ abstract class PagedDataRepository<T> extends Repository {
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
 
-  final streamController = StreamController<DataPage<T>>(); //TODO close stream
+  final streamController = StreamController<List<T>>();
+
+  List<T> itemsList = [];
 
   @override
-  Future<DataPage<T>> update() async {
+  Future<List<T>> update() async {
     try {
+      itemsList = [];
       noMoreItems = false;
-      var dataPage = await loadMore(force: true);
-      return Future.value(dataPage);
+      nextCursor = null;
+      await loadMore(force: true);
+      return Future.value(itemsList);
     } catch (e, s) {
       print(e);
       print(s);
@@ -56,26 +60,27 @@ abstract class PagedDataRepository<T> extends Repository {
     cache?.cachePage(page);
   }
 
-  Future<DataPage<T>> loadMore({bool force = false}) async {
+  Future<List<T>> loadMore({bool force = false}) async {
     if ((noMoreItems || (isLoading && !isLoadingTopPages)) && !force) {
-      return Future.value(DataPage('', List.empty(), true));
+      return Future.value(List.empty());
     }
     return getCachedPage(nextCursor).then((cachedPage) async {
       if (cachedPage.isLast) {
         log('Cached page is last');
         var res = await getAndCacheRemotePage(nextCursor, pagingOrder);
         onNewPage(res);
-        return res;
+        return res.items;
       } else {
-        return cachedPage;
+        return cachedPage.items;
       }
     });
   }
 
   onNewPage(DataPage<T> page) {
-    log('onNewPage');
+    isNeverUpdated = false;
     noMoreItems = page.isLast;
     nextCursor = page.nextCursor != null ? int.parse(page.nextCursor!) : null;
-    streamController.sink.add(page);
+    itemsList.addAll(page.items);
+    streamController.sink.add(itemsList);
   }
 }

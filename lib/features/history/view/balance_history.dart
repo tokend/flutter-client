@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
@@ -11,26 +10,38 @@ import 'package:flutter_template/features/history/storage/balance_changes_reposi
 import 'package:flutter_template/features/history/view/balance_change_item.dart';
 import 'package:get/get.dart';
 
-class BalanceHistory extends StatelessWidget {
+class BalanceHistory extends StatefulWidget {
   BalanceRecord balanceRecord;
 
   BalanceHistory(this.balanceRecord);
 
   @override
+  State<BalanceHistory> createState() => _BalanceHistoryState();
+}
+
+class _BalanceHistoryState extends State<BalanceHistory> {
+  RepositoryProvider repositoryProvider = Get.find();
+  late BalanceChangesRepository balanceChangesRepo;
+
+  @override
   Widget build(BuildContext context) {
-    RepositoryProvider repositoryProvider = Get.find();
-    BalanceChangesRepository balanceChangesRepo =
-        repositoryProvider.balanceChanges(balanceRecord.id);
-    var stream = balanceChangesRepo.update().asStream();
-    if (balanceChangesRepo.streamController.isBlank != true) {
-      stream = balanceChangesRepo.loadMore().asStream();
+    balanceChangesRepo =
+        repositoryProvider.balanceChanges(widget.balanceRecord.id);
+    void subscribeToBalanceChanges() async {
+      await balanceChangesRepo.update();
     }
 
-    return StreamBuilder<DataPage<BalanceChange>>(
+    if (balanceChangesRepo.isNeverUpdated == true) {
+      subscribeToBalanceChanges();
+      balanceChangesRepo.isNeverUpdated = false;
+    }
+    var stream = balanceChangesRepo.streamController.stream;
+
+    return StreamBuilder<List<BalanceChange>>(
         stream: stream,
-        builder: (context, AsyncSnapshot<DataPage<BalanceChange>> snapshot) {
+        builder: (context, AsyncSnapshot<List<BalanceChange>> snapshot) {
           if (snapshot.hasData &&
-              snapshot.data?.items.isEmpty == true &&
+              snapshot.data?.isEmpty == true &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Center(
                 child: Text(
@@ -47,7 +58,7 @@ class BalanceHistory extends StatelessWidget {
                 } else {
                   // You're at the bottom.
                   print('Scrolling reached the bottom');
-                  stream = balanceChangesRepo.loadMore().asStream();
+                  balanceChangesRepo.loadMore();
                 }
               }
             });
@@ -65,12 +76,11 @@ class BalanceHistory extends StatelessWidget {
                             Divider(height: 2),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: snapshot.data!.items.length,
+                        itemCount: snapshot.data!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Builder(
                               builder: (BuildContext context) =>
-                                  BalanceChangeItem(
-                                      snapshot.data!.items[index]));
+                                  BalanceChangeItem(snapshot.data![index]));
                         }),
                   ],
                 ),
@@ -84,5 +94,11 @@ class BalanceHistory extends StatelessWidget {
           }
           return Center(child: CircularProgressIndicator());
         });
+  }
+
+  @override
+  void dispose() {
+    balanceChangesRepo.streamController.close();
+    super.dispose();
   }
 }

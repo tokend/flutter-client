@@ -5,26 +5,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
+import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/balances/view/balance_item.dart';
 import 'package:flutter_template/features/send/view/send_bottom_dialog.dart';
 import 'package:flutter_template/utils/view/default_bottom_dialog.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
+import 'package:lazy_evaluation/lazy_evaluation.dart';
 
-class BalancesScreen extends StatelessWidget {
+class BalancesScreen extends StatefulWidget {
   bool isMovementsScreen;
 
   BalancesScreen(this.isMovementsScreen);
 
   @override
+  State<BalancesScreen> createState() => _BalancesScreenState();
+}
+
+class _BalancesScreenState extends State<BalancesScreen> {
+  RepositoryProvider repositoryProvider = Get.find();
+  Lazy<BalancesRepository>? balanceRepo;
+
+  @override
   Widget build(BuildContext context) {
-    RepositoryProvider repositoryProvider = Get.find();
-    var balanceRepo = repositoryProvider.balances;
+    balanceRepo = repositoryProvider.balances;
     var stream;
-    if (balanceRepo.value.isNeverUpdated == true) {
-      stream = balanceRepo.value.getItems().asStream();
-      balanceRepo.value.isNeverUpdated = false;
+
+    void subscribeToBalances() async {
+      await balanceRepo?.value.getItems();
     }
+
+    if (balanceRepo?.value.isNeverUpdated == true) {
+      subscribeToBalances();
+      balanceRepo?.value.isNeverUpdated = false;
+    }
+    stream = balanceRepo?.value.streamController.stream;
+
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
         stream: stream,
@@ -42,7 +58,7 @@ class BalancesScreen extends StatelessWidget {
               color: context.colorTheme.background,
               child: RefreshIndicator(
                 onRefresh: () {
-                  return balanceRepo.value.update();
+                  return balanceRepo!.value.update();
                 },
                 child: Stack(
                   children: [
@@ -56,7 +72,7 @@ class BalancesScreen extends StatelessWidget {
                           return Builder(
                               builder: (BuildContext context) => BalanceItem(
                                   snapshot.data![index],
-                                  this.isMovementsScreen));
+                                  this.widget.isMovementsScreen));
                         }),
                     Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -73,7 +89,8 @@ class BalancesScreen extends StatelessWidget {
                                 backgroundColor: Colors.transparent,
                                 builder: (context) => DefaultBottomDialog(
                                       SendScaffold(
-                                          snapshot.data!,),
+                                        snapshot.data!,
+                                      ),
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.9,
@@ -94,5 +111,11 @@ class BalancesScreen extends StatelessWidget {
           }
           return Center(child: CircularProgressIndicator());
         });
+  }
+
+  @override
+  void dispose() {
+    balanceRepo?.value.streamController.close();
+    super.dispose();
   }
 }
