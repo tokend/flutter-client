@@ -64,6 +64,7 @@ final Map<String, String> en = {
   "error_try_again": "An error occurred. Try again later",
   "error_connection_try_again": "Connection error. Try again later",
   "error_unauthorized": "The session has been expired",
+  "something_wrong_with_qr": "Something is wrong with Qr, try another one",
 
   //send
   "send_to": "Send to",

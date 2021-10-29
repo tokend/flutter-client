@@ -1,7 +1,7 @@
 class UrlConfig {
   String mApi;
   String mStorage;
-  String mClient;
+  String? mClient;
   bool withLogs = true;
 
   UrlConfig(this.mApi, this.mStorage, this.mClient, this.withLogs);
@@ -10,7 +10,7 @@ class UrlConfig {
 
   String get storage => mStorage.addTrailSlashIfNeeded().addProtocolIfNeeded();
 
-  String get client => mClient.addTrailSlashIfNeeded().addProtocolIfNeeded();
+  String? get client => mClient?.addTrailSlashIfNeeded().addProtocolIfNeeded();
 
   UrlConfig.fromJson(Map<String, dynamic> json)
       : mApi = json['api'],
