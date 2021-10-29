@@ -1,14 +1,16 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:flutter_template/data/storage%20/model/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/pagination/paging_record.dart';
 
 class MemoryOnlyPagedDataCache<T> implements PagedDataCache<T> {
-  var _items = List<T>.empty();
+  List<T> _items = [];
 
   @override
   cachePage(DataPage<dynamic> page) {
-    _items.addAll(page.items as Iterable<T>);
+    _items.addAll(page.items as List<T>);
   }
 
   @override
