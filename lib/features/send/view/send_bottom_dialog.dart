@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart' as Repo;
@@ -13,6 +12,7 @@ import 'package:flutter_template/features/send/bloc/send_bloc.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
 import 'package:flutter_template/features/send/bloc/send_state.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/utils/formatters/decimal_text_input_formatter.dart';
 import 'package:flutter_template/utils/view/counter_text_field.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
@@ -32,7 +32,8 @@ class SendScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: BlocProvider(
-      create: (_) => SendBloc(SendInitial(assets.first, balances.first)),
+      create: (_) => SendBloc(
+          SendInitial(assets.first, balances.first, Decimal.zero, '', null)),
       child: SendBottomDialog(balances, assets),
     ));
   }
@@ -214,7 +215,7 @@ BalanceRecord getBalanceByAssetCode(
   try {
     return balances.firstWhere((element) => element.asset.code == assetCode);
   } catch (e, stacktrace) {
-    log(stacktrace.toString());
+    print(stacktrace.toString());
     return balances.first;
   }
 }
@@ -251,6 +252,7 @@ class _AmountInputField extends StatelessWidget {
       builder: (context, state) {
         return DefaultTextField(
           //Amount
+          textInputFormatters: [DecimalTextInputFormatter()],
           colorTheme: context.colorTheme,
           onChanged: (String newAmount) {
             if (newAmount.isNotEmpty) {

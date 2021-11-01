@@ -47,10 +47,16 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
                 PaymentFee(SimpleFeeRecord.zero, SimpleFeeRecord.zero, true),
                 walletInfoProvider)
             .perform();
-        yield state.copyWith(isRequestReady: true);
+        yield state.copyWith(isRequestReady: true, error: null);
       } catch (e, stacktrace) {
         log(stacktrace.toString());
-        yield SendInitial(state.asset, state.balanceRecord!);
+        yield SendInitial(
+          state.asset,
+          state.balanceRecord!,
+          state.amount,
+          state.recipient,
+          e as Exception,
+        );
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
@@ -69,12 +75,17 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         } catch (e, stacktrace) {
           log(stacktrace.toString());
           if (e is InvalidRecipientException) {
-            toastManager.showShortToast('Invalid recipient');
+            toastManager.showShortToast('error_invalid_recipient'.tr);
           } else if (e is Exception) {
             errorHandler.handle(e);
           }
-          yield SendInitial(state.asset, state.balanceRecord!);
-          yield state.copyWith(error: e as Exception);
+          yield SendInitial(
+            state.asset,
+            state.balanceRecord!,
+            state.amount,
+            state.recipient,
+            e as Exception,
+          );
         }
       }
     }

@@ -64,7 +64,7 @@ class SendState extends Equatable {
       isRequestReady: isRequestReady ?? this.isRequestReady,
       isRequestConfirmed: isRequestConfirmed ?? this.isRequestConfirmed,
       isRequestSubmitted: isRequestSubmitted ?? this.isRequestSubmitted,
-      error: error ?? this.error,
+      error: error,
     );
   }
 }
@@ -72,7 +72,16 @@ class SendState extends Equatable {
 class SendInitial extends SendState {
   Asset asset;
   BalanceRecord balanceRecord;
+  Decimal amount;
+  String recipient;
+  Exception? error;
 
-  SendInitial(this.asset, this.balanceRecord)
-      : super(asset: asset, amount: Decimal.zero, balanceRecord: balanceRecord);
+  SendInitial(
+      this.asset, this.balanceRecord, this.amount, this.recipient, this.error)
+      : super(
+            asset: asset,
+            amount: amount,
+            balanceRecord: balanceRecord,
+            recipient: recipient,
+            error: error);
 }
