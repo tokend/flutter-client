@@ -93,8 +93,16 @@ final Map<String, String> en = {
   "account_id": "Account ID",
   "account_id_description": "Your account QR code",
   "secret_seed": "Secret seed",
-  "secret_seed_description": "Secret seed is private information that proves you own your account.",
+  "secret_seed_description":
+      "Secret seed is private information that proves you own your account.",
   "network_passphrase": "Network passphrase",
-  "network_passphrase_description": "Network passphrase is a sequence of words or other text used to control access to a system",
+  "network_passphrase_description":
+      "Network passphrase is a sequence of words or other text used to control access to a system",
   "tfa_label": "Two-factor authentication",
+  //change_password
+  "change_password": "Change password",
+  "current_password": "Current password",
+  "new_password": "New password",
+  "repeat_new_password": "Confirm new password",
+  "save_changes": "Save changes",
 };

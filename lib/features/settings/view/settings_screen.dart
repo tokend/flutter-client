@@ -44,7 +44,6 @@ class SettingsScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 2,
                     color: colourScheme.background,
                     child: AccountTypeTab(),
-                    //Text('Tab View 1', textAlign: TextAlign.start, style: TextStyle(fontSize: 15.0),),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 2,

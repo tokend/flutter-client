@@ -1,9 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/settings/view/security/security_list_item.dart';
 import 'package:flutter_template/features/settings/view/security/tfa_list_item.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SecurityTab extends StatefulWidget {
@@ -17,6 +17,9 @@ class _SecurityTabState extends State<SecurityTab> {
       'password_label'.tr,
       'password_description'.tr,
       CustomIcons.lock_1,
+      onTap: () {
+        Get.toNamed('/changePassword');
+      },
     ),
     SecurityListItem(
       'account_id'.tr,

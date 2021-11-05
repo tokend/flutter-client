@@ -54,9 +54,9 @@ class CustomIcons {
   static const IconData error =
       IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData eye_slash =
-      IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+      IconData(0xea3f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData eye =
-      IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+      IconData(0xea40, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData limits =
       IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData filter_active =

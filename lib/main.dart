@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
+import 'package:flutter_template/features/change_password/view/change_password_screen.dart';
 import 'package:flutter_template/features/home/view/home_screen.dart';
 import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
 import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
@@ -62,6 +63,10 @@ class App extends StatelessWidget {
             binding: binding),
         GetPage(
             name: '/settings', page: () => SettingsScreen(), binding: binding),
+        GetPage(
+            name: '/changePassword',
+            page: () => ChangePasswordScaffold(),
+            binding: binding),
       ],
     );
   }

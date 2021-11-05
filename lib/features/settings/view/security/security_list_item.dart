@@ -21,7 +21,9 @@ class SecurityListItem extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: Builder(
         builder: (BuildContext context) => GestureDetector(
-          onTap: () {},
+          onTap: () {
+            onTap?.call();
+          },
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width - 50,
