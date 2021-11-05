@@ -31,10 +31,12 @@ class _BalanceHistoryState extends State<BalanceHistory> {
       await balanceChangesRepo.update();
     }
 
-    if (balanceChangesRepo.isNeverUpdated == true) {
+    /*if (balanceChangesRepo.isNeverUpdated == true) {
       subscribeToBalanceChanges();
       balanceChangesRepo.isNeverUpdated = false;
-    }
+    }*/ //TODO
+    subscribeToBalanceChanges();
+
     var stream = balanceChangesRepo.streamController.stream;
 
     return StreamBuilder<List<BalanceChange>>(

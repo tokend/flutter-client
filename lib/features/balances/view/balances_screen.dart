@@ -29,21 +29,23 @@ class _BalancesScreenState extends State<BalancesScreen> {
   @override
   Widget build(BuildContext context) {
     balanceRepo = repositoryProvider.balances;
-    var stream;
+    var streamController;
 
     void subscribeToBalances() async {
       await balanceRepo?.value.getItems();
     }
 
+    /*
     if (balanceRepo?.value.isNeverUpdated == true) {
       subscribeToBalances();
       balanceRepo?.value.isNeverUpdated = false;
-    }
-    stream = balanceRepo?.value.streamController.stream;
+    }*/ //TODO
+    subscribeToBalances();
+    streamController = balanceRepo?.value.streamController;
 
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
-        stream: stream,
+        stream: streamController.stream,
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
           if (snapshot.data?.isEmpty == true &&
               snapshot.connectionState != ConnectionState.waiting) {

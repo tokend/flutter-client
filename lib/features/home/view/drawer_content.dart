@@ -13,22 +13,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final List<NavigationItemData> listItems = [
   //TODO update icons
-  NavigationItemData(true, null, null, CustomIcons.dashboard),
+  NavigationItemData(true, null, null, CustomIcons.element_3),
   NavigationItemData(
-      false, NavItem.dashboard, 'dashboard'.tr, CustomIcons.dashboard),
+      false, NavItem.dashboard, 'dashboard'.tr, CustomIcons.element_3),
   NavigationItemData(
-      false, NavItem.movements, 'movements'.tr, CustomIcons.movements),
-  NavigationItemData(false, NavItem.assets, 'assets'.tr, CustomIcons.assets),
-  NavigationItemData(false, NavItem.sales, 'sales'.tr, CustomIcons.sales),
-  NavigationItemData(false, NavItem.polls, 'polls'.tr, CustomIcons.polls),
-  NavigationItemData(false, NavItem.trade, 'trade'.tr, CustomIcons.trade),
+      false, NavItem.movements, 'movements'.tr, CustomIcons.message_text),
+  NavigationItemData(false, NavItem.assets, 'assets'.tr, CustomIcons.blend_2),
+  NavigationItemData(false, NavItem.sales, 'sales'.tr, CustomIcons.diagram),
+  NavigationItemData(false, NavItem.polls, 'polls'.tr, CustomIcons.clipboard_tick),
+  NavigationItemData(false, NavItem.trade, 'trade'.tr, CustomIcons.status_up),
   NavigationItemData(false, NavItem.issuance_request, 'issuance_requests'.tr,
-      CustomIcons.request_issuance),
-  NavigationItemData(false, NavItem.limits, 'limits'.tr, CustomIcons.limits),
-  NavigationItemData(false, NavItem.fees, 'fees'.tr, CustomIcons.fees),
+      CustomIcons.chart),
+  NavigationItemData(false, NavItem.limits, 'limits'.tr, CustomIcons.favorite_chart),
+  NavigationItemData(false, NavItem.fees, 'fees'.tr, CustomIcons.graph),
   NavigationItemData(
-      false, NavItem.settings, 'settings'.tr, CustomIcons.setting),
-  NavigationItemData(false, NavItem.log_out, 'log_out'.tr, CustomIcons.logout),
+      false, NavItem.settings, 'settings'.tr, CustomIcons.setting_2),
+  NavigationItemData(false, NavItem.log_out, 'log_out'.tr, CustomIcons.login),
 ];
 
 class DrawerContent extends StatelessWidget {
@@ -106,7 +106,7 @@ class DrawerContent extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(CustomIcons.eye,
+                  Icon(CustomIcons.info_circle,
                       color: context.colorTheme.secondaryText, size: 12),
                   Padding(
                     padding: EdgeInsets.only(left: 6.0),

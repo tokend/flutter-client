@@ -5,6 +5,7 @@ import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:dart_sdk/api/base/params/paging_order.dart' as pagination;
 import 'package:dart_sdk/api/base/params/paging_params_v2.dart';
 import 'package:decimal/decimal.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_template/base/model/fee.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/data/storage%20/model/paging_order.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/features/assets/model/simple_asset.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/model/balance_change_action.dart';
+import 'package:flutter_template/features/history/model/balance_change_cause.dart';
 
 class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
   String? _balanceId;
@@ -116,7 +118,9 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
               effect['relationships']['balance']['data']['id'],
               SimpleFeeRecord.fromFee(
                   Fee.fromJson(relatedEffect['attributes']['fee'])),
-              DateTime.parse(relatedOp['attributes']['applied_at']));
+              DateTime.parse(relatedOp['attributes']['applied_at']),
+              getCause(describeEnum(action),
+                  relatedOp['relationships']['details']['data']['type']));
         }).toList();
         var nextLink = Uri.decodeFull(response['links']['next']);
 
@@ -139,6 +143,47 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
       print(e);
       print(s.toString());
       return Future.error(e);
+    }
+  }
+
+  BalanceChangeCause getCause(String effectType, String operationDetails) {
+    switch (operationDetails) {
+      case 'operations-payment':
+        return Payment();
+      case 'operations-create-issuance-request':
+        return Issuance();
+      case 'operations-create-withdrawal-request':
+        return WithdrawalRequest();
+      case 'operations-manage-offer':
+        switch (effectType) {
+          case 'effects-matched':
+            return MatchedOffer();
+          case 'effects-unlocked':
+            return OfferCancellation();
+          default:
+            return Offer();
+        }
+      case 'operations-check-sale-state':
+        switch (effectType) {
+          case 'effects-matched':
+            return Investment();
+          case 'effects-issued':
+            return Issuance();
+          case 'effects-unlocked':
+            return SaleCancellation();
+          default:
+            return Unknown();
+        }
+      case 'operations-create-aml-alert':
+        return AmlAlert();
+      case 'operations-manage-asset-pair':
+        return AssetPairUpdate();
+      case 'operations-create-atomic-swap-ask-request':
+        return AtomicSwapAskCreation();
+      case 'operations-create-atomic-swap-bid-request':
+        return AtomicSwapAskCreation();
+      default:
+        return Unknown();
     }
   }
 }

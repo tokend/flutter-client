@@ -21,7 +21,7 @@ abstract class PagedDataRepository<T> extends Repository {
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
 
-  final streamController = StreamController<List<T>>();
+  final streamController = StreamController<List<T>>.broadcast();
 
   List<T> itemsList = [];
 

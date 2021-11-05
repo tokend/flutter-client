@@ -79,4 +79,22 @@ final Map<String, String> en = {
   "empty_history": "Movements history is empty",
   "empty_balances_list": "No balances found",
   "latest_activity": "Latest activity",
+
+  //settings
+  "verification": "Verification",
+  "security": "Security",
+  "general": "General",
+  "general_description": "Deposit, withdraw, buy, sell and transfer assets",
+  "corporate": "Corporate",
+  "corporate_description":
+      "Deposit, withdraw, buy, sell, transfer and create assets",
+  "account_type": "Account type",
+  "password_description": "Password settings",
+  "account_id": "Account ID",
+  "account_id_description": "Your account QR code",
+  "secret_seed": "Secret seed",
+  "secret_seed_description": "Secret seed is private information that proves you own your account.",
+  "network_passphrase": "Network passphrase",
+  "network_passphrase_description": "Network passphrase is a sequence of words or other text used to control access to a system",
+  "tfa_label": "Two-factor authentication",
 };

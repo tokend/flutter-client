@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
+import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:intl/intl.dart';
 
 class BalanceChangeItem extends StatelessWidget {
@@ -33,7 +34,8 @@ class BalanceChangeItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${describeEnum(balanceChange.action)}',
+                      '${balanceChange.cause.runtimeType.toString()}',
+                      //TODO change to appropriate strings
                       style: TextStyle(fontSize: 12.0),
                     ),
                   ],
@@ -43,7 +45,7 @@ class BalanceChangeItem extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text('${describeEnum(balanceChange.action)}',
+                    Text('${describeEnum(balanceChange.action)}'.capitalize(),
                         style: TextStyle(
                           fontSize: 13.0,
                           fontWeight: FontWeight.w700,

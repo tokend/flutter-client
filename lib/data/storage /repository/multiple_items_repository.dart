@@ -10,7 +10,7 @@ abstract class MultipleItemsRepository<T> extends Repository {
 
   Lock lock = new Lock();
 
-  final streamController = StreamController<List<T>>();
+  final streamController = StreamController<List<T>>.broadcast();
 
   //TODO implement items ensuring
 
