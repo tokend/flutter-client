@@ -6,6 +6,7 @@ import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
+import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -67,8 +68,7 @@ class HomeScreen extends StatelessWidget {
         // TODO: Handle this case.
         break;
       case NavItem.settings:
-        // TODO: Handle this case.
-        break;
+        return SettingsScreen();
       case NavItem.log_out:
         // TODO: Handle this case.
         break;
