@@ -20,21 +20,31 @@ class SettingsScreen extends StatelessWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(
+          color: colourScheme.background,
           width: MediaQuery.of(context).size.width,
           child: Column(children: [
             TabBar(
               labelColor: colourScheme.primary,
               indicatorColor: colourScheme.primary,
               unselectedLabelColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
               tabs: [
                 Container(
-                    color: colourScheme.background,
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Tab(text: tabs[0])),
+                  color: colourScheme.background,
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Tab(
+                    text: tabs[0],
+                    iconMargin: EdgeInsets.zero,
+                  ),
+                ),
                 Container(
-                    color: colourScheme.background,
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Tab(text: tabs[1])),
+                  color: colourScheme.background,
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Tab(
+                    text: tabs[1],
+                    iconMargin: EdgeInsets.zero,
+                  ),
+                ),
               ],
             ),
             Expanded(

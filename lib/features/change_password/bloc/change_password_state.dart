@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_template/utils/view/models/confirm_password.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
 
 class ChangePasswordState extends Equatable {
   final Password oldPassword;
   final Password newPassword;
-  final Password repeatPassword;
+  final ConfirmPassword repeatPassword;
   final FormzStatus status;
   Object? error;
 
@@ -19,7 +20,7 @@ class ChangePasswordState extends Equatable {
   ChangePasswordState copyWith({
     Password? oldPassword,
     Password? newPassword,
-    Password? repeatPassword,
+    ConfirmPassword? repeatPassword,
     FormzStatus? status,
     Object? error,
   }) {

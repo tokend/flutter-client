@@ -1,21 +1,30 @@
+import 'package:dart_sdk/tfa/exceptions.dart';
+import 'package:dart_sdk/tfa/password_tfa_otp_generator.dart';
+import 'package:dart_sdk/tfa/tfa_callback.dart';
+import 'package:dart_sdk/tfa/tfa_verifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_bloc.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_event.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_state.dart';
+import 'package:flutter_template/features/tfa%20/app_tfa_callback.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
+import 'package:flutter_template/utils/view/models/confirm_password.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
+import 'package:flutter_template/view/toast_manager.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 GlobalKey<DefaultButtonState> _saveChangesButtonKey =
     GlobalKey<DefaultButtonState>();
+String oldPassword = '';
 
 class ChangePasswordScaffold extends StatelessWidget {
   @override
@@ -24,10 +33,13 @@ class ChangePasswordScaffold extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: context.colorTheme.background,
         iconTheme: IconThemeData(color: context.colorTheme.accent),
-        title: Text(
-          'change_password'.tr,
-          style:
-              TextStyle(color: context.colorTheme.primaryText, fontSize: 17.0),
+        title: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'change_password'.tr,
+            style: TextStyle(
+                color: context.colorTheme.primaryText, fontSize: 17.0),
+          ),
         ),
         elevation: 0,
       ),
@@ -35,7 +47,7 @@ class ChangePasswordScaffold extends StatelessWidget {
         top: false,
         child: BlocProvider(
           create: (_) => ChangePasswordBloc(ChangePasswordState(Password.pure(),
-              Password.pure(), Password.pure(), FormzStatus.pure)),
+              Password.pure(), ConfirmPassword.pure(), FormzStatus.pure)),
           child: ChangePasswordScreen(),
         ),
       ),
@@ -43,11 +55,16 @@ class ChangePasswordScaffold extends StatelessWidget {
   }
 }
 
-class ChangePasswordScreen extends StatelessWidget {
+class ChangePasswordScreen extends StatelessWidget implements TfaCallback {
+  ToastManager tm = Get.find();
+  var progress;
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    var progress;
+
+    AppTfaCallback appTfaCallback = Get.find();
+    appTfaCallback.registerHandler(this);
 
     return ProgressHUD(
       child: Builder(builder: (contextBuilder) {
@@ -60,6 +77,8 @@ class ChangePasswordScreen extends StatelessWidget {
                 child: Stack(children: [
                   Column(
                     children: [
+                      Padding(
+                          padding: EdgeInsets.only(top: Sizes.doubleMargin)),
                       _OldPasswordInputField(),
                       Padding(
                           padding: EdgeInsets.only(top: Sizes.standartMargin)),
@@ -98,12 +117,31 @@ class ChangePasswordScreen extends StatelessWidget {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.offAllNamed('/home');
+                tm.showShortToast('password_changed_successfully'.tr);
               }
             },
             child: signInWidget);
       }),
     );
+  }
+
+  @override
+  Future<void> onTfaRequired(
+      NeedTfaException exception, Interface verifierInterface) async {
+    WalletInfoProvider walletInfoProvider = Get.find();
+    var email = walletInfoProvider.getWalletInfo()?.email;
+
+    try {
+      var otp = await PasswordTfaOtpGenerator()
+          .generate(exception, email!, oldPassword);
+
+      verifierInterface.verify(otp);
+    } catch (e, s) {
+      print('Entered password is incorrect $s');
+      progress.dismiss();
+      tm.showShortToast('error_wrong_entered_password'.tr);
+      throw e;
+    }
   }
 }
 
@@ -121,6 +159,7 @@ class _OldPasswordInputField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: PasswordTextField(
+            backgroundColor: colorTheme.secondaryText,
             label: 'current_password'.tr,
             hint: 'password_hint'.tr,
             key: const Key('ChangePasswordForm_oldPasswordInput_textField'),
@@ -128,6 +167,7 @@ class _OldPasswordInputField extends StatelessWidget {
                 ? state.oldPassword.error!.name
                 : null,
             onChanged: (password) {
+              oldPassword = password;
               context
                   .read<ChangePasswordBloc>()
                   .add(OldPasswordChanged(password));
@@ -146,24 +186,25 @@ class _NewPasswordInputField extends StatelessWidget {
     final colorTheme = context.colorTheme;
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
       buildWhen: (previous, current) =>
-          previous.oldPassword != current.oldPassword,
+          previous.newPassword != current.newPassword,
       builder: (context, state) {
-        print(state.oldPassword.error != null
-            ? state.oldPassword.error!.name
+        print(state.newPassword.error != null
+            ? state.newPassword.error!.name
             : null);
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: PasswordTextField(
+            backgroundColor: colorTheme.secondaryText,
             label: 'new_password'.tr,
             hint: 'password_hint'.tr,
             key: const Key('ChangePasswordForm_newPasswordInput_textField'),
-            error: state.oldPassword.error != null
-                ? state.oldPassword.error!.name
+            error: state.newPassword.error != null
+                ? state.newPassword.error!.name
                 : null,
             onChanged: (password) {
               context
                   .read<ChangePasswordBloc>()
-                  .add(OldPasswordChanged(password));
+                  .add(NewPasswordChanged(password));
             },
             colorTheme: colorTheme,
           ),
@@ -179,24 +220,25 @@ class _RepeatPasswordInputField extends StatelessWidget {
     final colorTheme = context.colorTheme;
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
       buildWhen: (previous, current) =>
-          previous.oldPassword != current.oldPassword,
+          previous.repeatPassword != current.repeatPassword,
       builder: (context, state) {
-        print(state.oldPassword.error != null
-            ? state.oldPassword.error!.name
+        print(state.repeatPassword.error != null
+            ? state.repeatPassword.error!.name
             : null);
         return Padding(
           padding: const EdgeInsets.only(bottom: 0.0),
           child: PasswordTextField(
+            backgroundColor: colorTheme.secondaryText,
             label: 'repeat_new_password'.tr,
             hint: 'password_hint'.tr,
             key: const Key('ChangePasswordForm_repeatPasswordInput_textField'),
-            error: state.oldPassword.error != null
-                ? state.oldPassword.error!.name
+            error: state.repeatPassword.error != null
+                ? state.repeatPassword.error!.name
                 : null,
             onChanged: (password) {
               context
                   .read<ChangePasswordBloc>()
-                  .add(OldPasswordChanged(password));
+                  .add(RepeatPasswordChanged(password));
             },
             colorTheme: colorTheme,
           ),

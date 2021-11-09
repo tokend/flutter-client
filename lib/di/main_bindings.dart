@@ -19,12 +19,12 @@ import 'package:flutter_template/logic/credentials/persistence/wallet_info_persi
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence_impl.dart';
 import 'package:flutter_template/logic/session.dart';
 import 'package:flutter_template/logic/tx_manager.dart';
-import 'package:get/get.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_template/utils/error_handler/default_error_handler.dart';
 import 'package:flutter_template/utils/error_handler/error_handler.dart';
 import 'package:flutter_template/view/toast_manager.dart';
+import 'package:get/get.dart';
+import 'package:get/get_instance/src/bindings_interface.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainBindings extends Bindings {
   Env env;
@@ -62,6 +62,7 @@ class MainBindings extends Bindings {
 
     //Put to GetX pool
     Get.put(env);
+    Get.put(tfaCallback);
     Get.put(apiProvider);
     Get.put(urlConfigProvider);
     Get.put(session);

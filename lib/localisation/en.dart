@@ -66,6 +66,7 @@ final Map<String, String> en = {
   "error_unauthorized": "The session has been expired",
   "something_wrong_with_qr": "Something is wrong with Qr, try another one",
   "error_invalid_recipient": "Invalid recipient",
+  "error_wrong_entered_password": "Entered password is wrong",
 
   //send
   "send_to": "Send to",
@@ -105,4 +106,5 @@ final Map<String, String> en = {
   "new_password": "New password",
   "repeat_new_password": "Confirm new password",
   "save_changes": "Save changes",
+  "password_changed_successfully": "Password was changed successfully",
 };
