@@ -25,11 +25,17 @@ class _SecurityTabState extends State<SecurityTab> {
       'account_id'.tr,
       'account_id_description'.tr,
       CustomIcons.user,
+      onTap: () {
+        Get.toNamed('/accountId');
+      },
     ),
     SecurityListItem(
       'secret_seed'.tr,
       'secret_seed_description'.tr,
       CustomIcons.card_edit,
+      onTap: () {
+        Get.toNamed('/secretSeed');
+      },
     ),
     SecurityListItem(
       'network_passphrase'.tr,

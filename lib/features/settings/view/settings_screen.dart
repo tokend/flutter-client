@@ -4,7 +4,7 @@ import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/settings/view/security/security_tab.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import 'account_type_tab.dart';
+import 'verification/account_type_tab.dart';
 
 class SettingsScreen extends StatelessWidget {
   final tabs = [

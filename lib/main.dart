@@ -9,6 +9,7 @@ import 'package:flutter_template/features/change_password/view/change_password_s
 import 'package:flutter_template/features/home/view/home_screen.dart';
 import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
 import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
+import 'package:flutter_template/features/settings/view/security/account_id/account_id_screen.dart';
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/env.dart';
+import 'features/settings/view/security/secret_seed/secret_seed_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +68,14 @@ class App extends StatelessWidget {
         GetPage(
             name: '/changePassword',
             page: () => ChangePasswordScaffold(),
+            binding: binding),
+        GetPage(
+            name: '/accountId',
+            page: () => AccountIdScreen(),
+            binding: binding),
+        GetPage(
+            name: '/secretSeed',
+            page: () => SecretSeedScreen(),
             binding: binding),
       ],
     );

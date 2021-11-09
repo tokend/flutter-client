@@ -100,6 +100,7 @@ final Map<String, String> en = {
   "network_passphrase_description":
       "Network passphrase is a sequence of words or other text used to control access to a system",
   "tfa_label": "Two-factor authentication",
+  "data_copied": "Data was copied to the Clipboard",
   //change_password
   "change_password": "Change password",
   "current_password": "Current password",

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/settings/view/account_type_item.dart';
+import 'package:flutter_template/features/settings/view/verification/account_type_item.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class AccountTypeTab extends StatelessWidget {
