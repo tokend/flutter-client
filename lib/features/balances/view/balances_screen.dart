@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
 import 'package:lazy_evaluation/lazy_evaluation.dart';
 
-class BalancesScreen extends StatefulWidget {
+class BalancesScreen extends BaseStatefulWidget {
   bool isMovementsScreen;
 
   BalancesScreen(this.isMovementsScreen);
@@ -23,25 +23,23 @@ class BalancesScreen extends StatefulWidget {
 }
 
 class _BalancesScreenState extends State<BalancesScreen> {
-  RepositoryProvider repositoryProvider = Get.find();
   Lazy<BalancesRepository>? balanceRepo;
 
   @override
   Widget build(BuildContext context) {
-    balanceRepo = repositoryProvider.balances;
+    balanceRepo = widget.repositoryProvider.balances;
     var streamController;
 
     void subscribeToBalances() async {
       await balanceRepo?.value.getItems();
     }
 
-    /*
     if (balanceRepo?.value.isNeverUpdated == true) {
       subscribeToBalances();
       balanceRepo?.value.isNeverUpdated = false;
-    }*/ //TODO
-    subscribeToBalances();
-    streamController = balanceRepo?.value.streamController;
+    }
+
+    streamController = balanceRepo?.value.streamSubject;
 
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
@@ -49,11 +47,14 @@ class _BalancesScreenState extends State<BalancesScreen> {
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
           if (snapshot.data?.isEmpty == true &&
               snapshot.connectionState != ConnectionState.waiting) {
-            return Center(
-                child: Text(
-              'empty_balances_list'.tr,
-              style: TextStyle(fontSize: 17.0),
-            ));
+            return Container(
+              color: context.colorTheme.background,
+              child: Center(
+                  child: Text(
+                'empty_balances_list'.tr,
+                style: TextStyle(fontSize: 17.0),
+              )),
+            );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
             return Container(
@@ -111,13 +112,9 @@ class _BalancesScreenState extends State<BalancesScreen> {
             return Text(
                 snapshot.error.toString()); // TODO display error correctly
           }
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              color: context.colorTheme.background,
+              child: Center(child: CircularProgressIndicator()));
         });
-  }
-
-  @override
-  void dispose() {
-    balanceRepo?.value.streamController.close();
-    super.dispose();
   }
 }

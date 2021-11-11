@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
+import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/change_password/view/change_password_screen.dart';
 import 'package:flutter_template/features/home/view/home_screen.dart';
@@ -18,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/env.dart';
+import 'features/settings/view/security/network_screen/network_screen.dart';
 import 'features/settings/view/security/secret_seed/secret_seed_screen.dart';
 
 Future<void> main() async {
@@ -38,6 +40,9 @@ class App extends StatelessWidget {
     MainBindings(env, sharedPreferences).dependencies();
     var binding = MainBindings(env, sharedPreferences);
     return GetMaterialApp(
+      theme: ThemeData(
+          backgroundColor: context.colorTheme.background,
+          scaffoldBackgroundColor: context.colorTheme.background),
       title: 'Flutter Client',
       locale: Get.deviceLocale,
       translations: AppTranslation(),
@@ -76,6 +81,10 @@ class App extends StatelessWidget {
         GetPage(
             name: '/secretSeed',
             page: () => SecretSeedScreen(),
+            binding: binding),
+        GetPage(
+            name: '/passphraseScreen',
+            page: () => PassphraseScreen(),
             binding: binding),
       ],
     );

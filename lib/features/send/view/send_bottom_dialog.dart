@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart' as Repo;
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
@@ -39,7 +39,7 @@ class SendScaffold extends StatelessWidget {
   }
 }
 
-class SendBottomDialog extends StatelessWidget {
+class SendBottomDialog extends BaseStatelessWidget {
   List<BalanceRecord> balances;
   List<Asset> assets;
   GlobalKey<DefaultButtonState> _sendButtonKey =
@@ -62,7 +62,6 @@ class SendBottomDialog extends StatelessWidget {
                     progress.dismiss();
                   } else if (state.isRequestSubmitted) {
                     progress.dismiss();
-                    Repo.RepositoryProvider repositoryProvider = Get.find();
                     repositoryProvider.balances.value.update();
                     Navigator.pop(contextBuilder, false);
                   } else if (state.isRequestConfirmed) {

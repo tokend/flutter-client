@@ -63,7 +63,7 @@ class ConfirmPaymentRequestUseCase {
       return Future.value(transaction);
     } catch (e, s) {
       log(s.toString());
-      if (e is ArgumentError) {
+      if (e is ArgumentError || e is FormatException) {
         throw InvalidRecipientException();
       }
       throw e;

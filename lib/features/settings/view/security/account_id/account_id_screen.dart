@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
-import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-class AccountIdScreen extends StatelessWidget {
-  WalletInfoProvider walletInfoProvider = Get.find();
-
+class AccountIdScreen extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ToastManager toastManager = Get.find();
+    WalletInfoProvider walletInfoProvider = Get.find();
+
     var accountId = walletInfoProvider.getWalletInfo()?.accountId.toUpperCase();
     return Scaffold(
       backgroundColor: context.colorTheme.background,
@@ -33,6 +33,13 @@ class AccountIdScreen extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 70.0, horizontal: 67.0),
+            child: QrImage(
+              data: accountId!,
+              size: 200.0,
+            ),
+          ),
           Text(
             'account_id'.tr,
             style:

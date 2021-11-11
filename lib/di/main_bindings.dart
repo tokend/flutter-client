@@ -8,7 +8,6 @@ import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/account_provider_impl.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/api_provider_impl.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider_impl.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider_impl.dart';
@@ -52,7 +51,7 @@ class MainBindings extends Bindings {
     WalletInfoPersistence walletInfoPersistence =
         WalletInfoPersistenceImpl(sharedPreferences);
     TxManager txManager = TxManager(apiProvider);
-    RepositoryProvider repositoryProvider = RepositoryProviderImpl(
+    RepositoryProviderImpl repositoryProvider = RepositoryProviderImpl(
         apiProvider: apiProvider,
         walletInfoProvider: walletInfoProvider,
         urlConfigProvider: urlConfigProvider,

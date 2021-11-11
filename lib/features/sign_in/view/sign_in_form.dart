@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
-import 'package:flutter_template/config/env.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
@@ -166,11 +166,10 @@ class SignInForm extends StatelessWidget {
   }
 }
 
-class _NetworkInputField extends StatelessWidget {
+class _NetworkInputField extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    Env env = Get.find();
     return BlocBuilder<SignInBloc, SignInState>(
         buildWhen: (previous, current) => previous.network != current.network,
         builder: (context, state) {
@@ -195,11 +194,9 @@ class _NetworkInputField extends StatelessWidget {
   }
 }
 
-class _LoggedInUseCase extends StatelessWidget {
+class _LoggedInUseCase extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
-    CredentialsPersistence credentialsPersistence = Get.find();
-
     return BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         context.read<SignInBloc>().add(NotFirstLogIn(

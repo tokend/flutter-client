@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_template/features/history/storage/balance_changes_reposi
 import 'package:flutter_template/features/history/view/balance_change_item.dart';
 import 'package:get/get.dart';
 
-class BalanceHistory extends StatefulWidget {
+class BalanceHistory extends BaseStatefulWidget {
   BalanceRecord balanceRecord;
 
   BalanceHistory(this.balanceRecord);
@@ -20,17 +20,18 @@ class BalanceHistory extends StatefulWidget {
 }
 
 class _BalanceHistoryState extends State<BalanceHistory> {
-  RepositoryProvider repositoryProvider = Get.find();
   late BalanceChangesRepository balanceChangesRepo;
 
   @override
   Widget build(BuildContext context) {
     balanceChangesRepo =
-        repositoryProvider.balanceChanges(widget.balanceRecord.id);
+        widget.repositoryProvider.balanceChanges(widget.balanceRecord.id);
     void subscribeToBalanceChanges() async {
       await balanceChangesRepo.update();
+      balanceChangesRepo.isNeverUpdated = false;
     }
 
+    var loading = false;
     /*if (balanceChangesRepo.isNeverUpdated == true) {
       subscribeToBalanceChanges();
       balanceChangesRepo.isNeverUpdated = false;
@@ -45,23 +46,31 @@ class _BalanceHistoryState extends State<BalanceHistory> {
           if (snapshot.hasData &&
               snapshot.data?.isEmpty == true &&
               snapshot.connectionState != ConnectionState.waiting) {
-            return Center(
-                child: Text(
-              'empty_history'.tr,
-              style: TextStyle(fontSize: 17.0),
-            ));
+            return Container(
+              color: context.colorTheme.background,
+              child: Center(
+                  child: Text(
+                'empty_history'.tr,
+                style: TextStyle(fontSize: 17.0),
+              )),
+            );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
             var controller = ScrollController();
-            controller.addListener(() {
+            controller.addListener(() async {
               if (controller.position.atEdge) {
                 if (controller.position.pixels == 0) {
                   // You're at the top.
                 } else {
                   // You're at the bottom.
                   print('Scrolling reached the bottom');
-                  balanceChangesRepo.loadMore();
+                  loading = true;
+                  if ((await balanceChangesRepo.loadMore()) == false) {
+                    loading = false;
+                  }
                 }
+              } else {
+                loading = false;
               }
             });
             return Container(
@@ -84,6 +93,13 @@ class _BalanceHistoryState extends State<BalanceHistory> {
                               builder: (BuildContext context) =>
                                   BalanceChangeItem(snapshot.data![index]));
                         }),
+                    Visibility(
+                      visible: loading,
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -94,7 +110,9 @@ class _BalanceHistoryState extends State<BalanceHistory> {
             return Text(
                 snapshot.error.toString()); // TODO display error correctly
           }
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              color: context.colorTheme.background,
+              child: Center(child: CircularProgressIndicator()));
         });
   }
 

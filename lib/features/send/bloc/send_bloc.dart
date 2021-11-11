@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
 import 'package:flutter_template/features/send/bloc/send_state.dart';
@@ -12,9 +11,6 @@ import 'package:flutter_template/features/send/logic/payment_request_usecase.dar
 import 'package:flutter_template/features/send/model/payment_fee.dart';
 import 'package:flutter_template/features/send/model/payment_recipient.dart';
 import 'package:flutter_template/features/send/model/payment_request.dart';
-import 'package:flutter_template/logic/tx_manager.dart';
-import 'package:flutter_template/utils/error_handler/error_handler.dart';
-import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 
 class SendBloc extends BaseBloc<SendEvent, SendState> {
@@ -34,7 +30,7 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
     } else if (event is FormFilled) {
       yield state.copyWith(isFilled: event.isFilled);
 
-      WalletInfoProvider walletInfoProvider = Get.find();
+      WalletInfoProvider walletInfoProvider = session.walletInfoProvider;
 
       try {
         this.paymentRequest = await CreatePaymentRequestUseCase(
@@ -60,12 +56,8 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
+      AccountProvider accountProvider = session.accountProvider;
 
-      AccountProvider accountProvider = Get.find();
-      TxManager txManager = Get.find();
-      RepositoryProvider repositoryProvider = Get.find();
-      ErrorHandler errorHandler = Get.find();
-      ToastManager toastManager = Get.find();
       if (this.paymentRequest != null) {
         try {
           await ConfirmPaymentRequestUseCase(this.paymentRequest!,

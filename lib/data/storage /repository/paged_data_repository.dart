@@ -20,7 +20,6 @@ abstract class PagedDataRepository<T> extends Repository {
       nextCursor == null || pagingOrder == PagingOrder.asc && nextCursor == 0;
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
-
   final streamController = StreamController<List<T>>.broadcast();
 
   List<T> itemsList = [];
@@ -60,19 +59,20 @@ abstract class PagedDataRepository<T> extends Repository {
     cache?.cachePage(page);
   }
 
-  Future<List<T>> loadMore({bool force = false}) async {
+  Future<bool> loadMore({bool force = false}) async {
     if ((noMoreItems || (isLoading && !isLoadingTopPages)) && !force) {
-      return Future.value(List.empty());
+      onNewPage(DataPage(null, List.empty(), true));
+      return Future.value(false);
     }
     return getCachedPage(nextCursor).then((cachedPage) async {
       if (cachedPage.isLast) {
         log('Cached page is last');
         var res = await getAndCacheRemotePage(nextCursor, pagingOrder);
         onNewPage(res);
-        return res.items;
-      } else {
-        return cachedPage.items;
+        isLoading = false;
       }
+
+      return Future.value(true);
     });
   }
 

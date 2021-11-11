@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_event.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final List<NavigationItemData> listItems = [
   //TODO update icons
@@ -20,18 +20,20 @@ final List<NavigationItemData> listItems = [
       false, NavItem.movements, 'movements'.tr, CustomIcons.message_text),
   NavigationItemData(false, NavItem.assets, 'assets'.tr, CustomIcons.blend_2),
   NavigationItemData(false, NavItem.sales, 'sales'.tr, CustomIcons.diagram),
-  NavigationItemData(false, NavItem.polls, 'polls'.tr, CustomIcons.clipboard_tick),
+  NavigationItemData(
+      false, NavItem.polls, 'polls'.tr, CustomIcons.clipboard_tick),
   NavigationItemData(false, NavItem.trade, 'trade'.tr, CustomIcons.status_up),
   NavigationItemData(false, NavItem.issuance_request, 'issuance_requests'.tr,
       CustomIcons.chart),
-  NavigationItemData(false, NavItem.limits, 'limits'.tr, CustomIcons.favorite_chart),
+  NavigationItemData(
+      false, NavItem.limits, 'limits'.tr, CustomIcons.favorite_chart),
   NavigationItemData(false, NavItem.fees, 'fees'.tr, CustomIcons.graph),
   NavigationItemData(
       false, NavItem.settings, 'settings'.tr, CustomIcons.setting_2),
   NavigationItemData(false, NavItem.log_out, 'log_out'.tr, CustomIcons.login),
 ];
 
-class DrawerContent extends StatelessWidget {
+class DrawerContent extends BaseStatelessWidget {
   final String accountName;
   final String accountEmail;
 
@@ -190,7 +192,6 @@ class DrawerContent extends StatelessWidget {
   }
 
   signOut({bool soft = false}) {
-    SharedPreferences sharedPreferences = Get.find();
     sharedPreferences.clear();
     Get.offAllNamed('/signIn');
   }

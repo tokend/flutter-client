@@ -37,7 +37,9 @@ class BalanceHistoryScreen extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
         ),
-        body: BalanceHistory(balanceRecord),
+        body: Container(
+            color: context.colorTheme.background,
+            child: BalanceHistory(balanceRecord)),
       ),
     );
   }

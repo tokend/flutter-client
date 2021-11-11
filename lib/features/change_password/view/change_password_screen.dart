@@ -6,18 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_bloc.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_event.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_state.dart';
-import 'package:flutter_template/features/tfa%20/app_tfa_callback.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/models/confirm_password.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
-import 'package:flutter_template/view/toast_manager.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -55,15 +54,13 @@ class ChangePasswordScaffold extends StatelessWidget {
   }
 }
 
-class ChangePasswordScreen extends StatelessWidget implements TfaCallback {
-  ToastManager tm = Get.find();
+class ChangePasswordScreen extends BaseStatelessWidget implements TfaCallback {
   var progress;
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
 
-    AppTfaCallback appTfaCallback = Get.find();
     appTfaCallback.registerHandler(this);
 
     return ProgressHUD(
@@ -117,7 +114,7 @@ class ChangePasswordScreen extends StatelessWidget implements TfaCallback {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                tm.showShortToast('password_changed_successfully'.tr);
+                toastManager.showShortToast('password_changed_successfully'.tr);
               }
             },
             child: signInWidget);
@@ -139,7 +136,7 @@ class ChangePasswordScreen extends StatelessWidget implements TfaCallback {
     } catch (e, s) {
       print('Entered password is incorrect $s');
       progress.dismiss();
-      tm.showShortToast('error_wrong_entered_password'.tr);
+      toastManager.showShortToast('error_wrong_entered_password'.tr);
       throw e;
     }
   }

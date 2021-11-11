@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
-import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-class SecretSeedScreen extends StatelessWidget {
+class SecretSeedScreen extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
     WalletInfoProvider walletInfoProvider = Get.find();
-    ToastManager toastManager = Get.find();
     var seed = walletInfoProvider.getWalletInfo()?.secretSeeds[0];
     return Scaffold(
       backgroundColor: context.colorTheme.background,
