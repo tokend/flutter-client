@@ -80,6 +80,16 @@ final Map<String, String> en = {
   "empty_history": "Movements history is empty",
   "empty_balances_list": "No balances found",
   "latest_activity": "Latest activity",
+  //transaction details
+  "transaction_details": "Transaction details",
+  "type": "Type",
+  "operation": "Operation",
+  "date": "Date",
+  "fixed_fee": "Fixed fee",
+  "percent_fee": "Percent fee (calculated)",
+  "total_fee": "Total fee",
+  "reference": "Reference",
+  "receiver": "Receiver",
 
   //settings
   "verification": "Verification",

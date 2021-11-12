@@ -62,7 +62,7 @@ class SendBottomDialog extends BaseStatelessWidget {
                     progress.dismiss();
                   } else if (state.isRequestSubmitted) {
                     progress.dismiss();
-                    repositoryProvider.balances.value.update();
+                    repositoryProvider.balances.update();
                     Navigator.pop(contextBuilder, false);
                   } else if (state.isRequestConfirmed) {
                     progress.show();

@@ -11,7 +11,7 @@ class PassphraseScreen extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: repositoryProvider.systemInfo.value
+        future: repositoryProvider.systemInfo
             .getItem()
             .then((systemInfo) => systemInfo.passphrase),
         builder: (context, AsyncSnapshot<String> snapshot) {

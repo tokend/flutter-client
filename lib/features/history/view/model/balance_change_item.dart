@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
+import 'package:flutter_template/features/history/view/transaction_details_screen.dart';
 import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:intl/intl.dart';
 
@@ -82,6 +83,13 @@ class BalanceChangeItem extends StatelessWidget {
             ),
           ]),
           trailing: null,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        TransactionDetailsScreen(balanceChange)));
+          },
         ),
       ),
     );

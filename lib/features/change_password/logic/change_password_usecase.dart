@@ -97,7 +97,7 @@ class ChangePasswordUseCase {
   }
 
   Future<NetworkParams> getNetworkParams() {
-    return _repositoryProvider.systemInfo.value
+    return _repositoryProvider.systemInfo
         .getItem()
         .then((systemInfoRecord) => systemInfoRecord.toNetworkParams());
   }

@@ -11,7 +11,6 @@ import 'package:flutter_template/features/send/view/send_bottom_dialog.dart';
 import 'package:flutter_template/utils/view/default_bottom_dialog.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:get/get.dart';
-import 'package:lazy_evaluation/lazy_evaluation.dart';
 
 class BalancesScreen extends BaseStatefulWidget {
   bool isMovementsScreen;
@@ -23,29 +22,27 @@ class BalancesScreen extends BaseStatefulWidget {
 }
 
 class _BalancesScreenState extends State<BalancesScreen> {
-  Lazy<BalancesRepository>? balanceRepo;
-
   @override
   Widget build(BuildContext context) {
-    balanceRepo = widget.repositoryProvider.balances;
+    BalancesRepository balanceRepo = widget.repositoryProvider.balances;
     var streamController;
 
     void subscribeToBalances() async {
-      await balanceRepo?.value.getItems();
+      await balanceRepo.getItems();
     }
 
-    if (balanceRepo?.value.isNeverUpdated == true) {
+    if (balanceRepo.isNeverUpdated == true) {
       subscribeToBalances();
-      balanceRepo?.value.isNeverUpdated = false;
     }
 
-    streamController = balanceRepo?.value.streamSubject;
+    streamController = balanceRepo.streamSubject;
 
     return StreamBuilder<List<BalanceRecord>>(
         initialData: [],
         stream: streamController.stream,
         builder: (context, AsyncSnapshot<List<BalanceRecord>> snapshot) {
           if (snapshot.data?.isEmpty == true &&
+              balanceRepo.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
               color: context.colorTheme.background,
@@ -57,11 +54,13 @@ class _BalancesScreenState extends State<BalancesScreen> {
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
+            balanceRepo.isNeverUpdated = false;
+
             return Container(
               color: context.colorTheme.background,
               child: RefreshIndicator(
                 onRefresh: () {
-                  return balanceRepo!.value.update();
+                  return balanceRepo.update();
                 },
                 child: Stack(
                   children: [

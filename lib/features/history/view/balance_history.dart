@@ -7,7 +7,7 @@ import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
-import 'package:flutter_template/features/history/view/balance_change_item.dart';
+import 'package:flutter_template/features/history/view/model/balance_change_item.dart';
 import 'package:get/get.dart';
 
 class BalanceHistory extends BaseStatefulWidget {

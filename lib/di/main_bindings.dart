@@ -70,7 +70,7 @@ class MainBindings extends Bindings {
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);
     Get.lazyPut(() => txManager);
-    Get.lazyPut(() => repositoryProvider);
+    Get.put(repositoryProvider);
     Get.put(toastManager);
     Get.put(errorHandler);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example

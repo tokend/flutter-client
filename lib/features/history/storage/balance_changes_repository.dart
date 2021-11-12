@@ -90,11 +90,10 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
 
         var participantEffects =
             data.where((dataItem) => dataItem['type'] == 'participant-effects');
-        var effectsCharged = included.where((include) =>
-            include['type'] == 'effects-charged' ||
-            include['type'] == 'effects-issued');
-        var operationsPayment = included
-            .where((include) => include['type'] == 'operations-payment');
+        var effectsCharged = included.where(
+            (include) => include['type'].toString().contains('effects-'));
+        var operationsPayment = included.where(
+            (include) => include['type'].toString().contains('operations-'));
         var operations =
             included.where((include) => include['type'] == 'operations');
 
@@ -106,21 +105,28 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
               element['id'] ==
               effect['relationships']['operation']['data']['id']);
 
+          var relatedPaymentOp = operationsPayment.firstWhere((element) =>
+              element['id'] ==
+              effect['relationships']['operation']['data']['id']);
+
           var action = getBalanceChangeAction(
               effect['relationships']['effect']['data']['type']);
 
           return BalanceChange(
-              int.parse(relatedEffect['id']),
-              action,
-              Decimal.parse(relatedEffect['attributes']['amount']),
-              SimpleAsset(
-                  effect['relationships']['asset']['data']['id'], '', 6),
-              effect['relationships']['balance']['data']['id'],
-              SimpleFeeRecord.fromFee(
-                  Fee.fromJson(relatedEffect['attributes']['fee'])),
-              DateTime.parse(relatedOp['attributes']['applied_at']),
-              getCause(describeEnum(action),
-                  relatedOp['relationships']['details']['data']['type']));
+            int.parse(relatedEffect['id']),
+            _accountId!,
+            action,
+            Decimal.parse(relatedEffect['attributes']['amount']),
+            SimpleAsset(effect['relationships']['asset']['data']['id'], '', 6),
+            effect['relationships']['balance']['data']['id'],
+            SimpleFeeRecord.fromFee(
+                Fee.fromJson(relatedEffect['attributes']['fee'])),
+            DateTime.parse(relatedOp['attributes']['applied_at']),
+            getCause(
+                describeEnum(action),
+                relatedOp['relationships']['details']['data']['type'],
+                relatedPaymentOp['relationships']),
+          );
         }).toList();
         var nextLink = Uri.decodeFull(response['links']['next']);
 
@@ -146,10 +152,14 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
     }
   }
 
-  BalanceChangeCause getCause(String effectType, String operationDetails) {
-    switch (operationDetails) {
+  BalanceChangeCause getCause(String effectType, String operationDetailsType,
+      Map<String, dynamic> operationDetails) {
+    switch (operationDetailsType) {
       case 'operations-payment':
-        return Payment();
+        return Payment(
+          operationDetails['account_from']['data']['id'],
+          operationDetails['account_to']['data']['id'],
+        );
       case 'operations-create-issuance-request':
         return Issuance();
       case 'operations-create-withdrawal-request':

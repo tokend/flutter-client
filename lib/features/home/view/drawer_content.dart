@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/base/base_widget.dart';
+import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_event.dart';
@@ -192,7 +193,11 @@ class DrawerContent extends BaseStatelessWidget {
   }
 
   signOut({bool soft = false}) {
+    //Delete all dependencies for current account
     sharedPreferences.clear();
+    Get.deleteAll();
+    MainBindings(env, sharedPreferences).dependencies();
+
     Get.offAllNamed('/signIn');
   }
 }
