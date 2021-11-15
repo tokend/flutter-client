@@ -62,6 +62,7 @@ dependencies:
   flutter_switch: ^0.3.2
   rxdart: ^0.27.2
   qr_flutter: ^4.0.0
+  cached_network_image: ^3.1.0+1
 
 
 

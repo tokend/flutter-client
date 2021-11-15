@@ -14,8 +14,9 @@ import 'package:get/get.dart';
 
 class BalancesScreen extends BaseStatefulWidget {
   bool isMovementsScreen;
+  bool isMyBalancesScreen;
 
-  BalancesScreen(this.isMovementsScreen);
+  BalancesScreen(this.isMovementsScreen, this.isMyBalancesScreen);
 
   @override
   State<BalancesScreen> createState() => _BalancesScreenState();
@@ -74,7 +75,8 @@ class _BalancesScreenState extends State<BalancesScreen> {
                           return Builder(
                               builder: (BuildContext context) => BalanceItem(
                                   snapshot.data![index],
-                                  this.widget.isMovementsScreen));
+                                  this.widget.isMovementsScreen,
+                                  this.widget.isMyBalancesScreen));
                         }),
                     Align(
                       alignment: FractionalOffset.bottomCenter,

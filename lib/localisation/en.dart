@@ -118,4 +118,20 @@ final Map<String, String> en = {
   "repeat_new_password": "Confirm new password",
   "save_changes": "Save changes",
   "password_changed_successfully": "Password was changed successfully",
+
+  //assets
+  "explore_assets": "Explore assets",
+  "my_balances": "My balances",
+  "asset_details": "Asset details",
+  "no_balance": "No balance",
+  //asset details
+  "maximum": "Maximum",
+  "issued": "Issued",
+  "available": "Available",
+  "transferable": "Transferable",
+  "withdrawable": "Withdrawable",
+  "base_in_atomic_swap": "Can be base in atomic swap",
+  "quote_in_atomic_swap": "Can be quote in atomic swap",
+  "deposit_method": "Deposit method",
+  "asset_type": "Asset type",
 };

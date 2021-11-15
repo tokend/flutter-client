@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/assets/view/assets_screen.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
@@ -43,12 +44,11 @@ class HomeScreen extends StatelessWidget {
   Widget _getCurrentPage(NavItem item) {
     switch (item) {
       case NavItem.dashboard:
-        return BalancesScreen(false);
+        return BalancesScreen(false, false);
       case NavItem.movements:
-        return BalancesScreen(true);
+        return BalancesScreen(true, false);
       case NavItem.assets:
-        // TODO: Handle this case.
-        break;
+        return AssetsScreen();
       case NavItem.sales:
         // TODO: Handle this case.
         break;
@@ -74,6 +74,6 @@ class HomeScreen extends StatelessWidget {
         break;
     }
 
-    return BalancesScreen(false);
+    return BalancesScreen(false, false);
   }
 }

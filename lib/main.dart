@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/assets/view/assets_screen.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/change_password/view/change_password_screen.dart';
 import 'package:flutter_template/features/home/view/home_screen.dart';
@@ -66,7 +67,7 @@ class App extends StatelessWidget {
         GetPage(name: '/home', page: () => HomeScreen(), binding: binding),
         GetPage(
             name: '/balances',
-            page: () => BalancesScreen(false),
+            page: () => BalancesScreen(false, false),
             binding: binding),
         GetPage(
             name: '/settings', page: () => SettingsScreen(), binding: binding),
@@ -85,6 +86,10 @@ class App extends StatelessWidget {
         GetPage(
             name: '/passphraseScreen',
             page: () => PassphraseScreen(),
+            binding: binding),
+        GetPage(
+            name: '/assetsScreen',
+            page: () => AssetsScreen(),
             binding: binding),
       ],
     );

@@ -23,13 +23,15 @@ class AssetRecord implements Asset {
       : code = json['id'],
         name = json['attributes']['details']['name'],
         ownerAccountId = json['relationships']['owner']['data']['id'] {
-    logoUrl = '';
-    //getLogoUrl(json['attributes']['details']['logo'], urlConfig); //TODO
+    logoUrl =
+        getLogoUrl(json['attributes']?['details']?['logo'], urlConfig); //TODO
   }
 
-  String? getLogoUrl(Map<String, dynamic> json, UrlConfig urlConfig) {
-    RemoteFile logo = RemoteFile.fromJson(json);
+  String? getLogoUrl(Map<String, dynamic>? json, UrlConfig urlConfig) {
+    if (json != null) {
+      RemoteFile logo = RemoteFile.fromJson(json);
 
-    return logo.getUrl(urlConfig.storage);
+      return logo.getUrl(urlConfig.storage);
+    }
   }
 }
