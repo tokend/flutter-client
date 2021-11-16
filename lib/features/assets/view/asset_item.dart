@@ -23,8 +23,10 @@ class AssetItem extends StatelessWidget {
       child: Builder(
         builder: (BuildContext context) => GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AssetDetailsScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AssetDetailsScreen(assetRecord)));
           },
           child: ListTile(
             minLeadingWidth: 12,

@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/history/view/model/transaction_detail_item.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-//TODO remove hardcode
 class AssetDetailsScreen extends StatelessWidget {
+  AssetRecord assetRecord;
+
+  AssetDetailsScreen(this.assetRecord);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +30,16 @@ class AssetDetailsScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: AssetDetail(),
+      body: AssetDetail(this.assetRecord),
     );
   }
 }
 
 class AssetDetail extends StatelessWidget {
+  AssetRecord assetRecord;
+
+  AssetDetail(this.assetRecord);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -60,16 +68,22 @@ class AssetDetail extends StatelessWidget {
               fontSize: 15.0,
             ),
           ),
-          TransactionDetailItem('maximum'.tr, '21,000,000 BTC'),
-          TransactionDetailItem('issued'.tr, '26,000,000 BTC'),
-          TransactionDetailItem('available'.tr, '26,000,000 BTC'),
-          TransactionDetailItem('transferable'.tr, 'Yes'),
-          TransactionDetailItem('withdrawable'.tr, 'No'),
-          TransactionDetailItem('base_in_atomic_swap'.tr, 'No'),
-          TransactionDetailItem('quote_in_atomic_swap'.tr, 'No'),
-          TransactionDetailItem('deposit_method'.tr, 'Non-depositable'),
           TransactionDetailItem(
-              'asset_type'.tr, 'Does not require verification'),
+              'maximum'.tr, '${assetRecord.maximum} ${assetRecord.code}'),
+          TransactionDetailItem(
+              'issued'.tr, '${assetRecord.issued} ${assetRecord.code}'),
+          TransactionDetailItem(
+              'available'.tr, '${assetRecord.available} ${assetRecord.code}'),
+          TransactionDetailItem('transferable'.tr,
+              '${assetRecord.isTransferable ? 'yes'.tr : 'no'.tr}'),
+          TransactionDetailItem('withdrawable'.tr,
+              '${assetRecord.isWithdrawable ? 'yes'.tr : 'no'.tr}'),
+          TransactionDetailItem('base_in_atomic_swap'.tr,
+              '${assetRecord.canBeBaseInAtomicSwap ? 'yes'.tr : 'no'.tr}'),
+          TransactionDetailItem('quote_in_atomic_swap'.tr,
+              '${assetRecord.canBeQuoteInAtomicSwap ? 'yes'.tr : 'no'.tr}'),
+          TransactionDetailItem('deposit_method'.tr,
+              '${assetRecord.isDepositable ? 'depositable'.tr : 'non_depositable'.tr}'),
         ],
       ),
     );

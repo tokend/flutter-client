@@ -134,4 +134,8 @@ final Map<String, String> en = {
   "quote_in_atomic_swap": "Can be quote in atomic swap",
   "deposit_method": "Deposit method",
   "asset_type": "Asset type",
+  "yes": "yes",
+  "no": "No",
+  "depositable": "Depositable",
+  "non_depositable": "Non-depositable",
 };
