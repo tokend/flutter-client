@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/history/view/balance_history.dart';
+import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class BalanceHistoryScreen extends StatelessWidget {
@@ -32,8 +33,7 @@ class BalanceHistoryScreen extends StatelessWidget {
           extendBody: true,
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              //TODO change on custom icon
+              icon: Icon(Icons.arrow_back, color: context.colorTheme.accent),
               onPressed: () => Navigator.of(context).pop(),
             ),
             backgroundColor: context.colorTheme.background,

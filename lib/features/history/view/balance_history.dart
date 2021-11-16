@@ -32,10 +32,6 @@ class _BalanceHistoryState extends State<BalanceHistory> {
     }
 
     var loading = false;
-    /*if (balanceChangesRepo.isNeverUpdated == true) {
-      subscribeToBalanceChanges();
-      balanceChangesRepo.isNeverUpdated = false;
-    }*/ //TODO
     subscribeToBalanceChanges();
 
     var stream = balanceChangesRepo.streamController.stream;

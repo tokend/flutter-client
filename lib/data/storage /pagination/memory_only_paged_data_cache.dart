@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:dart_sdk/api/base/model/data_page.dart';
-import 'package:flutter_template/data/storage%20/model/paging_order.dart';
+import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/pagination/paging_record.dart';
 
@@ -29,12 +27,12 @@ class MemoryOnlyPagedDataCache<T> implements PagedDataCache<T> {
   Future<DataPage<T>> getPage(int limit, int? cursor, PagingOrder order) {
     int? actualCursor = cursor;
     if (actualCursor == null) {
-      if (order == PagingOrder.desc) {
+      if (order == PagingOrder.DESC) {
         actualCursor = 0; // TODO add int getting int max value
       }
     }
     var pageItems = _items;
-    if (order == PagingOrder.desc) {
+    if (order == PagingOrder.DESC) {
       pageItems.sort((b, a) => (a as PagingRecord)
           .getPagingId()
           .compareTo((b as PagingRecord).getPagingId()));
@@ -44,7 +42,7 @@ class MemoryOnlyPagedDataCache<T> implements PagedDataCache<T> {
           .compareTo((b as PagingRecord).getPagingId()));
     }
 
-    if (order == PagingOrder.desc) {
+    if (order == PagingOrder.DESC) {
       pageItems.where(
           (element) => (element as PagingRecord).getPagingId() < actualCursor!);
     } else {

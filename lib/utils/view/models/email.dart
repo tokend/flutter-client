@@ -1,7 +1,8 @@
+import 'package:dart_sdk/api/wallets/model/exceptions.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-enum EmailValidationError { empty, invalid, alreadyTaken }
+enum EmailValidationError { empty, invalid, alreadyTaken, unVerified }
 
 class Email extends FormzInput<String, EmailValidationError> {
   Email.pure() : super.pure('');
@@ -17,6 +18,9 @@ class Email extends FormzInput<String, EmailValidationError> {
   @override
   EmailValidationError? validator(String value) {
     if (serverError != null) {
+      if (serverError is EmailNotVerifiedException) {
+        return EmailValidationError.unVerified;
+      }
       return EmailValidationError.alreadyTaken;
     }
     if (value.isEmpty) {
@@ -29,6 +33,8 @@ class Email extends FormzInput<String, EmailValidationError> {
 extension Explanation on EmailValidationError {
   String? get name {
     switch (this) {
+      case EmailValidationError.unVerified:
+        return 'error_email_is_unverified'.tr;
       case EmailValidationError.alreadyTaken:
         return 'error_already_taken_email'.tr;
       case EmailValidationError.invalid:

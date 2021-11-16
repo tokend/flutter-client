@@ -20,6 +20,12 @@ abstract class BaseColorTheme {
   final Color basic = Color(0xFFFFFFFF);
   final Color loading = Color(0xFFFFFFFF);
   final Color primaryLight = Color(0xFFFFFFFF);
+  final Color errorRejectAlert = Color(0xFFFFFFFF);
+  final Color errorRejectAlertLight = Color(0xFFFFFFFF);
+  final Color yellow = Color(0xFFFFFFFF);
+  final Color yellowLight = Color(0xFFFFFFFF);
+  final Color approved = Color(0xFFFFFFFF);
+  final Color approvedLight = Color(0xFFFFFFFF);
 }
 
 class LightColorTheme implements BaseColorTheme {
@@ -87,6 +93,24 @@ class LightColorTheme implements BaseColorTheme {
 
   @override
   Color get primaryLight => Color(0x1a7b6eff);
+
+  @override
+  Color get errorRejectAlert => Color(0xFFFF4646);
+
+  @override
+  Color get errorRejectAlertLight => Color(0x1AFF4646);
+
+  @override
+  Color get yellow => Color(0xFFF58500);
+
+  @override
+  Color get yellowLight => Color(0x1AF58500);
+
+  @override
+  Color get approved => Color(0xFF329D3D);
+
+  @override
+  Color get approvedLight => Color(0x1A329D3D);
 }
 
 class DarkColorTheme implements BaseColorTheme {
@@ -154,4 +178,22 @@ class DarkColorTheme implements BaseColorTheme {
 
   @override
   Color get primaryLight => Color(0xff7b6eff);
+
+  @override
+  Color get errorRejectAlert => Color(0xFFFF4646);
+
+  @override
+  Color get errorRejectAlertLight => Color(0x1AFF4646);
+
+  @override
+  Color get yellow => Color(0xFFF58500);
+
+  @override
+  Color get yellowLight => Color(0x1AF58500);
+
+  @override
+  Color get approved => Color(0xFF329D3D);
+
+  @override
+  Color get approvedLight => Color(0x1A329D3D);
 }

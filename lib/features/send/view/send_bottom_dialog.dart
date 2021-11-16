@@ -201,7 +201,6 @@ class _AvailableBalanceField extends StatelessWidget {
       builder: (context, state) {
         return Text(
           'Balance is ${getBalanceByAssetCode(balances, state.asset.code).available} ${state.asset.code.toUpperCase()}.',
-          //TODO localisaiton
           style: TextStyle(color: context.colorTheme.grayText, fontSize: 12.0),
         );
       },

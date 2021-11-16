@@ -1,5 +1,5 @@
 import 'package:dart_sdk/api/base/model/data_page.dart';
-import 'package:flutter_template/data/storage%20/model/paging_order.dart';
+import 'package:dart_sdk/api/base/params/paging_order.dart';
 
 /// Cache of [PagingRecord] ordered by [PagingRecord.getPagingId].
 /// You can't add new records to it unless their ID's are known,

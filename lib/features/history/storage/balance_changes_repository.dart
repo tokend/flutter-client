@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:dart_sdk/api/base/params/paging_order.dart' as pagination;
+import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:dart_sdk/api/base/params/paging_params_v2.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_template/base/model/fee.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
-import 'package:flutter_template/data/storage%20/model/paging_order.dart';
 import 'package:flutter_template/data/storage%20/model/participant_effects_page_params.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/repository/paged_data_repository.dart';
@@ -26,7 +26,7 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
 
   BalanceChangesRepository(
       this._balanceId, this._accountId, this._apiProvider, this.dataCache)
-      : super(PagingOrder.desc, dataCache);
+      : super(PagingOrder.DESC, dataCache);
 
   BalanceChangeAction getBalanceChangeAction(String effect) {
     switch (effect) {

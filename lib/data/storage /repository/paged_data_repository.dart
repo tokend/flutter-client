@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
-import 'package:flutter_template/data/storage%20/model/paging_order.dart';
+import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
 
@@ -17,7 +17,7 @@ abstract class PagedDataRepository<T> extends Repository {
   int? nextCursor;
 
   bool get isOnFirstPage =>
-      nextCursor == null || pagingOrder == PagingOrder.asc && nextCursor == 0;
+      nextCursor == null || pagingOrder == PagingOrder.ASC && nextCursor == 0;
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
   final streamController = StreamController<List<T>>.broadcast();

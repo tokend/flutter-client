@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 final List<NavigationItemData> listItems = [
-  //TODO update icons
   NavigationItemData(true, null, null, CustomIcons.element_3),
   NavigationItemData(
       false, NavItem.dashboard, 'dashboard'.tr, CustomIcons.element_3),
