@@ -5,6 +5,7 @@ import 'package:flutter_template/features/sign_in/logic/sign_in_method.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
 import 'package:flutter_template/logic/session.dart';
+import 'package:get/get.dart';
 
 class SignInUseCase {
   String _email;
@@ -22,11 +23,10 @@ class SignInUseCase {
 
   Future<void> perform() {
     return _getWalletInfo(_email, _password)
-        .catchError((error, stacktrace) => {print(stacktrace)})
         .then((walletInfo) => this._walletInfo = walletInfo)
         .then((walletInfo) => _getAccountFromWalletInfo())
         .then((account) => this._account = account)
-        .whenComplete(() => _updateProviders());
+        .then((_) => _updateProviders());
 
     //TODO add postSignIn invoking
   }
@@ -48,12 +48,21 @@ class SignInUseCase {
   }
 
   Future<bool> _updateProviders() async {
-    _session.walletInfoProvider.setWalletInfo(_walletInfo);
-    await _walletInfoPersistence?.saveWalletInfo(_walletInfo, _password);
-    _credentialsPersistence?.saveCredentials(_walletInfo.email, _password);
-    _session.accountProvider.setAccount(_account);
-    _session.signInMethod = SignInMethod.CREDENTIALS;
-    return Future.value(true);
+    try {
+      _session.walletInfoProvider.setWalletInfo(_walletInfo);
+      await _walletInfoPersistence?.saveWalletInfo(_walletInfo, _password);
+      await _credentialsPersistence?.saveCredentials(
+          _walletInfo.email, _password);
+      _session.accountProvider.setAccount(_account);
+      _session.signInMethod = SignInMethod.CREDENTIALS;
+      Get.put(_session); //TODO refactor
+      Get.put(_session.accountProvider);
+      Get.put(_session.walletInfoProvider);
+      return Future.value(true);
+    } catch (e, s) {
+      print(s);
+      return Future.value(false);
+    }
   }
 
 //TODO performPostSignIn

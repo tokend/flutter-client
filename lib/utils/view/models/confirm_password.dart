@@ -17,11 +17,8 @@ class ConfirmPassword
   @override
   ConfirmedPasswordValidationError? validator(String value) {
     if (value.isEmpty) {
-      print("CONF -> $value");
       return ConfirmedPasswordValidationError.invalid;
     }
-    print(
-        "CONF_VALIDATION -> value -> $value -> ${password == value ? null : ConfirmedPasswordValidationError.mismatch}");
     return password == value ? null : ConfirmedPasswordValidationError.mismatch;
   }
 }

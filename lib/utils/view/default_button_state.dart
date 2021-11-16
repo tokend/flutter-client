@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
@@ -64,6 +62,7 @@ class DefaultButtonState extends State<DefaultButton> {
           ),
           onPressed: value
               ? () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   widget.onPressed();
                 }
               : null,

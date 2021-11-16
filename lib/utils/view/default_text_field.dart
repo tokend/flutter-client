@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
-import 'package:get/get.dart';
 
 class DefaultTextField extends StatefulWidget {
   final String title;
@@ -40,7 +38,6 @@ class DefaultTextField extends StatefulWidget {
 }
 
 class DefaultTextFieldState extends State<DefaultTextField> {
-  Env env = Get.find();
   final _error = ValueNotifier<String?>(null);
 
   final _key = GlobalKey<FormState>();
@@ -53,7 +50,6 @@ class DefaultTextFieldState extends State<DefaultTextField> {
 
   @override
   Widget build(BuildContext context) {
-    // controller.addListener(() { controller.text});
     return Form(
       key: _key,
       child: Column(
@@ -110,7 +106,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
   OutlineInputBorder _borderStyle(Color color) {
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: Sizes.borderWidth),
-      borderRadius: BorderRadius.circular(Sizes.mediumRadius),
+      borderRadius: BorderRadius.circular(Sizes.xSmallRadius),
     );
   }
 }

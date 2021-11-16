@@ -7,7 +7,7 @@ import 'package:flutter_template/storage/persistence/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletInfoPersistenceImpl extends WalletInfoPersistence {
-  final Future<SharedPreferences> _sharedPreferences;
+  final SharedPreferences _sharedPreferences;
 
   WalletInfoPersistenceImpl(this._sharedPreferences) {
     this._secureStorage = SecureStorage(_sharedPreferences);

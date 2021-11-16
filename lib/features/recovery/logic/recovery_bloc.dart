@@ -8,11 +8,10 @@ import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
 
 part 'recovery_event.dart';
-
 part 'recovery_state.dart';
 
 class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
-  RecoveryBloc() : super(RecoveryState());
+  RecoveryBloc() : super(RecoveryState(Email.pure(), Password.pure()));
 
   @override
   void onTransition(Transition<RecoveryEvent, RecoveryState> transition) {
@@ -25,7 +24,7 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
     RecoveryEvent event,
   ) async* {
     if (event is EmailChanged) {
-      final email = Email.dirty(event.email!);
+      final email = Email.dirty(value: event.email!);
       yield state.copyWith(
         email: email,
         status: Formz.validate([
@@ -35,7 +34,7 @@ class RecoveryBloc extends Bloc<RecoveryEvent, RecoveryState> {
         ]),
       );
     } else if (event is PasswordChanged) {
-      final password = Password.dirty(event.password!);
+      final password = Password.dirty(value: event.password!);
       final confirm = ConfirmPassword.dirty(
         password: password.value,
         value: state.confirmPassword.value,

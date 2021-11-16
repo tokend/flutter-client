@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dart_sdk/api/wallets/model/exceptions.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,8 @@ part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
-  SignInBloc(this.env) : super(SignInState(network: env.apiUrl));
+  SignInBloc(this.env)
+      : super(SignInState(Email.pure(), Password.pure(), network: env.apiUrl));
   Env env;
 
   @override
@@ -30,7 +32,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
     SignInEvent event,
   ) async* {
     if (event is EmailChanged) {
-      final email = Email.dirty(event.email!);
+      final email = Email.dirty(value: event.email!);
       yield state.copyWith(
         email: email,
         status: Formz.validate([
@@ -39,7 +41,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         ]),
       );
     } else if (event is PasswordChanged) {
-      final password = Password.dirty(event.password!);
+      final password = Password.dirty(value: event.password!);
       yield state.copyWith(
         password: password,
         status: Formz.validate([
@@ -62,6 +64,27 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         var keyServer = KeyServer(api.wallets);
         await SignInUseCase(state.email.value, state.password.value, keyServer,
                 session, credentialsPersistence, walletInfoPersistence)
+            .perform();
+        yield state.copyWith(status: FormzStatus.submissionSuccess);
+      } catch (e, stacktrace) {
+        log(stacktrace.toString());
+        if (e is InvalidCredentialsException) {
+          yield state.copyWith(
+              status: FormzStatus.submissionFailure,
+              password: Password.dirty(serverError: e));
+        } else if (e is EmailNotVerifiedException) {
+          yield state.copyWith(
+              status: FormzStatus.submissionFailure,
+              email: Email.dirty(serverError: e));
+        }
+      }
+    } else if (event is NotFirstLogIn) {
+      try {
+        var api = apiProvider.getApi();
+        var keyServer = KeyServer(api.wallets);
+        var savedPassword = await event.password;
+        await SignInUseCase(event.email!, savedPassword!, keyServer, session,
+                credentialsPersistence, walletInfoPersistence)
             .perform();
 
         yield state.copyWith(status: FormzStatus.submissionSuccess);

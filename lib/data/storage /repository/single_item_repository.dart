@@ -13,8 +13,8 @@ abstract class SingleItemRepository<T> extends Repository {
 
   Lock lock = new Lock();
 
-  Future<T?> getStoredItem() {
-    if (objectPersistence == null) return Future.value();
+  T? getStoredItem() {
+    if (objectPersistence == null) return null;
     return objectPersistence!.loadItem();
   }
 
@@ -37,19 +37,16 @@ abstract class SingleItemRepository<T> extends Repository {
     invalidate();
 
     return lock.synchronized(() {
-      Future<T?> storedItem;
+      T? storedItem;
       if (isNeverUpdated) {
         storedItem = getStoredItem();
-      } else {
-        storedItem = Future.value();
       }
 
-      storedItem
-          .then((_) => getItem().then((item) => storeItem(item)).then((item) {
-                isNeverUpdated = false;
-                isLoading = false;
-                onNewItem(item);
-              }));
+      getItem().then((item) => storeItem(item)).then((item) {
+        isNeverUpdated = false;
+        isLoading = false;
+        onNewItem(item);
+      });
       //TODO return value  ?
     });
   }

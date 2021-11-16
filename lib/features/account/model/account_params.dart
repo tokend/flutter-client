@@ -2,7 +2,7 @@ import 'package:dart_sdk/api/v3/base/json_api_query_params.dart';
 
 class AccountParams extends JsonApiQueryParams {
   static const FEES = 'fees';
-  static const BALANCES = 'fees';
+  static const BALANCES = 'balances';
   static const BALANCES_ASSET = 'balances.asset';
   static const BALANCES_STATE = 'balances.state';
   static const REFERRER = 'referrer';
