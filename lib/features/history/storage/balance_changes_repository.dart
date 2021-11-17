@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
-import 'package:dart_sdk/api/base/params/paging_order.dart' as pagination;
 import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:dart_sdk/api/base/params/paging_params_v2.dart';
 import 'package:decimal/decimal.dart';
@@ -70,8 +69,8 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
     var next = nextCursor ?? null;
     String? nextC;
     if (next != null) nextC = next.toString();
-    params.withPagingParams(PagingParamsV2(nextC, pageLimit,
-        pagination.PagingOrder.ASC)); //TODO sync with PagingOrder from SDK
+    params.withPagingParams(PagingParamsV2(
+        nextC, pageLimit, requiredOrder)); //TODO sync with PagingOrder from SDK
 
     if (_balanceId != null) {
       params.withBalance(_balanceId!);
@@ -141,7 +140,8 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
                 Uri.decodeFull(response['links']['next']),
                 'page\\[cursor\\]') ??
             DataPage.getNumberParamFromLink(
-                Uri.decodeFull(response['links']['next']), 'page\\[number\\]');
+                Uri.decodeFull(response['links']['next']),
+                'page\\[number\\]'); //TODO rewrite with SDK static methods
         return DataPage((nextCursor), items, isLast);
       });
       return dataPage;

@@ -140,4 +140,8 @@ final Map<String, String> en = {
   "no": "No",
   "depositable": "Depositable",
   "non_depositable": "Non-depositable",
+
+  //exchange
+  "exchange": "Exchange",
+  "my_orders": "My Orders",
 };

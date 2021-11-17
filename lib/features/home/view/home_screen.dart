@@ -8,6 +8,7 @@ import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
+import 'package:flutter_template/features/trade%20/view/trade_screen.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -56,8 +57,7 @@ class HomeScreen extends StatelessWidget {
         // TODO: Handle this case.
         break;
       case NavItem.trade:
-        // TODO: Handle this case.
-        break;
+        return TradeScreen();
       case NavItem.issuance_request:
         // TODO: Handle this case.
         break;

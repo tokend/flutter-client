@@ -11,4 +11,9 @@ class SimpleAsset implements Asset {
   int trailingDigits;
 
   SimpleAsset(this.code, this.name, this.trailingDigits);
+
+  SimpleAsset.fromJson(Map<String, dynamic> json)
+      : code = json['id'],
+        name = json['data']['attributes']['name'],
+        trailingDigits = json['data']['attributes']['trailing_digits'];
 }

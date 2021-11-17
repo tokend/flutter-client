@@ -63,6 +63,7 @@ dependencies:
   rxdart: ^0.27.2
   qr_flutter: ^4.0.0
   cached_network_image: ^3.1.0+1
+  syncfusion_flutter_charts: ^19.3.53
 
 
 

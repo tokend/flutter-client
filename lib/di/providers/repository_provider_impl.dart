@@ -11,6 +11,7 @@ import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
+import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RepositoryProviderImpl implements RepositoryProvider {
@@ -28,6 +29,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late var systemInfo;
 
+  @override
+  late AssetPairsRepository assetPairsRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -38,6 +42,7 @@ class RepositoryProviderImpl implements RepositoryProvider {
     assets =
         AssetsRepository(apiProvider, walletInfoProvider, urlConfigProvider);
     systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
+    assetPairsRepository = AssetPairsRepository(apiProvider, urlConfigProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {
