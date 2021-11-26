@@ -6,6 +6,7 @@ import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
+import 'package:flutter_template/features/blobs/blobs_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
@@ -24,6 +25,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late SystemInfoRepository systemInfo;
 
+  @override
+  late BlobsRepository blobs;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -32,6 +36,7 @@ class RepositoryProviderImpl implements RepositoryProvider {
     balances =
         BalancesRepository(apiProvider, walletInfoProvider, urlConfigProvider);
     systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
+    blobs = BlobsRepository(apiProvider, walletInfoProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {
