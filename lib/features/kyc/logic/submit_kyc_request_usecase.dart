@@ -18,6 +18,7 @@ import 'package:dart_wallet/xdr/utils/dependencies.dart';
 import 'package:dart_wallet/xdr/xdr_types.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
+import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
 import 'package:flutter_template/features/kyc/model/kyc_form.dart';
 import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:flutter_template/utils/file/local_file.dart';
@@ -29,6 +30,7 @@ class SubmitKycRequestUseCase {
   final TokenDApi api;
   final TokenDApi signedApi;
   final TxManager txManager;
+  final KeyValueEntriesRepository keyValueEntriesRepository;
   final AccountProvider accountProvider;
   final RepositoryProvider repositoryProvider;
   final Map<String, RemoteFile>? alreadySubmittedDocuments;
@@ -45,6 +47,7 @@ class SubmitKycRequestUseCase {
       required this.repositoryProvider,
       required this.accountProvider,
       required this.txManager,
+      required this.keyValueEntriesRepository,
       this.alreadySubmittedDocuments,
       this.newDocument,
       this.requestIdToSubmit,
@@ -77,9 +80,10 @@ class SubmitKycRequestUseCase {
     }
 
     var key = kycForm.getRoleKey();
-
-    return Future.value(
-        Int64(0)); //TODO implement getting role from keyserver!!!!!
+    return keyValueEntriesRepository.update().then((_) =>
+        keyValueEntriesRepository.getItem(key).then((keyValueRecord) =>
+            Future.value(Int64(int.parse(keyValueRecord.value)))));
+    //TODO check getting role from keyserver!!!!!
   }
 
   Future<NetworkParams> _getNetworkParams() {
@@ -159,8 +163,8 @@ class SubmitKycRequestUseCase {
     return Future.value(resultMap);
   }
 
-  Future<RemoteFile> _uploadFile(DocumentType documentType,
-      LocalFile localFile) async {
+  Future<RemoteFile> _uploadFile(
+      DocumentType documentType, LocalFile localFile) async {
     Uint8List document = File(localFile.path).readAsBytesSync();
 
     var policy = await signedApi.documents

@@ -2,9 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart' as repo;
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
 import 'package:flutter_template/logic/session.dart';
+import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 
@@ -18,4 +20,6 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> {
   CredentialsPersistence credentialsPersistence = Get.find();
   ToastManager toastManager = Get.find();
   repo.RepositoryProvider repositoryProvider = Get.find();
+  TxManager txManager = Get.find();
+  KeyValueEntriesRepository keyValueEntriesRepository = Get.find();
 }

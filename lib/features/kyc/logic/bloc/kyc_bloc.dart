@@ -15,7 +15,6 @@ import 'package:flutter_template/utils/file/local_file.dart';
 import 'package:flutter_template/utils/view/models/name.dart';
 import 'package:flutter_template/utils/view/models/string_field.dart';
 import 'package:formz/formz.dart';
-import 'package:get/get.dart';
 
 part 'kyc_event.dart';
 part 'kyc_state.dart';
@@ -351,7 +350,6 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
         session.accountProvider.setAccount(account);
         var signedApi = TokenDApi("http://c663-193-19-228-94.ngrok.io/_/api/",
             requestSigner: AccountRequestSigner(account), tfaCallback: null);
-        var txManager = Get.find();
         var result = await SubmitKycRequestUseCase(
             kycForm: GeneralKycForm(
                 lastName: 'ksdjfg', firstName: 'skdjfh', document: null),
@@ -360,6 +358,7 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             keyServer: keyServer,
             walletInfo: walletInfo,
             api: api,
+            keyValueEntriesRepository: keyValueEntriesRepository,
             signedApi: signedApi,
             repositoryProvider: repositoryProvider,
             newDocument: {
