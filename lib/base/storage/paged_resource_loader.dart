@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
@@ -23,10 +22,11 @@ abstract class PagedResourceLoader<T> {
   /// Return request that will load all data page by page,
   /// and then return it as list.
   Future<List<T>> loadAll() async {
-    Iterable<T> result = [];
-    if (distinct) result = LinkedHashSet();
+    List<T> result = [];
     var page = await getPageRequest(nextCursor);
-    result.toList().addAll(page.items);
+    result.addAll(page.items);
+    log('Page items: ${page.items}');
+    log('Page items1: ${result.toList()}');
     nextCursor = page.nextCursor;
     noMoreItems = page.isLast;
     log('NoMoreItems??? $noMoreItems');

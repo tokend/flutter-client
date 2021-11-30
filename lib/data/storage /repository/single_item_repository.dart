@@ -1,5 +1,6 @@
 import 'package:flutter_template/data/storage%20/persistence/object_persistence.dart';
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Repository that holds a single [T] item.
@@ -12,6 +13,8 @@ abstract class SingleItemRepository<T> extends Repository {
   Future<T> getItem();
 
   Lock lock = new Lock();
+
+  final streamSubject = BehaviorSubject<T>();
 
   T? getStoredItem() {
     if (objectPersistence == null) return null;

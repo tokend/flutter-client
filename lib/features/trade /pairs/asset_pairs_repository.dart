@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:dart_sdk/api/base/params/paging_params_v2.dart';
 import 'package:decimal/decimal.dart';
@@ -42,16 +40,21 @@ class AssetPairsRepository extends MultipleItemsRepository<AssetPairRecord>
         var itemsList = (response['data'] as List<dynamic>)
             .map((e) => AssetPairRecord.fromJson(e, urlConfig))
             .toList();
+
         var nextLink = DataPage.getNextLink(response);
         var limit = DataPage.getLimit(response, nextLink);
-        var isLast = DataPage.isLastOne(response, itemsList.length, limit);
-        log('isLastOne $isLast');
+
+        var isLast = DataPage.isLastOne(
+          response,
+          limit,
+          itemsList.length,
+        );
         var nextCursor = DataPage.getNextPageCursor(response);
-        return DataPage(nextCursor, itemsList, true);
+        return DataPage(nextCursor, itemsList, isLast);
       });
     });
-    var itemsList = loader.loadAll();
-    streamSubject.sink.add((await itemsList));
+    var itemsList = await loader.loadAll();
+    streamSubject.sink.add(itemsList);
 
     return itemsList;
   }
