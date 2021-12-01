@@ -144,4 +144,8 @@ final Map<String, String> en = {
   //exchange
   "exchange": "Exchange",
   "my_orders": "My Orders",
+
+  //charts
+  "loading": "Loading...",
+  "no_asset_pairs": "No asset pairs found",
 };

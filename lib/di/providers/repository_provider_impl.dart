@@ -1,3 +1,4 @@
+import 'package:dcache/dcache.dart';
 import 'package:flutter_template/config/providers/url_config_provider.dart';
 import 'package:flutter_template/data/storage%20/pagination/memory_only_paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/persistence/object_persistence.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_template/data/storage%20/persistence/object_persitence_o
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/extensions/lru_cache.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
@@ -16,10 +18,15 @@ import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RepositoryProviderImpl implements RepositoryProvider {
+  static const int MAX_SAME_REPOSITORIES_COUNT = 10;
   ApiProvider apiProvider;
   WalletInfoProvider walletInfoProvider;
   UrlConfigProvider urlConfigProvider;
   SharedPreferences? persistencePreferences;
+
+  var chartRepositoriesByCode = LruCache(
+      storage: InMemoryStorage<String, AssetChartRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
 
   @override
   late var balances;
@@ -71,7 +78,7 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   AssetChartRepository assetChartsRepository(
       String baseAssetCode, String quoteAssetCode) {
-    return AssetChartRepository(
-        this.apiProvider, baseAssetCode, quoteAssetCode);
+    return chartRepositoriesByCode.getOrPut('$baseAssetCode-$quoteAssetCode',
+        new AssetChartRepository(this.apiProvider, baseAssetCode, quoteAssetCode));
   }
 }
