@@ -9,6 +9,7 @@ import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/features/trade%20/pairs/amount_converter.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_page_params.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class AssetPairsRepository extends MultipleItemsRepository<AssetPairRecord>
     implements AmountConverter {
@@ -77,20 +78,20 @@ class AssetPairsRepository extends MultipleItemsRepository<AssetPairRecord>
     if (sourceAsset == destAsset) return Decimal.one;
 
     var pairs = streamSubject.value;
-    Decimal mainPairPrice = pairs
-        .firstWhere(
+    Decimal? mainPairPrice = pairs
+        .firstWhereOrNull(
           (element) =>
               element.quote.code == destAsset &&
               element.base.code == sourceAsset,
         )
-        .price; //TODO use firstWhereOrNull extension from SDK
-    var quotePair = pairs.firstWhere((element) =>
+        ?.price;
+    var quotePair = pairs.firstWhereOrNull((element) =>
         element.quote.code == destAsset &&
         element.base.code ==
-            sourceAsset); //TODO use firstWhereOrNull extension from SDK
+            sourceAsset);
     Decimal? quotePairPrice;
     if (quotePair?.price != null) {
-      quotePairPrice = Decimal.one / quotePair.price;
+      quotePairPrice = Decimal.one / quotePair!.price;
     }
 
     return mainPairPrice ?? quotePairPrice;
