@@ -1,5 +1,5 @@
 abstract class ObjectPersistence<T> {
-  Future<T?> loadItem();
+  T? loadItem();
 
   saveItem(T item);
 

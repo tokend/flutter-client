@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
 import 'package:flutter_template/features/send/bloc/send_state.dart';
@@ -12,9 +11,6 @@ import 'package:flutter_template/features/send/logic/payment_request_usecase.dar
 import 'package:flutter_template/features/send/model/payment_fee.dart';
 import 'package:flutter_template/features/send/model/payment_recipient.dart';
 import 'package:flutter_template/features/send/model/payment_request.dart';
-import 'package:flutter_template/logic/tx_manager.dart';
-import 'package:flutter_template/utils/error_handler/error_handler.dart';
-import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
 
 class SendBloc extends BaseBloc<SendEvent, SendState> {
@@ -23,8 +19,8 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
 
   @override
   Stream<SendState> mapEventToState(SendEvent event) async* {
-    if (event is AssetChanged) {
-      yield state.copyWith(asset: event.asset, balanceRecord: event.balance);
+    if (event is BalanceChanged) {
+      yield state.copyWith(balanceRecord: event.balance);
     } else if (event is AmountChanged) {
       yield state.copyWith(amount: event.amount);
     } else if (event is RecipientChanged) {
@@ -34,7 +30,7 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
     } else if (event is FormFilled) {
       yield state.copyWith(isFilled: event.isFilled);
 
-      WalletInfoProvider walletInfoProvider = Get.find();
+      WalletInfoProvider walletInfoProvider = session.walletInfoProvider;
 
       try {
         this.paymentRequest = await CreatePaymentRequestUseCase(
@@ -47,19 +43,21 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
                 PaymentFee(SimpleFeeRecord.zero, SimpleFeeRecord.zero, true),
                 walletInfoProvider)
             .perform();
-        yield state.copyWith(isRequestReady: true);
+        yield state.copyWith(isRequestReady: true, error: null);
       } catch (e, stacktrace) {
         log(stacktrace.toString());
-        yield SendInitial(state.asset, state.balanceRecord!);
+        yield SendInitial(
+          state.asset,
+          state.balanceRecord!,
+          state.amount,
+          state.recipient,
+          e as Exception,
+        );
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
+      AccountProvider accountProvider = session.accountProvider;
 
-      AccountProvider accountProvider = Get.find();
-      TxManager txManager = Get.find();
-      RepositoryProvider repositoryProvider = Get.find();
-      ErrorHandler errorHandler = Get.find();
-      ToastManager toastManager = Get.find();
       if (this.paymentRequest != null) {
         try {
           await ConfirmPaymentRequestUseCase(this.paymentRequest!,
@@ -69,12 +67,17 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         } catch (e, stacktrace) {
           log(stacktrace.toString());
           if (e is InvalidRecipientException) {
-            toastManager.showShortToast('Invalid recipient');
+            toastManager.showShortToast('error_invalid_recipient'.tr);
           } else if (e is Exception) {
             errorHandler.handle(e);
           }
-          yield SendInitial(state.asset, state.balanceRecord!);
-          yield state.copyWith(error: e as Exception);
+          yield SendInitial(
+            state.asset,
+            state.balanceRecord!,
+            state.amount,
+            state.recipient,
+            e as Exception,
+          );
         }
       }
     }

@@ -10,6 +10,7 @@ class PasswordTextField extends StatefulWidget {
   final String label;
   final String? error;
   final BaseColorTheme colorTheme;
+  final Color? backgroundColor;
   final TextInputType inputType;
   final ValueChanged<String> onChanged;
 
@@ -18,6 +19,7 @@ class PasswordTextField extends StatefulWidget {
       this.title = "",
       required this.onChanged,
       required this.colorTheme,
+      this.backgroundColor,
       this.error,
       this.hint = "",
       this.label = "",
@@ -35,10 +37,10 @@ class PasswordTextFieldState extends State<PasswordTextField> {
 
   final _textFieldKey = GlobalKey<DefaultTextFieldState>();
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTextField(
+      background: widget.backgroundColor ?? Colors.white,
       key: _textFieldKey,
       showText: _isPasswordVisible,
       title: widget.title,

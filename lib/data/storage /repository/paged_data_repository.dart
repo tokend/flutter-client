@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
-import 'package:flutter_template/data/storage%20/model/paging_order.dart';
+import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
 
@@ -16,19 +17,21 @@ abstract class PagedDataRepository<T> extends Repository {
   int? nextCursor;
 
   bool get isOnFirstPage =>
-      nextCursor == null || pagingOrder == PagingOrder.asc && nextCursor == 0;
+      nextCursor == null || pagingOrder == PagingOrder.ASC && nextCursor == 0;
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
+  final streamController = StreamController<List<T>>.broadcast();
 
-  final streamController = StreamController<List<T>>(); //TODO close stream
+  List<T> itemsList = [];
 
   @override
-  Future<DataPage<T>> update() async {
+  Future<List<T>> update() async {
     try {
-      return await loadMore(true).then((dataPage) {
-        streamController.sink.add(dataPage.items);
-        return Future.value(dataPage);
-      });
+      itemsList = [];
+      noMoreItems = false;
+      nextCursor = null;
+      await loadMore(force: true);
+      return Future.value(itemsList);
     } catch (e, s) {
       print(e);
       print(s);
@@ -47,9 +50,7 @@ abstract class PagedDataRepository<T> extends Repository {
 
   Future<DataPage<T>> getAndCacheRemotePage(
       int? nextCursor, PagingOrder requiredOrder) {
-    return getRemotePage(nextCursor, requiredOrder)
-        .onError((error, stackTrace) => Future.error(error!))
-        .then((page) => cachePage(page));
+    return getRemotePage(nextCursor, requiredOrder); //TODO cache data
   }
 
   Future<DataPage<T>> getRemotePage(int? nextCursor, PagingOrder requiredOrder);
@@ -58,29 +59,28 @@ abstract class PagedDataRepository<T> extends Repository {
     cache?.cachePage(page);
   }
 
-  Future<DataPage<T>> loadMore(bool force) async {
+  Future<bool> loadMore({bool force = false}) async {
     if ((noMoreItems || (isLoading && !isLoadingTopPages)) && !force) {
-      return Future.value();
+      onNewPage(DataPage(null, List.empty(), true));
+      return Future.value(false);
     }
-    var getPage;
-    await getCachedPage(nextCursor).then((cachedPage) {
+    return getCachedPage(nextCursor).then((cachedPage) async {
       if (cachedPage.isLast) {
-        print('Cached page is last');
-        if (cachedPage.items.isNotEmpty) {
-
-        }
-        var wasOnFirstPage = isOnFirstPage;
-        getPage = getAndCacheRemotePage(nextCursor, pagingOrder).then((page) {
-          if ((pagingOrder == PagingOrder.asc || wasOnFirstPage) &&
-              page.isLast) {
-            isFresh = true;
-          }
-        });
-      } else {
-        getPage = Future.value(cachedPage);
+        log('Cached page is last');
+        var res = await getAndCacheRemotePage(nextCursor, pagingOrder);
+        onNewPage(res);
+        isLoading = false;
       }
-    });
 
-    return getPage;
+      return Future.value(true);
+    });
+  }
+
+  onNewPage(DataPage<T> page) {
+    isNeverUpdated = false;
+    noMoreItems = page.isLast;
+    nextCursor = page.nextCursor != null ? int.parse(page.nextCursor!) : null;
+    itemsList.addAll(page.items);
+    streamController.sink.add(itemsList);
   }
 }

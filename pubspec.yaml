@@ -61,6 +61,12 @@ dependencies:
   dart_numerics: ^0.0.2
   japx: ^2.0.3
   intl: ^0.17.0
+  lazy_evaluation: ^1.1.0
+  infinite_scroll_pagination: ^3.1.0
+  flutter_switch: ^0.3.2
+  rxdart: ^0.27.2
+  qr_flutter: ^4.0.0
+  cached_network_image: ^3.1.0+1
 
 
 

@@ -1,19 +1,18 @@
-import 'dart:developer';
-
 import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart' as Repo;
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
-import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/send/bloc/send_bloc.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
 import 'package:flutter_template/features/send/bloc/send_state.dart';
 import 'package:flutter_template/resources/sizes.dart';
+import 'package:flutter_template/utils/formatters/decimal_text_input_formatter.dart';
 import 'package:flutter_template/utils/view/counter_text_field.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
@@ -23,21 +22,24 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SendScaffold extends StatelessWidget {
   List<BalanceRecord> balances;
-  List<Asset> assets;
+  late List<Asset> assets;
 
-  SendScaffold(this.balances, this.assets);
+  SendScaffold(this.balances) {
+    this.assets = balances.map((balance) => balance.asset).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
         child: BlocProvider(
-      create: (_) => SendBloc(SendInitial(assets.first, balances.first)),
+      create: (_) => SendBloc(
+          SendInitial(assets.first, balances.first, Decimal.zero, '', null)),
       child: SendBottomDialog(balances, assets),
     ));
   }
 }
 
-class SendBottomDialog extends StatelessWidget {
+class SendBottomDialog extends BaseStatelessWidget {
   List<BalanceRecord> balances;
   List<Asset> assets;
   GlobalKey<DefaultButtonState> _sendButtonKey =
@@ -60,7 +62,6 @@ class SendBottomDialog extends StatelessWidget {
                     progress.dismiss();
                   } else if (state.isRequestSubmitted) {
                     progress.dismiss();
-                    Repo.RepositoryProvider repositoryProvider = Get.find();
                     repositoryProvider.balances.update();
                     Navigator.pop(contextBuilder, false);
                   } else if (state.isRequestConfirmed) {
@@ -114,12 +115,7 @@ class SendBottomDialog extends StatelessWidget {
                             padding:
                                 EdgeInsets.only(top: Sizes.standartPadding),
                           ),
-                          _AssetDropDown(balances),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: Sizes.halfStandartMargin),
-                          ),
-                          _AvailableBalanceField(balances),
+                          _BalanceDropDown(balances),
                           Padding(
                             padding: EdgeInsets.only(top: Sizes.standartMargin),
                           ),
@@ -205,7 +201,6 @@ class _AvailableBalanceField extends StatelessWidget {
       builder: (context, state) {
         return Text(
           'Balance is ${getBalanceByAssetCode(balances, state.asset.code).available} ${state.asset.code.toUpperCase()}.',
-          //TODO localisaiton
           style: TextStyle(color: context.colorTheme.grayText, fontSize: 12.0),
         );
       },
@@ -218,42 +213,31 @@ BalanceRecord getBalanceByAssetCode(
   try {
     return balances.firstWhere((element) => element.asset.code == assetCode);
   } catch (e, stacktrace) {
-    log(stacktrace.toString());
+    print(stacktrace.toString());
     return balances.first;
   }
 }
 
-class _AssetDropDown extends StatelessWidget {
+class _BalanceDropDown extends StatelessWidget {
   List<BalanceRecord> balances;
 
-  _AssetDropDown(this.balances);
+  _BalanceDropDown(this.balances);
 
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    var assetCodes = balances.map((balance) => balance.asset.code).toList();
     return BlocBuilder<SendBloc, SendState>(
-      buildWhen: (previous, current) => previous.asset != current.asset,
       builder: (context, state) {
         return Padding(
             padding: const EdgeInsets.only(bottom: 0.0),
-            child: DropDownField(
+            child: BalanceDropDownField(
                 colorTheme: colorTheme,
-                labelText: 'asset'.tr,
-                currentValue: state.asset.code,
-                onChanged: (String? newAsset) {
-                  context.read<SendBloc>().add(AssetChanged(
-                      AssetRecord(
-                          newAsset!,
-                          getBalanceByAssetCode(balances, newAsset).asset.name,
-                          getBalanceByAssetCode(balances, newAsset)
-                              .asset
-                              .trailingDigits,
-                          'logoUrl', //TODO
-                          'ownerAccountId'),
-                      getBalanceByAssetCode(balances, newAsset)));
+                labelText: 'balance'.tr,
+                currentValue: state.balanceRecord,
+                onChanged: (BalanceRecord? newBalance) {
+                  context.read<SendBloc>().add(BalanceChanged(newBalance));
                 },
-                list: assetCodes));
+                list: balances));
       },
     );
   }
@@ -266,6 +250,7 @@ class _AmountInputField extends StatelessWidget {
       builder: (context, state) {
         return DefaultTextField(
           //Amount
+          textInputFormatters: [DecimalTextInputFormatter()],
           colorTheme: context.colorTheme,
           onChanged: (String newAmount) {
             if (newAmount.isNotEmpty) {

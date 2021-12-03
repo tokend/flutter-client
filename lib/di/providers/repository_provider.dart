@@ -1,3 +1,4 @@
+import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/blobs/blobs_repository.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_template/features/system_info/storage/system_info_reposi
 abstract class RepositoryProvider {
   abstract SystemInfoRepository systemInfo;
   abstract BalancesRepository balances;
+  abstract AssetsRepository assets;
   abstract BlobsRepository blobs;
   abstract KycRequestStateRepository kycRequestStateRepository;
   abstract KeyValueEntriesRepository keyValueEntriesRepository;

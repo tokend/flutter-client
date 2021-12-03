@@ -5,6 +5,7 @@ import 'package:flutter_template/data/storage%20/persistence/object_persitence_o
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/blobs/blobs_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
@@ -22,10 +23,13 @@ class RepositoryProviderImpl implements RepositoryProvider {
   SharedPreferences? persistencePreferences;
 
   @override
-  late BalancesRepository balances;
+  late var balances;
 
   @override
-  late SystemInfoRepository systemInfo;
+  late var assets;
+
+  @override
+  late var systemInfo;
 
   @override
   late BlobsRepository blobs;
@@ -43,6 +47,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
       this.persistencePreferences}) {
     balances =
         BalancesRepository(apiProvider, walletInfoProvider, urlConfigProvider);
+    assets =
+        AssetsRepository(apiProvider, walletInfoProvider, urlConfigProvider);
     systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
     blobs = BlobsRepository(apiProvider, walletInfoProvider);
     keyValueEntriesRepository = KeyValueEntriesRepository(apiProvider.getApi());

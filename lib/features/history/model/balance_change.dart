@@ -2,6 +2,7 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
 import 'package:flutter_template/features/history/model/balance_change_action.dart';
+import 'package:flutter_template/features/history/model/balance_change_cause.dart';
 
 class BalanceChange {
   late String assetCode;
@@ -9,19 +10,21 @@ class BalanceChange {
   late Decimal totalAmount;
 
   int id;
+  String accountId;
   BalanceChangeAction action;
   Decimal amount;
   Asset asset;
   String balanceId;
   SimpleFeeRecord fee;
   DateTime date;
+  BalanceChangeCause cause;
+  String? counterparty;
 
-  //BalanceChangeCause cause;
-
-  BalanceChange(this.id, this.action, this.amount, this.asset, this.balanceId,
-      this.fee, this.date) {
+  BalanceChange(this.id, this.accountId, this.action, this.amount, this.asset,
+      this.balanceId, this.fee, this.date, this.cause) {
     assetCode = asset.code;
     isReceived = getIsReceivedState(action);
+    counterparty = getCounterParty(cause, accountId);
 
     ///Amount including fee
     if (isReceived && action != BalanceChangeAction.unlocked) {
@@ -49,6 +52,12 @@ class BalanceChange {
         return true;
       case BalanceChangeAction.funded:
         return true;
+    }
+  }
+
+  String? getCounterParty(BalanceChangeCause cause, String accountId) {
+    if (cause is Payment) {
+      return cause.getCounterPartyAccountId(accountId);
     }
   }
 

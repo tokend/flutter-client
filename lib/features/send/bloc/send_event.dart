@@ -10,14 +10,14 @@ abstract class SendEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class AssetChanged extends SendEvent {
-  const AssetChanged(this.asset, this.balance);
+class BalanceChanged extends SendEvent {
+  const BalanceChanged(this.balance);
 
-  final Asset? asset;
+  //final Asset? asset;
   final BalanceRecord? balance;
 
   @override
-  List<Object?> get props => [asset, balance];
+  List<Object?> get props => [balance];
 }
 
 class AmountChanged extends SendEvent {

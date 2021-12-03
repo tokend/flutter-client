@@ -62,6 +62,7 @@ class DefaultButtonState extends State<DefaultButton> {
           ),
           onPressed: value
               ? () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   widget.onPressed();
                 }
               : null,

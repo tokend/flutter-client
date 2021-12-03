@@ -25,10 +25,9 @@ class CreatePaymentRequestUseCase {
 
   Future<PaymentRequest?> perform() {
     return _getSenderAccount().then((senderAccount) {
-      /*if (senderAccount == _recipient.accountId)
-        return Future.value(SendToYourselfException());*/
+      if (senderAccount == _recipient.accountId)
+        throw SendToYourselfException();
 
-      ///TODO uncomment
       this._senderAccount = senderAccount;
     }).then((_) => getPaymentRequest());
   }

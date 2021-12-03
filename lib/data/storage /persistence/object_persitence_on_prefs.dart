@@ -23,7 +23,7 @@ class ObjectPersistenceOnPrefs<T> implements ObjectPersistence<T> {
   }
 
   @override
-  Future<T?> loadItem() async {
+  T? loadItem() {
     var item = loadedItem;
     if (item == null) {
       var savedItemJson = sharedPreferences.getString(key);

@@ -61,7 +61,7 @@ class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
           .toList();
     });
 
-    streamController.sink.add((await itemsList));
+    streamSubject.sink.add((await itemsList));
     return itemsList;
   }
 }
