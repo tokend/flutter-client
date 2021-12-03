@@ -21,5 +21,4 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> {
   ToastManager toastManager = Get.find();
   repo.RepositoryProvider repositoryProvider = Get.find();
   TxManager txManager = Get.find();
-  KeyValueEntriesRepository keyValueEntriesRepository = Get.find();
 }

@@ -4,6 +4,7 @@ import 'package:dart_sdk/api/base/model/remote_file.dart';
 import 'package:dart_sdk/api/blobs/model/blob.dart';
 import 'package:flutter_template/features/key_value/model/key_value_entry_record.dart';
 
+/// KYC form data with documents
 abstract class KycForm {
   String getRoleKey();
 
@@ -49,8 +50,7 @@ class GeneralKycForm extends KycForm {
 
   @override
   String getRoleKey() {
-    // TODO: implement getRoleKey
-    throw UnimplementedError();
+    return 'general';
   }
 }
 
@@ -69,8 +69,7 @@ class CorporateKycForm extends KycForm {
         lastName = json['last_name'],
         avatar = json['avatar'];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'first_name': firstName,
         'last_name': lastName,
         'avatar': avatar.toJson()
@@ -78,9 +77,23 @@ class CorporateKycForm extends KycForm {
 
   @override
   String getRoleKey() {
-    // TODO: implement getRoleKey
-    throw UnimplementedError();
+    return 'corporate';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is GeneralKycForm == false) return false;
+
+    other as GeneralKycForm;
+
+    if (firstName != other.firstName) return false;
+    if (lastName != other.lastName) return false;
+
+    return true;
+  }
+
+  @override
+  int get hashCode => 31 * firstName.hashCode + lastName.hashCode;
 }
 
 class EmptyKycForm extends KycForm {

@@ -9,6 +9,8 @@ import 'package:flutter_template/features/balances/storage/balances_repository.d
 import 'package:flutter_template/features/blobs/blobs_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
+import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
+import 'package:flutter_template/features/kyc/logic/kyc_request_state_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +30,12 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late BlobsRepository blobs;
 
+  @override
+  late KycRequestStateRepository kycRequestStateRepository;
+
+  @override
+  late KeyValueEntriesRepository keyValueEntriesRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -37,6 +45,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
         BalancesRepository(apiProvider, walletInfoProvider, urlConfigProvider);
     systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
     blobs = BlobsRepository(apiProvider, walletInfoProvider);
+    keyValueEntriesRepository = KeyValueEntriesRepository(apiProvider.getApi());
+    kycRequestStateRepository = KycRequestStateRepository(
+        apiProvider, walletInfoProvider, blobs, keyValueEntriesRepository);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

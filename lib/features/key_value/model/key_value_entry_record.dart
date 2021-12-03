@@ -8,10 +8,10 @@ class KeyValueEntryRecord {
 
   static KeyValueEntryRecord fromJson(Map<String, dynamic> source) {
     var key = source["id"];
-    var value = source["value"];
+    var value = source['attributes']["value"];
 
     KeyValueEntryRecord keyValueRecord;
-    switch (value) {
+    switch (value['type']['value']) {
       case KeyValueEntryType.STRING:
         keyValueRecord = StringOwn(key, value["str"]);
         break;

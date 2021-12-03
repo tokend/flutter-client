@@ -358,7 +358,8 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             keyServer: keyServer,
             walletInfo: walletInfo,
             api: api,
-            keyValueEntriesRepository: keyValueEntriesRepository,
+            keyValueEntriesRepository:
+                repositoryProvider.keyValueEntriesRepository,
             signedApi: signedApi,
             repositoryProvider: repositoryProvider,
             newDocument: {

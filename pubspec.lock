@@ -246,7 +246,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: c4d81797b2ed73a339e2af4daa2a6634fb612a8e
+      resolved-ref: "9241b91c03cf7b2efd8177670beeae28c6618a33"
       url: "https://github.com/tokend/dart-sdk"
     source: git
     version: "0.0.1"
@@ -413,7 +413,7 @@ packages:
       name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.8"
+    version: "4.5.1"
   glob:
     dependency: transitive
     description:
