@@ -13,7 +13,7 @@ class FirstName extends FormzInput<String, NameError> {
 
   @override
   NameError? validator(String value) {
-    if (value?.isNotEmpty == false) {
+    if (value.isNotEmpty == false) {
       return NameError.empty;
     }
     return _nameRegExp.hasMatch(value) ? null : NameError.invalid;
@@ -31,7 +31,7 @@ class LastName extends FormzInput<String, NameError> {
 
   @override
   NameError? validator(String value) {
-    if (value?.isNotEmpty == false) {
+    if (value.isNotEmpty == false) {
       return NameError.empty;
     }
     return _nameRegExp.hasMatch(value) ? null : NameError.invalid;

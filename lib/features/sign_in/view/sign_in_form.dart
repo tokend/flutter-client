@@ -157,7 +157,8 @@ class SignInForm extends StatelessWidget {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.offAllNamed('/home');
+                Get.toNamed('/kycForm');
+                //Get.offAllNamed('/home');
               }
             },
             child: signInWidget);

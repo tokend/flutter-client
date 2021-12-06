@@ -348,8 +348,8 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
         var account =
             await Account.fromSecretSeed(walletInfo.secretSeeds.first);
         session.accountProvider.setAccount(account);
-        var signedApi = TokenDApi("http://c663-193-19-228-94.ngrok.io/_/api/",
-            requestSigner: AccountRequestSigner(account), tfaCallback: null);
+
+        var signedApi = apiProvider.getSignedApi();
         var result = await SubmitKycRequestUseCase(
             kycForm: GeneralKycForm(
                 lastName: 'ksdjfg', firstName: 'skdjfh', document: null),
@@ -360,7 +360,7 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             api: api,
             keyValueEntriesRepository:
                 repositoryProvider.keyValueEntriesRepository,
-            signedApi: signedApi,
+            signedApi: signedApi!,
             repositoryProvider: repositoryProvider,
             newDocument: {
               "kyc_avatar": LocalFile.fromPath(state.image.value)

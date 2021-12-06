@@ -75,7 +75,9 @@ class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
             .perform()
             .then((wallet) => log('ID:  ${wallet.walletData.id}'));
         yield state.copyWith(status: FormzStatus.submissionSuccess);
-      } catch (e) {
+      } catch (e, s) {
+        log(e.toString());
+        log(s.toString());
         yield state.copyWith(
             //TODO add error type checking. Is absent now because of wrong server side error code (500)
             status: FormzStatus.submissionFailure,

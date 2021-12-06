@@ -11,9 +11,9 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/env.dart';
-import 'features/kyc/view/kyc_scaffold.dart';
+import 'features/sign_in/view/sign_in_scaffold.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.black.withOpacity(0), //top bar color
@@ -26,7 +26,6 @@ Future<void> main() async{
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   runApp(App(Development(sharedPreferences), sharedPreferences));
-
 }
 
 class App extends StatelessWidget {
@@ -44,8 +43,8 @@ class App extends StatelessWidget {
         locale: Get.deviceLocale,
         translations: AppTranslation(),
         fallbackLocale: Locale('en', 'US'),
-        // home: SignInScaffold(),
-        home: KycScaffold(),
+        home: SignInScaffold(),
+        //home: KycScaffold(),
         // home: SignUpScaffold(),
         getPages: getPageList(env, sharedPreferences, binding));
   }

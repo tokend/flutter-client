@@ -35,5 +35,7 @@ List<GetPage<dynamic>> getPageList(
           binding: MainBindings(env, sharedPreferences)),
       GetPage(name: '/home', page: () => HomeScreen(), binding: binding),
       GetPage(
-          name: '/balances', page: () => BalancesScreen(), binding: binding),
+          name: '/balances',
+          page: () => BalancesScreen(false, false),
+          binding: binding),
     ];

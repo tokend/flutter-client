@@ -50,7 +50,7 @@ class GeneralKycForm extends KycForm {
 
   @override
   String getRoleKey() {
-    return 'general';
+    return ROLE_KEY;
   }
 }
 
@@ -77,7 +77,7 @@ class CorporateKycForm extends KycForm {
 
   @override
   String getRoleKey() {
-    return 'corporate';
+    return ROLE_KEY;
   }
 
   @override

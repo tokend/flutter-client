@@ -44,7 +44,7 @@ class SignUpForm extends StatelessWidget {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.toNamed('/kycForm');
+                Get.toNamed('/signIn');
               }
             },
             child: AuthScreenTemplate(

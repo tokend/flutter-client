@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/api/v3/requests/model/request_model.dart';
 import 'package:dart_wallet/xdr/utils/dependencies.dart';
@@ -56,7 +58,9 @@ class KycRequestStateRepository extends SingleItemRepository<KycRequestState> {
           _keyValueEntriesRepository.update().then((_) => Future.value(
               KycForm.fromBlob(blob, roleId.toInt(),
                   _keyValueEntriesRepository.entriesMap.values.toList()))));
-    } catch (e) {
+    } catch (e, s) {
+      log('KycRequestRepository error: $e');
+      log(s.toString());
       return Future.value(EmptyKycForm());
     }
   }

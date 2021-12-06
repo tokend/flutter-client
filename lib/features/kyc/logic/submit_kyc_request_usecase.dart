@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -57,13 +58,13 @@ class SubmitKycRequestUseCase {
   late String _formBlobId;
   late NetworkParams _networkParams;
   late String _transactionRequestXdr;
-  Map<String, RemoteFile>? uploadedDocuments;
+  late Map<String, RemoteFile> uploadedDocuments;
 
   Future<void>? perform() async {
     await _getRoleToSet()
         .then((role) => this._roleToSet = role)
-        /*.then((_) => _uploadNewDocuments())
-        .then((uploadedDocuments) => this.uploadedDocuments = uploadedDocuments)*/
+        .then((_) => _uploadNewDocuments())
+        .then((uploadedDocuments) => this.uploadedDocuments = uploadedDocuments)
         .then((_) => _uploadFormAsBlob())
         .then((formBlobId) => this._formBlobId = formBlobId)
         .then((_) => _getNetworkParams())
@@ -75,17 +76,21 @@ class SubmitKycRequestUseCase {
   }
 
   Future<Int64> _getRoleToSet() async {
-    if (explicitRoleToSet != null && explicitRoleToSet! > 0) {
-      return Future.value(explicitRoleToSet ?? Int64(0));
-    }
+    try {
+      if (explicitRoleToSet != null && explicitRoleToSet! > 0) {
+        return Future.value(explicitRoleToSet ?? Int64(0));
+      }
 
-    var key = kycForm.getRoleKey();
-    var result = keyValueEntriesRepository.update().then((_) =>
-        keyValueEntriesRepository.getItem(key).then((keyValueRecord) =>
-            Future.value(Int64(int.parse(keyValueRecord.value)))));
-    print('RESULT KEY-VALUE: ${await result}');
-    return await result;
-    //TODO check getting role from keyserver!!!!!
+      var key = kycForm.getRoleKey();
+      var result = keyValueEntriesRepository.update().then((_) =>
+          keyValueEntriesRepository.getItem(key).then((keyValueRecord) =>
+              Future.value(Int64(int.parse(keyValueRecord.value)))));
+      return await result;
+    } catch (e, s) {
+      log('${e.toString()}');
+      log(s.toString());
+      return Future.error(e);
+    }
   }
 
   Future<NetworkParams> _getNetworkParams() async {
@@ -96,18 +101,14 @@ class SubmitKycRequestUseCase {
 
   Future<String> _uploadFormAsBlob() async {
     (kycForm as GeneralKycForm).document = {}
-      ..addAll(alreadySubmittedDocuments ?? {});
-    // ..addAll(uploadedDocuments);
+      ..addAll(alreadySubmittedDocuments ?? {})
+      ..addAll(uploadedDocuments);
 
-    var formJson = (kycForm as GeneralKycForm).toJson();
+    var formJson = json.encode((kycForm as GeneralKycForm).toJson());
 
     return await (repositoryProvider.blobs
-        .create(Blob.fromContent(
-            BlobType.KYC_FORM,
-            formJson
-                .toString())) //TODO: check if map.toString() works correctly!
+        .create(Blob.fromContent(BlobType.KYC_FORM, formJson))
         .then((value) {
-      print('Value id: ${value.id}');
       return value.id;
     }));
   }

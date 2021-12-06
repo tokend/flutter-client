@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:dart_sdk/signing/account_request_signer.dart';
@@ -62,7 +64,7 @@ class ApiProviderImpl implements ApiProvider {
     } else {
       signedApi = TokenDApi(_url,
           requestSigner:
-              AccountRequestSigner(account, accountId: originalAccountId),
+          AccountRequestSigner(account, originalAccountId: originalAccountId),
           tfaCallback: _tfaCallback,
           withLogs: _withLogs);
     }
