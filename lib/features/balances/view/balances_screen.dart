@@ -29,6 +29,8 @@ class _BalancesScreenState extends State<BalancesScreen> {
     var streamController;
 
     void subscribeToBalances() async {
+      await widget.repositoryProvider.activeKyc.getItem();
+      widget.repositoryProvider.activeKyc.isNeverUpdated = false;
       await balanceRepo.getItems();
     }
 

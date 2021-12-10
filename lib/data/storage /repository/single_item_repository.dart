@@ -1,5 +1,6 @@
 import 'package:flutter_template/data/storage%20/persistence/object_persistence.dart';
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Repository that holds a single [T] item.
@@ -8,6 +9,7 @@ abstract class SingleItemRepository<T> extends Repository {
 
   /// Repository item
   T? item;
+  final streamSubject = BehaviorSubject<T>();
 
   Future<T> getItem();
 
@@ -43,6 +45,7 @@ abstract class SingleItemRepository<T> extends Repository {
       }
 
       getItem().then((item) => storeItem(item)).then((item) {
+        streamSubject.add(item);
         isNeverUpdated = false;
         isLoading = false;
         onNewItem(item);

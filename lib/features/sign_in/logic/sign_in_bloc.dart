@@ -106,6 +106,6 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
 
   Future<bool> hasKyc() async {
     var form = await repositoryProvider.activeKyc.getItem();
-    return form is Form;
+    return form is ActiveKycForm;
   }
 }

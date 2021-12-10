@@ -4,8 +4,8 @@ class ActiveKyc {}
 
 class KycMissing extends ActiveKyc {}
 
-class Form extends ActiveKyc {
+class ActiveKycForm extends ActiveKyc {
   KycForm formData;
 
-  Form(this.formData);
+  ActiveKycForm(this.formData);
 }

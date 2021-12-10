@@ -192,7 +192,7 @@ class SubmitKycRequestUseCase {
 
   _updateRepositories() {
     //TODO update kyc request state repo
-    repositoryProvider.activeKyc.set(Form(kycForm));
+    repositoryProvider.activeKyc.set(ActiveKycForm(kycForm));
     repositoryProvider.account.updateRole(_roleToSet.toInt());
   }
 }

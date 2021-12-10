@@ -17,15 +17,17 @@ class ActiveKycRepository extends SingleItemRepository<ActiveKyc> {
       this._accountRepository, this._blobsRepository, this.persistence);
 
   @override
-  Future<ActiveKyc> getItem() {
-    return _accountRepository.getItem().then((account) async {
+  Future<ActiveKyc> getItem() async {
+    var kyc = _accountRepository.getItem().then((account) async {
       if (account.kycBlob != null) {
-        log('account.kycBlob ${account.kycBlob}');
         var form = await getForm(account.kycBlob!);
-        return Form(form);
+        return ActiveKycForm(form);
       }
       return Future.value(KycMissing());
     });
+
+    streamSubject.sink.add(await kyc);
+    return kyc;
   }
 
   Future<AccountRecord?> getAccount() {
