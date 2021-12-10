@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
-import 'package:dart_sdk/signing/account_request_signer.dart';
-import 'package:dart_wallet/account.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_template/base/base_bloc.dart';
@@ -341,22 +338,19 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
       try {
         var api = apiProvider.getApi();
 
-        // var walletInfo = walletInfoProvider;
         var keyServer = KeyServer(api.wallets);
-        var walletInfo =
-            await keyServer.getWalletInfo("user1@gmail.com", "111111");
-        var account =
-            await Account.fromSecretSeed(walletInfo.secretSeeds.first);
-        session.accountProvider.setAccount(account);
 
         var signedApi = apiProvider.getSignedApi();
-        var result = await SubmitKycRequestUseCase(
+
+        await SubmitKycRequestUseCase(
             kycForm: GeneralKycForm(
-                lastName: 'ksdjfg', firstName: 'skdjfh', document: null),
+                lastName: state.lastName.value,
+                firstName: state.firstName.value,
+                document: null),
             accountProvider: session.accountProvider,
             txManager: txManager,
             keyServer: keyServer,
-            walletInfo: walletInfo,
+            walletInfoProvider: session.walletInfoProvider,
             api: api,
             keyValueEntriesRepository:
                 repositoryProvider.keyValueEntriesRepository,
@@ -365,7 +359,6 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             newDocument: {
               "kyc_avatar": LocalFile.fromPath(state.image.value)
             }).perform();
-        print("result");
       } on Exception {
         yield state.copyWith(status: FormzStatus.submissionFailure);
       }

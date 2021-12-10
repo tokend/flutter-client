@@ -36,7 +36,6 @@ class _SetKycFormState extends BaseState<KycForm>
   @override
   Widget build(BuildContext context) {
     final colorTheme = context.colorTheme;
-    final screenSize = MediaQuery.of(context).size;
     var progress;
 
     return ProgressHUD(
@@ -56,7 +55,7 @@ class _SetKycFormState extends BaseState<KycForm>
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.toNamed('/signIn'); //TODO: change route
+                Get.offAllNamed('/home');
               }
             },
             child: Scaffold(
@@ -417,7 +416,7 @@ class _VocationTradingCertificateInputField extends StatelessWidget {
     final colorTheme = context.colorTheme;
     return BlocBuilder<KycBloc, KycState>(
       buildWhen: (previous, current) =>
-      previous.vocationTrainingCertificate !=
+          previous.vocationTrainingCertificate !=
           current.vocationTrainingCertificate,
       builder: (context, state) {
         return Padding(

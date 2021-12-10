@@ -10,7 +10,6 @@ import 'package:dart_sdk/api/blobs/model/blob_type.dart';
 import 'package:dart_sdk/api/documents/model/document_type.dart';
 import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
-import 'package:dart_sdk/key_server/models/wallet_info.dart';
 import 'package:dart_wallet/network_params.dart';
 import 'package:dart_wallet/public_key_factory.dart';
 import 'package:dart_wallet/transaction.dart' as tr;
@@ -19,7 +18,9 @@ import 'package:dart_wallet/xdr/utils/dependencies.dart';
 import 'package:dart_wallet/xdr/xdr_types.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
+import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
+import 'package:flutter_template/features/kyc/model/active_kyc.dart';
 import 'package:flutter_template/features/kyc/model/kyc_form.dart';
 import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:flutter_template/utils/file/local_file.dart';
@@ -27,7 +28,8 @@ import 'package:flutter_template/utils/file/local_file.dart';
 class SubmitKycRequestUseCase {
   final KycForm kycForm;
   final KeyServer keyServer;
-  final WalletInfo walletInfo;
+
+  final WalletInfoProvider walletInfoProvider;
   final TokenDApi api;
   final TokenDApi signedApi;
   final TxManager txManager;
@@ -42,7 +44,7 @@ class SubmitKycRequestUseCase {
   SubmitKycRequestUseCase(
       {required this.kycForm,
       required this.keyServer,
-      required this.walletInfo,
+      required this.walletInfoProvider,
       required this.api,
       required this.signedApi,
       required this.repositoryProvider,
@@ -72,7 +74,8 @@ class SubmitKycRequestUseCase {
         .then((_) => _getTransaction())
         .then((transaction) => txManager.submit(transaction))
         .then((response) =>
-            this._transactionRequestXdr = response!.resultMetaXdr!);
+            this._transactionRequestXdr = response!.resultMetaXdr!)
+        .then((_) => _updateRepositories());
   }
 
   Future<Int64> _getRoleToSet() async {
@@ -115,18 +118,22 @@ class SubmitKycRequestUseCase {
 
   Future<tr.Transaction> _getTransaction() async {
     try {
+      var accountId = walletInfoProvider.getWalletInfo()?.accountId;
+      if (accountId == null)
+        return Future.error(StateError('No wallet info found'));
+
       var operation = CreateChangeRoleRequestOp(
           requestIdToSubmit ?? Int64(0),
-          PublicKeyFactory.fromAccountId(walletInfo.accountId),
+          PublicKeyFactory.fromAccountId(accountId),
           _roleToSet,
           "{\"blob_id\":\"$_formBlobId\"}",
           null,
           CreateChangeRoleRequestOpExtEmptyVersion());
 
-      var transaction = await TransactionBuilder.FromPubKey(
-              _networkParams, walletInfo.accountId)
-          .addOperation(OperationBodyCreateChangeRoleRequest(operation))
-          .build();
+      var transaction =
+          await TransactionBuilder.FromPubKey(_networkParams, accountId)
+              .addOperation(OperationBodyCreateChangeRoleRequest(operation))
+              .build();
 
       var account = accountProvider.getAccount();
       if (account == null) {
@@ -173,9 +180,19 @@ class SubmitKycRequestUseCase {
       DocumentType documentType, LocalFile localFile) async {
     Uint8List document = File(localFile.path).readAsBytesSync();
 
+    var accountId = walletInfoProvider.getWalletInfo()?.accountId;
+    if (accountId == null)
+      return Future.error(StateError('No wallet info found'));
+
     var policy = await signedApi.documents
-        .requestUpload(walletInfo.accountId, documentType, localFile.mimeType);
+        .requestUpload(accountId, documentType, localFile.mimeType);
     return api.documents
         .upload(policy, localFile.mimeType, localFile.name, document);
+  }
+
+  _updateRepositories() {
+    //TODO update kyc request state repo
+    repositoryProvider.activeKyc.set(Form(kycForm));
+    repositoryProvider.account.updateRole(_roleToSet.toInt());
   }
 }

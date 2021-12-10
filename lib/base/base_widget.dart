@@ -27,6 +27,8 @@ class BaseWidget {
   CredentialsPersistence credentialsPersistence = Get.find();
 }
 
-abstract class BaseStatelessWidget extends StatelessWidget with BaseWidget {}
+abstract class BaseStatelessWidget extends StatelessWidget with BaseWidget {
+  BaseStatelessWidget({Key? key}): super(key: key);
+}
 
 abstract class BaseStatefulWidget extends StatefulWidget with BaseWidget {}

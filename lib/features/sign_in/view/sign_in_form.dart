@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +20,7 @@ import 'package:formz/formz.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends BaseStatelessWidget {
   SignInForm({Key? key}) : super(key: key);
   GlobalKey<DefaultButtonState> _signInButtonKey =
       GlobalKey<DefaultButtonState>();
@@ -157,8 +159,13 @@ class SignInForm extends StatelessWidget {
                 print('submission failure');
               } else if (state.status.isSubmissionSuccess) {
                 progress.dismiss();
-                Get.toNamed('/kycForm');
-                //Get.offAllNamed('/home');
+                log('HAS KYC: ${state.hasKyc}');
+
+                if (state.hasKyc) {
+                  Get.offAllNamed('/home');
+                } else {
+                  Get.offAllNamed('/kycForm');
+                }
               }
             },
             child: signInWidget);
