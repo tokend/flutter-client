@@ -7,6 +7,8 @@ import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_event.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
+import 'package:flutter_template/features/kyc/model/active_kyc.dart';
+import 'package:flutter_template/features/kyc/model/kyc_form.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get.dart';
@@ -37,51 +39,76 @@ class DrawerContent extends BaseStatelessWidget {
   final String accountName;
   final String accountEmail;
 
-  DrawerContent(this.accountName, this.accountEmail);
+  DrawerContent(this.accountName, this.accountEmail) {
+    if (repositoryProvider.activeKyc.isNeverUpdated == true) {
+      subscribeToBalances();
+    }
+
+    streamController = repositoryProvider.activeKyc.streamSubject;
+  }
+
+  var streamController;
+
+  void subscribeToBalances() async {
+    await repositoryProvider.activeKyc.getItem();
+  }
 
   //TODO create header
   @override
-  Widget build(BuildContext context) => Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
-      child: Container(
-          color: context.colorTheme.drawerBackground,
-          child: Stack(
-            children: [
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(left: 10.0),
-                  itemCount: listItems.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      BlocBuilder<DrawerBloc, DrawerState>(
-                        builder: (BuildContext context, DrawerState state) =>
-                            _buildItem(listItems[index], state, context),
-                      )),
-              Positioned(
-                bottom: 24.0,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 30.0),
-                  child: makeFooter(context),
-                ),
-              )
-            ],
-          )));
+  Widget build(BuildContext context) => StreamBuilder(
+        stream: streamController.stream,
+        builder: (context, AsyncSnapshot<ActiveKyc> snapshot) {
+          if (snapshot.connectionState != ConnectionState.waiting &&
+              snapshot.hasData) {
+            return Drawer(
+                // Add a ListView to the drawer. This ensures the user can scroll
+                // through the options in the drawer if there isn't enough vertical
+                // space to fit everything.
+                child: Container(
+                    color: context.colorTheme.drawerBackground,
+                    child: Stack(
+                      children: [
+                        ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(left: 10.0),
+                            itemCount: listItems.length,
+                            itemBuilder: (BuildContext context, int index) =>
+                                BlocBuilder<DrawerBloc, DrawerState>(
+                                  builder: (BuildContext context,
+                                          DrawerState state) =>
+                                      _buildItem(snapshot, listItems[index],
+                                          state, context),
+                                )),
+                        Positioned(
+                          bottom: 24.0,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 30.0),
+                            child: makeFooter(context),
+                          ),
+                        )
+                      ],
+                    )));
+          }
+          return CircularProgressIndicator();
+        },
+      );
 
-  Widget _buildItem(
-          NavigationItemData data, DrawerState state, BuildContext context) =>
+  Widget _buildItem(AsyncSnapshot<ActiveKyc> snapshot, NavigationItemData data,
+          DrawerState state, BuildContext context) =>
       data.header
           // if the item is a header return the header widget
-          ? makeHeader(context)
+          ? makeHeader(snapshot, context)
           // otherwise build and return the default list item
           : _makeListItem(data, state, context);
 
-  Widget makeHeader(BuildContext context) {
+  Widget makeHeader(AsyncSnapshot<ActiveKyc> snapshot, BuildContext context) {
+    var form = ((snapshot.data as ActiveKycForm).formData as GeneralKycForm);
+    var documentUrl = form.documents?['kyc_avatar']
+        ?.getUrl(urlConfigProvider.getConfig().storage);
     return Card(
       color: context.colorTheme.drawerBackground,
       margin: EdgeInsets.only(top: 100.0, left: 20.0),
-      //shape: ContinuousRectangleBorder(borderRadius: BorderRadius.zero),
       elevation: 0,
       child: Row(
         children: [
@@ -89,22 +116,28 @@ class DrawerContent extends BaseStatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(right: 12.0),
-                child: CircleAvatar(
-                    backgroundColor: context.colorTheme.buttonDisabled,
-                    radius: 24,
-                    child: Icon(
-                      Icons.person,
-                      color: context.colorTheme.secondaryText,
-                    )),
-              ),
+                child: documentUrl != null
+                    ? CircleAvatar(
+                        backgroundColor: context.colorTheme.buttonDisabled,
+                        radius: 24,
+                        backgroundImage: NetworkImage(documentUrl),
+                      )
+                    : CircleAvatar(
+                        child: Icon(
+                          Icons.person,
+                          color: context.colorTheme.secondaryText,
+                        ),
+                      ),
+              )
             ],
           ),
           Column(
             children: [
               Text(
-                "Dafna Shvimer", //TODO
+                '${form.firstName} ${form.lastName}',
                 style: TextStyle(
                     color: context.colorTheme.secondaryText, fontSize: 17.0),
+                textAlign: TextAlign.start,
               ),
               Row(
                 children: [

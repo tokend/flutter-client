@@ -2,28 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
-import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/assets/view/assets_screen.dart';
-import 'package:flutter_template/features/balances/view/balances_screen.dart';
-import 'package:flutter_template/features/change_password/view/change_password_screen.dart';
-import 'package:flutter_template/features/home/view/home_screen.dart';
-import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
-import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
-import 'package:flutter_template/features/settings/view/security/account_id/account_id_screen.dart';
-import 'package:flutter_template/features/settings/view/settings_screen.dart';
-import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
-import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
+import 'package:flutter_template/utils/routing/page_router.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/env.dart';
-import 'features/settings/view/security/network_screen/network_screen.dart';
-import 'features/settings/view/security/secret_seed/secret_seed_screen.dart';
+import 'features/sign_in/view/sign_in_scaffold.dart';
 
 Future<void> main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.black.withOpacity(0), //top bar color
+      statusBarIconBrightness: Brightness.dark, //top bar icons
+      systemNavigationBarColor: Colors.white, //bottom bar color
+      systemNavigationBarIconBrightness: Brightness.dark, //bottom bar icons
+    ),
+  );
   WidgetsFlutterBinding.ensureInitialized();
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -41,57 +39,13 @@ class App extends StatelessWidget {
     MainBindings(env, sharedPreferences).dependencies();
     var binding = MainBindings(env, sharedPreferences);
     return GetMaterialApp(
-      theme: ThemeData(
-          backgroundColor: context.colorTheme.background,
-          scaffoldBackgroundColor: context.colorTheme.background),
-      title: 'Flutter Client',
-      locale: Get.deviceLocale,
-      translations: AppTranslation(),
-      fallbackLocale: Locale('en', 'US'),
-      routes: {
-        'sign_in': (context) => SignInScaffold(),
-        'sign_up': (context) => SignUpScaffold(),
-      },
-      home: SignInScaffold(),
-      getPages: [
-        GetPage(
-            name: '/signIn', page: () => SignInScaffold(), binding: binding),
-        GetPage(
-            name: '/signUp', page: () => SignUpScaffold(), binding: binding),
-        GetPage(
-            name: '/qr', page: () => ScanNetworkQrUseCase(), binding: binding),
-        GetPage(
-            name: '/recovery',
-            page: () => RecoveryScaffold(),
-            binding: binding),
-        GetPage(name: '/home', page: () => HomeScreen(), binding: binding),
-        GetPage(
-            name: '/balances',
-            page: () => BalancesScreen(false, false),
-            binding: binding),
-        GetPage(
-            name: '/settings', page: () => SettingsScreen(), binding: binding),
-        GetPage(
-            name: '/changePassword',
-            page: () => ChangePasswordScaffold(),
-            binding: binding),
-        GetPage(
-            name: '/accountId',
-            page: () => AccountIdScreen(),
-            binding: binding),
-        GetPage(
-            name: '/secretSeed',
-            page: () => SecretSeedScreen(),
-            binding: binding),
-        GetPage(
-            name: '/passphraseScreen',
-            page: () => PassphraseScreen(),
-            binding: binding),
-        GetPage(
-            name: '/assetsScreen',
-            page: () => AssetsScreen(),
-            binding: binding),
-      ],
-    );
+        title: 'Flutter Client',
+        locale: Get.deviceLocale,
+        translations: AppTranslation(),
+        fallbackLocale: Locale('en', 'US'),
+        home: SignInScaffold(),
+        //home: KycScaffold(),
+        // home: SignUpScaffold(),
+        getPages: getPageList(env, sharedPreferences, binding));
   }
 }

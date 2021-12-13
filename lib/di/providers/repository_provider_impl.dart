@@ -5,10 +5,17 @@ import 'package:flutter_template/data/storage%20/persistence/object_persitence_o
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/features/account/model/account_record.dart';
+import 'package:flutter_template/features/account/storage/account_repository.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
+import 'package:flutter_template/features/blobs/blobs_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
+import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
+import 'package:flutter_template/features/kyc/logic/kyc_request_state_repository.dart';
+import 'package:flutter_template/features/kyc/model/active_kyc.dart';
+import 'package:flutter_template/features/kyc/storage/active_kyc_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +35,21 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late var systemInfo;
 
+  @override
+  late BlobsRepository blobs;
+
+  @override
+  late KycRequestStateRepository kycRequestStateRepository;
+
+  @override
+  late KeyValueEntriesRepository keyValueEntriesRepository;
+
+  @override
+  late AccountRepository account;
+
+  @override
+  late ActiveKycRepository activeKyc;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -38,6 +60,14 @@ class RepositoryProviderImpl implements RepositoryProvider {
     assets =
         AssetsRepository(apiProvider, walletInfoProvider, urlConfigProvider);
     systemInfo = SystemInfoRepository(apiProvider, getSystemInfoPersistence());
+    blobs = BlobsRepository(apiProvider, walletInfoProvider);
+    keyValueEntriesRepository = KeyValueEntriesRepository(apiProvider.getApi());
+    kycRequestStateRepository = KycRequestStateRepository(
+        apiProvider, walletInfoProvider, blobs, keyValueEntriesRepository);
+    account = AccountRepository(
+        apiProvider, walletInfoProvider, getAccountRecordPersistence());
+    activeKyc = ActiveKycRepository(
+        account, blobs, keyValueEntriesRepository, getActiveKycPersistence());
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {
@@ -48,6 +78,32 @@ class RepositoryProviderImpl implements RepositoryProvider {
     if (persistencePreferences != null) {
       persistence = ObjectPersistenceOnPrefs<SystemInfoRecord>(
           persistencePreferences!, "system_info");
+    } //TODO else case
+
+    return persistence;
+  }
+
+  ObjectPersistence<AccountRecord> getAccountRecordPersistence() {
+    ObjectPersistence<AccountRecord> persistence =
+        ObjectPersistenceOnPrefs<AccountRecord>(
+            persistencePreferences!, "account_record");
+
+    if (persistencePreferences != null) {
+      persistence = ObjectPersistenceOnPrefs<AccountRecord>(
+          persistencePreferences!, "account_record");
+    } //TODO else case
+
+    return persistence;
+  }
+
+  ObjectPersistence<ActiveKyc> getActiveKycPersistence() {
+    ObjectPersistence<ActiveKyc> persistence =
+        ObjectPersistenceOnPrefs<ActiveKyc>(
+            persistencePreferences!, "kyc_form");
+
+    if (persistencePreferences != null) {
+      persistence = ObjectPersistenceOnPrefs<ActiveKyc>(
+          persistencePreferences!, "kyc_form");
     } //TODO else case
 
     return persistence;

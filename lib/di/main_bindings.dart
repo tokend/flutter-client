@@ -69,6 +69,7 @@ class MainBindings extends Bindings {
     Get.put(urlConfigPersistence);
     Get.put(credentialsPersistence);
     Get.put(walletInfoPersistence);
+    Get.put(walletInfoProvider);
     Get.lazyPut(() => txManager);
     Get.put(repositoryProvider);
     Get.put(toastManager);

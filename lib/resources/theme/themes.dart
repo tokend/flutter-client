@@ -59,7 +59,7 @@ class LightColorTheme implements BaseColorTheme {
   final Color primaryText = Color(0xFF010000);
 
   @override
-  final Color suffixIcons = Color(0xFF9695A8);
+  final Color suffixIcons = Color(0x1A7B6EFF);
 
   @override
   final Color hint = Color(0xFF9695A8);

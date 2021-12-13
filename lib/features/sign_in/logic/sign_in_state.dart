@@ -5,6 +5,7 @@ class SignInState extends Equatable {
     this.email,
     this.password, {
     this.network = '',
+    this.hasKyc = false,
     this.status = FormzStatus.pure,
     this.error,
   });
@@ -13,15 +14,18 @@ class SignInState extends Equatable {
   final Email email;
   final Password password;
   final FormzStatus status;
+  final bool hasKyc;
   Object? error;
+
   @override
-  List<Object> get props => [network, email, password, status];
+  List<Object> get props => [network, email, password, status, hasKyc];
 
   SignInState copyWith({
     String? network,
     Email? email,
     Password? password,
     FormzStatus? status,
+    bool? hasKyc,
     Object? error,
   }) {
     return SignInState(
@@ -29,6 +33,7 @@ class SignInState extends Equatable {
       password ?? this.password,
       network: network ?? this.network,
       status: status ?? this.status,
+      hasKyc: hasKyc ?? this.hasKyc,
       error: error ?? this.error,
     );
   }
