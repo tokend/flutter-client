@@ -10,7 +10,7 @@ abstract class KycForm {
 
   static const _ROLE_KEY_PREFIX = "account_role";
 
-  static KycForm? fromBlob(
+  static KycForm fromBlob(
       Blob blob, int roleId, List<KeyValueEntryRecord> keyValueEntries) {
     var roleKey;
     keyValueEntries.forEach((element) {
@@ -35,22 +35,27 @@ class GeneralKycForm extends KycForm {
 
   String firstName;
   String lastName;
-  Map<String, RemoteFile>? document;
+  late Map<String, RemoteFile>? documents;
 
   GeneralKycForm(
-      {required this.firstName, required this.lastName, this.document});
+      {required this.firstName, required this.lastName, this.documents});
 
   GeneralKycForm.fromJson(Map<String, dynamic> json)
       : firstName = json['first_name'],
-        lastName = json['last_name'],
-        document = json['avatar'];
+        lastName = json['last_name'] {
+    documents = getRemoteFiles(json['documents']);
+  }
 
   Map<String, dynamic> toJson() =>
-      {'first_name': firstName, 'last_name': lastName, 'documents': document};
+      {'first_name': firstName, 'last_name': lastName, 'documents': documents};
 
   @override
   String getRoleKey() {
     return ROLE_KEY;
+  }
+
+  Map<String, RemoteFile>? getRemoteFiles(Map<String, dynamic> json) {
+    return json.map((key, value) => MapEntry(key, RemoteFile.fromJson(value)));
   }
 }
 

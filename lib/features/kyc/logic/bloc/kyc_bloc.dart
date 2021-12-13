@@ -346,7 +346,7 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             kycForm: GeneralKycForm(
                 lastName: state.lastName.value,
                 firstName: state.firstName.value,
-                document: null),
+                documents: null),
             accountProvider: session.accountProvider,
             txManager: txManager,
             keyServer: keyServer,

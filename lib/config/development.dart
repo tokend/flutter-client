@@ -10,8 +10,8 @@ class Development extends Env {
   String apiUrl = 'http://d038-193-19-228-94.ngrok.io/_/api/';
 
   @override
-  String storageUrl =
-      'https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden/';
+  String storageUrl = 'http://d038-193-19-228-94.ngrok.io/_/storage/api/';
+     // 'https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden/';
 
   @override
   Color primarySwatch = Color.fromARGB(100, 0, 150, 136);

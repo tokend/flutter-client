@@ -66,7 +66,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
         apiProvider, walletInfoProvider, blobs, keyValueEntriesRepository);
     account = AccountRepository(
         apiProvider, walletInfoProvider, getAccountRecordPersistence());
-    activeKyc = ActiveKycRepository(account, blobs, getActiveKycPersistence());
+    activeKyc = ActiveKycRepository(
+        account, blobs, keyValueEntriesRepository, getActiveKycPersistence());
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

@@ -103,7 +103,7 @@ class SubmitKycRequestUseCase {
   }
 
   Future<String> _uploadFormAsBlob() async {
-    (kycForm as GeneralKycForm).document = {}
+    (kycForm as GeneralKycForm).documents = {}
       ..addAll(alreadySubmittedDocuments ?? {})
       ..addAll(uploadedDocuments);
 

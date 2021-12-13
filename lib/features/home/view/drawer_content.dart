@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,7 +104,8 @@ class DrawerContent extends BaseStatelessWidget {
 
   Widget makeHeader(AsyncSnapshot<ActiveKyc> snapshot, BuildContext context) {
     var form = ((snapshot.data as ActiveKycForm).formData as GeneralKycForm);
-    var documentUrl = form.document?['avatar']?.key;
+    var documentUrl = form.documents?['kyc_avatar']
+        ?.getUrl(urlConfigProvider.getConfig().storage);
     return Card(
       color: context.colorTheme.drawerBackground,
       margin: EdgeInsets.only(top: 100.0, left: 20.0),
@@ -117,16 +116,18 @@ class DrawerContent extends BaseStatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(right: 12.0),
-                child: CircleAvatar(
-                  backgroundColor: context.colorTheme.buttonDisabled,
-                  radius: 24,
-                  child: documentUrl != null
-                      ? Image.file(File(documentUrl))
-                      : Icon(
+                child: documentUrl != null
+                    ? CircleAvatar(
+                        backgroundColor: context.colorTheme.buttonDisabled,
+                        radius: 24,
+                        backgroundImage: NetworkImage(documentUrl),
+                      )
+                    : CircleAvatar(
+                        child: Icon(
                           Icons.person,
                           color: context.colorTheme.secondaryText,
                         ),
-                ),
+                      ),
               )
             ],
           ),
