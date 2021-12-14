@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/config/env.dart';
+import 'package:flutter_template/features/kyc/model/active_kyc.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_usecase.dart';
 import 'package:flutter_template/utils/view/models/email.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
@@ -65,17 +66,24 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
         await SignInUseCase(state.email.value, state.password.value, keyServer,
                 session, credentialsPersistence, walletInfoPersistence)
             .perform();
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
+        await repositoryProvider.activeKyc.getItem();
+        var kycState = await hasKyc();
+        yield state.copyWith(
+            status: FormzStatus.submissionSuccess, hasKyc: kycState);
       } catch (e, stacktrace) {
         log(stacktrace.toString());
         if (e is InvalidCredentialsException) {
           yield state.copyWith(
-              status: FormzStatus.submissionFailure,
-              password: Password.dirty(serverError: e));
+            status: FormzStatus.submissionFailure,
+            password: Password.dirty(serverError: e),
+            hasKyc: false,
+          );
         } else if (e is EmailNotVerifiedException) {
           yield state.copyWith(
-              status: FormzStatus.submissionFailure,
-              email: Email.dirty(serverError: e));
+            status: FormzStatus.submissionFailure,
+            email: Email.dirty(serverError: e),
+            hasKyc: false,
+          );
         }
       }
     } else if (event is NotFirstLogIn) {
@@ -87,10 +95,17 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
                 credentialsPersistence, walletInfoPersistence)
             .perform();
 
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
+        var kycState = await hasKyc();
+        yield state.copyWith(
+            status: FormzStatus.submissionSuccess, hasKyc: kycState);
       } on Exception {
         yield state.copyWith(status: FormzStatus.submissionFailure);
       }
     }
+  }
+
+  Future<bool> hasKyc() async {
+    var form = await repositoryProvider.activeKyc.getItem();
+    return form is ActiveKycForm;
   }
 }

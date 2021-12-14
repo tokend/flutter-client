@@ -9,6 +9,7 @@ abstract class SingleItemRepository<T> extends Repository {
 
   /// Repository item
   T? item;
+  final streamSubject = BehaviorSubject<T>();
 
   Future<T> getItem();
 
@@ -46,6 +47,7 @@ abstract class SingleItemRepository<T> extends Repository {
       }
 
       getItem().then((item) => storeItem(item)).then((item) {
+        streamSubject.add(item);
         isNeverUpdated = false;
         isLoading = false;
         onNewItem(item);

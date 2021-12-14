@@ -15,21 +15,15 @@ abstract class MultipleItemsRepository<T> extends Repository {
 
   //TODO implement items ensuring
 
-  Future<void> update() {
+  Future<void> update() async {
     invalidate();
+    await getItems().then((items) {
+      streamSubject.add(items);
 
-    return lock.synchronized(() async {
-      isLoading = true;
-
-      //TODO add loading from db
-      await getItems().then((items) {
-        streamSubject.add(items);
-
-        onNewItems(items);
-        isLoading = false;
-      }).onError((error, stackTrace) {
-        log(stackTrace.toString());
-      });
+      onNewItems(items);
+      isLoading = false;
+    }).onError((error, stackTrace) {
+      log(stackTrace.toString());
     });
   }
 

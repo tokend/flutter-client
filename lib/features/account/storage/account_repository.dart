@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dart_sdk/api/transactions/transactions_api.dart';
 import 'package:flutter_template/data/storage%20/persistence/object_persistence.dart';
 import 'package:flutter_template/data/storage%20/repository/single_item_repository.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
@@ -25,6 +28,7 @@ class AccountRepository extends SingleItemRepository<AccountRecord> {
     var response = await signedApi.getService().get('v3/accounts/$accountId',
         query: AccountParams(List.of([AccountParams.KYC_DATA])).map());
 
+    printLongString('Response from Account Repository ${json.encode(response)}');
     return AccountRecord.fromJson(response);
   }
 
