@@ -15,8 +15,6 @@ abstract class SingleItemRepository<T> extends Repository {
 
   Lock lock = new Lock();
 
-  final streamSubject = BehaviorSubject<T>();
-
   T? getStoredItem() {
     if (objectPersistence == null) return null;
     return objectPersistence!.loadItem();

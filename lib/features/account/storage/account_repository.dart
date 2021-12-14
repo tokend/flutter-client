@@ -28,7 +28,7 @@ class AccountRepository extends SingleItemRepository<AccountRecord> {
     var response = await signedApi.getService().get('v3/accounts/$accountId',
         query: AccountParams(List.of([AccountParams.KYC_DATA])).map());
 
-    printLongString('Response from Account Repository ${json.encode(response)}');
+    //printLongString('Response from Account Repository ${json.encode(response)}');
     return AccountRecord.fromJson(response);
   }
 

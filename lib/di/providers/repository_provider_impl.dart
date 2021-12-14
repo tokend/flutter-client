@@ -77,6 +77,7 @@ class RepositoryProviderImpl implements RepositoryProvider {
         apiProvider, walletInfoProvider, getAccountRecordPersistence());
     activeKyc = ActiveKycRepository(
         account, blobs, keyValueEntriesRepository, getActiveKycPersistence());
+    assetPairsRepository = AssetPairsRepository(apiProvider, urlConfigProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {
@@ -137,5 +138,5 @@ class RepositoryProviderImpl implements RepositoryProvider {
   }
 
   @override
-  AssetPairsRepository assetPairsRepository;
+  late AssetPairsRepository assetPairsRepository;
 }

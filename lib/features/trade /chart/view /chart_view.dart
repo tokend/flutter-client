@@ -19,14 +19,17 @@ class ChartView extends StatelessWidget {
           LineSeries<charts.ChartPoint, String>(
             dataSource: getDataSourceByTimePeriod(assetPairs)!,
             xValueMapper: (charts.ChartPoint point, _) =>
-                assetPairs.day!.indexOf(point).toString(),
+                getDataSourceByTimePeriod(assetPairs)!
+                    .indexOf(point)
+                    .toString(),
             yValueMapper: (charts.ChartPoint point, _) =>
                 point.value.toDouble(),
           )
         ]);
   }
 
-  List<charts.ChartPoint>? getDataSourceByTimePeriod(charts.AssetChartData assetPairs) {
+  List<charts.ChartPoint>? getDataSourceByTimePeriod(
+      charts.AssetChartData assetPairs) {
     switch (timePeriod) {
       case ChartTimePeriod.day:
         return assetPairs.day?.toList();
