@@ -9,6 +9,7 @@ import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/trade%20/view/trade_screen.dart';
+import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -29,6 +30,18 @@ class HomeScreen extends StatelessWidget {
               style:
                   TextStyle(color: context.colorTheme.accent, fontSize: 28.0),
             ),
+            actions: state.selectedItem == NavItem.trade
+                ? [
+                    IconButton(
+                      icon: Icon(
+                        CustomIcons.add,
+                      ),
+                      onPressed: () {
+                        //TODO open bottom dialog for order creation
+                      },
+                    )
+                  ]
+                : [],
             elevation: 0,
           ),
         ),

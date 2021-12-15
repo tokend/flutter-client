@@ -1,6 +1,5 @@
 import 'package:decimal/decimal.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_template/features/assets/model/asset.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 
 abstract class SendEvent extends Equatable {
@@ -13,7 +12,6 @@ abstract class SendEvent extends Equatable {
 class BalanceChanged extends SendEvent {
   const BalanceChanged(this.balance);
 
-  //final Asset? asset;
   final BalanceRecord? balance;
 
   @override
