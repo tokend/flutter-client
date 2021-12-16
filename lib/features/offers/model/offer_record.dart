@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:dart_wallet/base32check.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
-import 'package:dart_wallet/base32check.dart';
 
 class OfferRecord {
   int id;
@@ -16,7 +16,8 @@ class OfferRecord {
   DateTime date;
   SimpleFeeRecord fee;
   OfferRecord? offerToCancel;
-
+  late String baseBalanceId;
+  late String quoteBalanceId;
   late Decimal quoteAmount;
 
   static String EMPTY_BALANCE_ID = Base32Check.encodeBalanceId(
@@ -37,6 +38,8 @@ class OfferRecord {
     this.orderBookId = 0,
   }) {
     quoteAmount = baseAmount * price;
+    baseBalanceId = EMPTY_BALANCE_ID;
+    quoteBalanceId = EMPTY_BALANCE_ID;
   }
 
   OfferRecord.fromJson(Map<String, dynamic> json)
@@ -49,7 +52,9 @@ class OfferRecord {
         quoteAmount = json['quote_amount'],
         fee = json['fee'],
         date = json['created_at'],
-        orderBookId = json['order_book_id'];
+        orderBookId = json['order_book_id'],
+        baseBalanceId = json['base_balance']['data']['id'],
+        quoteBalanceId = json['quote_balance']['data']['id'];
 
   @override
   int get hashCode => id.hashCode;
