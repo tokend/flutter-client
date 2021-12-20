@@ -7,28 +7,57 @@ class CreateOfferState extends Equatable {
   final bool isBuy;
   final Asset asset;
   final Decimal price;
+  final bool isFormFilled;
+  final bool isRequestReady;
+  final bool isRequestConfirmed;
+  final bool isRequestSubmitted;
+  final Exception? error;
 
   CreateOfferState({
     required this.amount,
     required this.isBuy,
     required this.asset,
     required this.price,
+    this.isFormFilled = false,
+    this.isRequestReady = false,
+    this.isRequestConfirmed = false,
+    this.isRequestSubmitted = false,
+    this.error,
   });
 
   @override
-  List<Object?> get props => [amount, isBuy, asset];
+  List<Object?> get props => [
+        amount,
+        isBuy,
+        asset,
+        isFormFilled,
+        isRequestReady,
+        isRequestConfirmed,
+        isRequestSubmitted,
+        error,
+      ];
 
   CreateOfferState copyWith({
     Decimal? amount,
     Decimal? price,
     Asset? asset,
     bool? isBuy,
+    bool? isFilled,
+    bool? isRequestReady,
+    bool? isRequestConfirmed,
+    bool? isRequestSubmitted,
+    Exception? error,
   }) {
     return CreateOfferState(
       asset: asset ?? this.asset,
       amount: amount ?? this.amount,
       isBuy: isBuy ?? this.isBuy,
       price: price ?? this.price,
+      isFormFilled: isFilled ?? this.isFormFilled,
+      isRequestReady: isRequestReady ?? this.isRequestReady,
+      isRequestConfirmed: isRequestConfirmed ?? this.isRequestConfirmed,
+      isRequestSubmitted: isRequestSubmitted ?? this.isRequestSubmitted,
+      error: error,
     );
   }
 }

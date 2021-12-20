@@ -173,6 +173,15 @@ final Map<String, String> en = {
   //exchange
   "exchange": "Exchange",
   "my_orders": "My Orders",
+  "create_order": "Create order",
+  "create_buy_order": "Create buy order",
+  "create_sell_order": "Create sell order",
+  "price": "Price per",
+  "order_fee": "Order fee",
+  "show_account_fees": "Show my account fees",
+  "total_amount": "Total amount",
+  "buy": "Buy",
+  "send": "Send",
 
   //charts
   "loading": "Loading...",

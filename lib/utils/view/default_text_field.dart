@@ -25,7 +25,7 @@ class DefaultTextField extends StatefulWidget {
     this.textInputFormatters,
     this.title = "",
     this.error,
-    this.onTap = null,
+    this.onTap,
     this.textEditingController,
     required this.onChanged,
     required this.colorTheme,
@@ -73,6 +73,7 @@ class DefaultTextFieldState extends State<DefaultTextField> {
               valueListenable: _error,
               builder: (context, String? value, child) {
                 return TextFormField(
+                  enabled: widget.isEnabled,
                   controller: widget.textEditingController,
                   onTap: widget.onTap,
                   focusNode: widget.isEnabled ? null : FocusNode(),

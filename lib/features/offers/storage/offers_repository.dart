@@ -93,12 +93,14 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
     SystemInfoRecord systemInfoRecord =
         systemInfoRepository.streamSubject.value;
     NetworkParams networkParams = systemInfoRecord.toNetworkParams();
-
+    return Future.value(null);
+/*
     return createOfferCreationTransaction(networkParams, accountId, account,
             baseBalanceId, quoteBalanceId, offerRequest, offerToCancel)
-        .then((transaction) => txManager.submit(transaction));
+        .then((transaction) => txManager.submit(transaction));*/
   }
-
+/*
+//TODO
   Future<transaction.Transaction> createOfferCreationTransaction(
     NetworkParams networkParams,
     String sourceAccountId,
@@ -142,5 +144,5 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
             operations.map((op) => OperationBodyManageOffer(op)).toList())
         .then((operations) => TxManager.createSignedTransaction(
             networkParams, sourceAccountId, signer, operations));
-  }
+  }*/
 }

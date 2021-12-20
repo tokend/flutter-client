@@ -12,13 +12,16 @@ import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:tuple/tuple.dart';
 
+/// Submits offer by given [OfferRequest].
+/// Creates balances if required.
+/// Updates related repositories: order book, balances, offers
 class ConfirmOfferRequestUseCase {
   OfferRequest _request;
   AccountProvider _accountProvider;
   RepositoryProvider _repositoryProvider;
   TxManager _txManager;
 
-  late OfferRecord _offerToCancel;
+  late OfferRecord? _offerToCancel;
   late var _cancellationOnly;
   late var _isPrimaryMarket;
 
@@ -39,19 +42,15 @@ class ConfirmOfferRequestUseCase {
     _offerToCancel = _request.offerToCancel;
   }
 
-  perform() {
-    _updateBalances().then((balances) => null);
-  }
-
-  /*Future<List<BalanceRecord>>*/ _updateBalances() async {
+  perform() async {
     var balances = await _balancesRepository.getItems();
     getBalances(balances)
         .then((baseQuoteTuple) {
           this.baseBalanceId = baseQuoteTuple.item1;
           this.quoteBalanceId = baseQuoteTuple.item2;
 
-          _offerToCancel.baseBalanceId = baseQuoteTuple.item1;
-          _offerToCancel.quoteBalanceId = baseQuoteTuple.item2;
+          _offerToCancel?.baseBalanceId = baseQuoteTuple.item1;
+          _offerToCancel?.quoteBalanceId = baseQuoteTuple.item2;
         })
         .then((_) => getNetworkParams())
         .then((networkParams) => this.networkParams = networkParams)
@@ -97,27 +96,10 @@ class ConfirmOfferRequestUseCase {
     var result;
     if (!_cancellationOnly) {
       result = _offersRepository.create(_accountProvider, _systemInfo,
-          _txManager, baseBalanceId, quoteBalanceId, _offerToCancel);
+          _txManager, baseBalanceId, quoteBalanceId, _request,
+          offerToCancel: _offerToCancel);
     } //TODO
 
     return result;
   }
 }
-
-/*
-*
-*  private val offerToCancel = request.offerToCancel
-
-    private val cancellationOnly = request.baseAmount.signum() == 0 && offerToCancel != null
-
-    private val isPrimaryMarket = request.orderBookId != 0L
-
-    private val offersRepository: OffersRepository
-        get() = repositoryProvider.offers(isPrimaryMarket)
-
-    private val systemInfoRepository: SystemInfoRepository
-        get() = repositoryProvider.systemInfo
-
-    private val balancesRepository: BalancesRepository
-        get() = repositoryProvider.balances
-*/

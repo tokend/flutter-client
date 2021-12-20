@@ -3,13 +3,17 @@ import 'dart:developer';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/fees/storage/fee_manager.dart';
+import 'package:flutter_template/features/offers/logic/confirm_offer_request_use_case.dart';
 import 'package:flutter_template/features/offers/logic/create_offer_request_use_case.dart';
+import 'package:flutter_template/features/offers/model/offer_request.dart';
 
 import 'create_offer_event.dart';
 import 'create_offer_state.dart';
 
 class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
   CreateOfferBloc(CreateOfferState initialState) : super(initialState);
+
+  late OfferRequest _offerRequest;
 
   @override
   Stream<CreateOfferState> mapEventToState(CreateOfferEvent event) async* {
@@ -28,7 +32,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
       var baseAsset =
           await repositoryProvider.orderBook(state.asset.code, 'USD').getItem();
       try {
-        CreateOfferRequestUseCase(
+        this._offerRequest = await CreateOfferRequestUseCase(
                 state.amount,
                 state.price,
                 baseAsset.baseAsset,
@@ -46,7 +50,17 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
         yield state.copyWith(error: e as Exception);
       }
     } else if (event is RequestConfirmed) {
+      yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
 
+      try {
+        ConfirmOfferRequestUseCase(_offerRequest, session.accountProvider,
+            repositoryProvider, txManager);
+        yield state.copyWith(isRequestSubmitted: true);
+      } catch (e, s) {
+        log(e.toString());
+        log(s.toString());
+        yield state.copyWith(error: e as Exception);
+      }
     }
   }
 }

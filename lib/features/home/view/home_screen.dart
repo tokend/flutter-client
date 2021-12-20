@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/extensions/resources.dart';
@@ -7,9 +6,11 @@ import 'package:flutter_template/features/balances/view/balances_screen.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
+import 'package:flutter_template/features/offers/view%20/create_order_bottom_dialog.dart';
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/trade%20/view/trade_screen.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
+import 'package:flutter_template/utils/view/default_bottom_dialog.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -37,7 +38,15 @@ class HomeScreen extends StatelessWidget {
                         CustomIcons.add,
                       ),
                       onPressed: () {
-                        //TODO open bottom dialog for order creation
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => DefaultBottomDialog(
+                                  CreateOrderScaffold(),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.9,
+                                ));
                       },
                     )
                   ]
