@@ -83,24 +83,20 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
     String quoteBalanceId,
     OfferRequest offerRequest, {
     OfferRecord? offerToCancel,
-  }) {
+  }) async {
     var accountId = _walletInfoProvider.getWalletInfo()?.accountId;
     if (accountId == null)
       return Future.error(StateError('No wallet info found'));
     var account = accountProvider.getAccount();
     if (account == null) return Future.error(StateError('No account found'));
 
-    SystemInfoRecord systemInfoRecord =
-        systemInfoRepository.streamSubject.value;
+    SystemInfoRecord systemInfoRecord = await systemInfoRepository.getItem();
     NetworkParams networkParams = systemInfoRecord.toNetworkParams();
-    return Future.value(null);
-/*
     return createOfferCreationTransaction(networkParams, accountId, account,
             baseBalanceId, quoteBalanceId, offerRequest, offerToCancel)
-        .then((transaction) => txManager.submit(transaction));*/
+        .then((transaction) => txManager.submit(transaction));
   }
-/*
-//TODO
+
   Future<transaction.Transaction> createOfferCreationTransaction(
     NetworkParams networkParams,
     String sourceAccountId,
@@ -110,9 +106,21 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
     OfferRequest offerRequest,
     OfferRecord? offerToCancel,
   ) {
-    return Future.value(offerToCancel)
+    var second = ManageOfferOp(
+      PublicKeyFactory.fromBalanceId(baseBalanceId),
+      PublicKeyFactory.fromBalanceId(quoteBalanceId),
+      offerRequest.isBuy,
+      Int64(networkParams.amountToPrecised(offerRequest.baseAmount.toDouble())),
+      Int64(networkParams.amountToPrecised(offerRequest.price.toDouble())),
+      Int64(networkParams.amountToPrecised(offerRequest.fee.total.toDouble())),
+      Int64.ZERO,
+      Int64(offerRequest.orderBookId),
+      ManageOfferOpExtEmptyVersion(),
+    );
+
+    return Future.value(List.of([second]))
         .then((offer) {
-          var first = ManageOfferOp(
+          /*var first = ManageOfferOp(
             PublicKeyFactory.fromBalanceId(offer.baseBalanceId),
             PublicKeyFactory.fromBalanceId(offer.quoteBalanceId),
             offer.isBuy,
@@ -122,27 +130,13 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
             Int64(offer.id),
             Int64(offer.orderBookId),
             ManageOfferOpExtEmptyVersion(),
-          );
-          var second = ManageOfferOp(
-            PublicKeyFactory.fromBalanceId(baseBalanceId),
-            PublicKeyFactory.fromBalanceId(quoteBalanceId),
-            offerRequest.isBuy,
-            Int64(networkParams
-                .amountToPrecised(offerRequest.baseAmount.toDouble())),
-            Int64(
-                networkParams.amountToPrecised(offerRequest.price.toDouble())),
-            Int64(networkParams
-                .amountToPrecised(offerRequest.fee.total.toDouble())),
-            Int64.ZERO,
-            Int64(offerRequest.orderBookId),
-            ManageOfferOpExtEmptyVersion(),
-          );
+          );*/
 
-          return List.of([first, second]);
+          return List.of([second]);
         })
         .then((operations) =>
             operations.map((op) => OperationBodyManageOffer(op)).toList())
         .then((operations) => TxManager.createSignedTransaction(
             networkParams, sourceAccountId, signer, operations));
-  }*/
+  }
 }

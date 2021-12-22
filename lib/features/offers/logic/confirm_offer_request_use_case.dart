@@ -42,9 +42,9 @@ class ConfirmOfferRequestUseCase {
     _offerToCancel = _request.offerToCancel;
   }
 
-  perform() async {
+  Future<void> perform() async {
     var balances = await _balancesRepository.getItems();
-    getBalances(balances)
+    return getBalances(balances)
         .then((baseQuoteTuple) {
           this.baseBalanceId = baseQuoteTuple.item1;
           this.quoteBalanceId = baseQuoteTuple.item2;
@@ -55,7 +55,7 @@ class ConfirmOfferRequestUseCase {
         .then((_) => getNetworkParams())
         .then((networkParams) => this.networkParams = networkParams)
         .then((_) => _submitOfferActions())
-        .then((response) => this.resultMeta = response.resultMetaXdr!);
+        .then((response) => this.resultMeta = response!.resultMetaXdr!);
     //TODO update repos
   }
 
@@ -92,14 +92,16 @@ class ConfirmOfferRequestUseCase {
         .then((systemInfoRecord) => systemInfoRecord.toNetworkParams());
   }
 
-  Future<SubmitTransactionResponse> _submitOfferActions() {
+  Future<SubmitTransactionResponse?> _submitOfferActions() {
     var result;
-    if (!_cancellationOnly) {
+    /*if (!_cancellationOnly) {
       result = _offersRepository.create(_accountProvider, _systemInfo,
           _txManager, baseBalanceId, quoteBalanceId, _request,
           offerToCancel: _offerToCancel);
-    } //TODO
+    }*/ //TODO
 
-    return result;
+    return _offersRepository.create(_accountProvider, _systemInfo, _txManager,
+        baseBalanceId, quoteBalanceId, _request,
+        offerToCancel: _offerToCancel);
   }
 }

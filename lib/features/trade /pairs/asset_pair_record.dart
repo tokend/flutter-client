@@ -41,6 +41,8 @@ class AssetPairRecord implements RecordWithPolicy {
 
   @override
   bool operator ==(Object other) {
-    return other is AssetPairRecord && other.id == this.id;
+    return other is AssetPairRecord &&
+        other.base == this.base &&
+        other.quote == this.quote;
   }
 }

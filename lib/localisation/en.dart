@@ -182,6 +182,7 @@ final Map<String, String> en = {
   "total_amount": "Total amount",
   "buy": "Buy",
   "send": "Send",
+  "confirm_offer_creation_op": "Please, confirm sending operation",
 
   //charts
   "loading": "Loading...",

@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dart_sdk/api/transactions/model/transaction_failed_exception.dart';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/fees/storage/fee_manager.dart';
 import 'package:flutter_template/features/offers/logic/confirm_offer_request_use_case.dart';
 import 'package:flutter_template/features/offers/logic/create_offer_request_use_case.dart';
@@ -22,7 +24,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
     } else if (event is PriceChanged) {
       yield state.copyWith(price: event.price);
     } else if (event is AssetChanged) {
-      yield state.copyWith(asset: event.asset);
+      yield state.copyWith(baseAsset: event.asset);
     } else if (event is IsBuyChanged) {
       yield state.copyWith(isBuy: event.isBuy);
     } else if (event is FormFilled) {
@@ -30,7 +32,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
       WalletInfoProvider walletInfoProvider = session.walletInfoProvider;
 
       var baseAsset =
-          await repositoryProvider.orderBook(state.asset.code, 'USD').getItem();
+          await repositoryProvider.orderBook('BTC', 'USD').getItem(); //TODO
       try {
         this._offerRequest = await CreateOfferRequestUseCase(
                 state.amount,
@@ -38,7 +40,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
                 baseAsset.baseAsset,
                 baseAsset.quoteAsset,
                 0,
-                false,
+                true,
                 null,
                 walletInfoProvider,
                 FeeManager(apiProvider))
@@ -53,10 +55,16 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
 
       try {
-        ConfirmOfferRequestUseCase(_offerRequest, session.accountProvider,
-            repositoryProvider, txManager);
+        await ConfirmOfferRequestUseCase(_offerRequest, session.accountProvider,
+                repositoryProvider, txManager)
+            .perform();
         yield state.copyWith(isRequestSubmitted: true);
       } catch (e, s) {
+        if (e is TransactionFailedException) {
+          log('TransactionFailedException ${e.operationResultCodes.first}');
+          e.transactionResultCode;
+          e.submitTransactionResponse.resultMetaXdr?.printLongString();
+        }
         log(e.toString());
         log(s.toString());
         yield state.copyWith(error: e as Exception);

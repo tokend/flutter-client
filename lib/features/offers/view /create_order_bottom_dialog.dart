@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +24,10 @@ class CreateOrderScaffold extends StatelessWidget {
         create: (_) => CreateOfferBloc(CreateOfferState(
             amount: Decimal.zero,
             isBuy: true,
-            asset: SimpleAsset('BTC', 'bitcoin', 6),
+            baseAsset: SimpleAsset('BTC', 'bitcoin', 6),
+            //TODO
+            quoteAsset: SimpleAsset('BTC', 'bitcoin', 6),
+            //TODO
             price: Decimal.ten)),
         child: CreateOrderBottomDialog(),
       ),
@@ -67,6 +68,29 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
               Navigator.pop(contextBuilder, false);
             } else if (state.isRequestConfirmed) {
               progress.show();
+            } else if (state.isRequestReady) {
+              showDialog(
+                  context: buildContext,
+                  builder: (BuildContext dialogContext) {
+                    return AlertDialog(
+                      title: Text('confirm_offer_creation_op'.tr),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext, false),
+                          child: Text('cancel'.tr),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext, false);
+                            context
+                                .read<CreateOfferBloc>()
+                                .add(RequestConfirmed(true));
+                          }, //loader
+                          child: Text('ok'.tr),
+                        ),
+                      ],
+                    );
+                  });
             }
           },
           child: Padding(
@@ -107,7 +131,6 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                                     builder: (BuildContext context) =>
                                         GestureDetector(
                                       onTap: () {
-                                        log('onTapping');
                                         setState(() {
                                           selectedOfferType = index;
                                         });
@@ -295,8 +318,7 @@ class _CreateButton extends StatelessWidget {
       builder: (context, state) {
         return DefaultButton(
           key: parentKey,
-          text: 'buy'.tr,
-          // TODO add 'sell'.tr
+          text: selectedOfferType == 0 ? 'buy'.tr : 'sell'.tr,
           defaultState: true,
           onPressed: () {
             FocusScope.of(context).requestFocus(FocusNode());

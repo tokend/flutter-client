@@ -1,29 +1,30 @@
 import 'package:flutter_template/features/assets/model/asset.dart';
-import 'package:flutter_template/features/trade%20/orderbook/model/order_book_record.dart';
+import 'package:flutter_template/features/assets/model/simple_asset.dart';
 
 class OrderBook {
   String id;
-  late List<OrderBookRecord> buyEntries;
-  late List<OrderBookRecord> sellEntries;
+  late Map<String, dynamic> buyEntries;
+  late Map<String, dynamic> sellEntries;
   Asset baseAsset;
   Asset quoteAsset;
 
   OrderBook.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        sellEntries = json['sell_entries'],
-        baseAsset = json['base_asset'],
-        quoteAsset = json['quote_asset'] {
-    buyEntries = getEntries(json, true);
-    sellEntries = getEntries(json, false);
+        baseAsset = SimpleAsset(
+            json['relationships']['base_asset']['data']['id'], null, 6),
+        quoteAsset = SimpleAsset(
+            json['relationships']['quote_asset']['data']['id'], null, 6) {
+    buyEntries = getEntries(json['relationships'], true);
+    sellEntries = getEntries(json['relationships'], false);
   }
 
-  List<OrderBookRecord> getEntries(Map<String, dynamic> json, bool isBuy) {
-    List<Map<String, dynamic>> entries;
+  Map<String, dynamic> getEntries(Map<String, dynamic> json, bool isBuy) {
+    Map<String, dynamic> entries;
     if (isBuy)
-      entries = json['buy_entries'].toList();
+      entries = json['buy_entries'];
     else
-      entries = json['sell_entries'].toList();
+      entries = json['sell_entries'];
 
-    return entries.map((entry) => OrderBookRecord.fromJson(entry)).toList();
+    return entries;
   }
 }

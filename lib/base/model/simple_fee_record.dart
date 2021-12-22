@@ -21,8 +21,8 @@ class SimpleFeeRecord {
   }
 
   SimpleFeeRecord.fromJson(Map<String, dynamic> json)
-      : fixed = json['fixed'],
-        percent = json['calculated_percent'] {
+      : fixed = Decimal.parse(json['fixed']),
+        percent = Decimal.parse(json['calculated_percent']) {
     total = fixed + percent;
   }
 

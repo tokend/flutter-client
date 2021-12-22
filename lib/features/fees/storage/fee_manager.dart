@@ -40,6 +40,6 @@ class FeeManager {
     else
       feeType = FeeType.OFFER_FEE;
 
-    return get(feeType, 0, accountId, asset, amount);
+    return get(FeeType(feeType), 0, accountId, asset, amount);
   }
 }

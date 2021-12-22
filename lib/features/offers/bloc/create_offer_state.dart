@@ -5,7 +5,8 @@ import 'package:flutter_template/features/assets/model/asset.dart';
 class CreateOfferState extends Equatable {
   final Decimal amount;
   final bool isBuy;
-  final Asset asset;
+  final Asset baseAsset;
+  final Asset quoteAsset;
   final Decimal price;
   final bool isFormFilled;
   final bool isRequestReady;
@@ -16,7 +17,8 @@ class CreateOfferState extends Equatable {
   CreateOfferState({
     required this.amount,
     required this.isBuy,
-    required this.asset,
+    required this.baseAsset,
+    required this.quoteAsset,
     required this.price,
     this.isFormFilled = false,
     this.isRequestReady = false,
@@ -29,7 +31,7 @@ class CreateOfferState extends Equatable {
   List<Object?> get props => [
         amount,
         isBuy,
-        asset,
+        baseAsset,
         isFormFilled,
         isRequestReady,
         isRequestConfirmed,
@@ -40,7 +42,8 @@ class CreateOfferState extends Equatable {
   CreateOfferState copyWith({
     Decimal? amount,
     Decimal? price,
-    Asset? asset,
+    Asset? baseAsset,
+    Asset? quoteAsset,
     bool? isBuy,
     bool? isFilled,
     bool? isRequestReady,
@@ -49,7 +52,8 @@ class CreateOfferState extends Equatable {
     Exception? error,
   }) {
     return CreateOfferState(
-      asset: asset ?? this.asset,
+      baseAsset: baseAsset ?? this.baseAsset,
+      quoteAsset: quoteAsset ?? this.quoteAsset,
       amount: amount ?? this.amount,
       isBuy: isBuy ?? this.isBuy,
       price: price ?? this.price,

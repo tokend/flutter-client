@@ -11,9 +11,9 @@ import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_rep
 import 'package:flutter_template/features/trade%20/chart/view%20/chart_view.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
-import 'package:flutter_template/features/trade%20/view/asset_pair_item.dart';
 import 'package:flutter_template/features/trade%20/view/time_period_picker.dart';
 import 'package:flutter_template/utils/formatters/string_formatter.dart';
+import 'package:flutter_template/utils/view/drop_down_field.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class ExchangeTab extends BaseStatefulWidget {
@@ -112,33 +112,20 @@ class _ExchangeTabState extends State<ExchangeTab> {
                     children: [
                       ConstrainedBox(
                         constraints: new BoxConstraints(
-                          maxHeight: 45.0,
+                          maxHeight: 95.0,
                         ),
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Builder(
-                                builder: (BuildContext context) =>
-                                    GestureDetector(
-                                  onTap: () {
-                                    if (selectedAssetPairIndex != index) {
-                                      setState(() {
-                                        selectedAssetPairIndex = index;
-                                        selectedAssetPair =
-                                            snapshot.data![index];
-                                        chartRepository?.isFresh = false;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    child: AssetPairItem(snapshot.data![index],
-                                        selectedAssetPairIndex == index),
-                                  ),
-                                ),
-                              );
-                            }),
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 16.0),
+                          child: DropDownField<AssetPairRecord>(
+                            onChanged: (newPair) {},
+                            colorTheme: colorScheme,
+                            currentValue: snapshot.data!.first,
+                            list: snapshot.data!,
+                            format: (AssetPairRecord item) {
+                              return '${item.base.code}/${item.quote.code}';
+                            },
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 18.0, bottom: 16.0),
