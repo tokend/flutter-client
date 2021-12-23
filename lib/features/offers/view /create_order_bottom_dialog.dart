@@ -1,22 +1,26 @@
 import 'package:decimal/decimal.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/assets/model/simple_asset.dart';
 import 'package:flutter_template/features/offers/bloc/create_offer_bloc.dart';
 import 'package:flutter_template/features/offers/bloc/create_offer_event.dart';
 import 'package:flutter_template/features/offers/bloc/create_offer_state.dart';
 import 'package:flutter_template/features/offers/view%20/offer_type_picker.dart';
+import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/formatters/decimal_text_input_formatter.dart';
 import 'package:flutter_template/utils/view/default_button_state.dart';
 import 'package:flutter_template/utils/view/default_text_field.dart';
+import 'package:flutter_template/utils/view/drop_down_field.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class CreateOrderScaffold extends StatelessWidget {
+  List<AssetPairRecord> assetPairs;
+
+  CreateOrderScaffold(this.assetPairs);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,12 +28,9 @@ class CreateOrderScaffold extends StatelessWidget {
         create: (_) => CreateOfferBloc(CreateOfferState(
             amount: Decimal.zero,
             isBuy: true,
-            baseAsset: SimpleAsset('BTC', 'bitcoin', 6),
-            //TODO
-            quoteAsset: SimpleAsset('BTC', 'bitcoin', 6),
-            //TODO
+            assetPairRecord: assetPairs.first,
             price: Decimal.ten)),
-        child: CreateOrderBottomDialog(),
+        child: CreateOrderBottomDialog(assetPairs),
       ),
     );
   }
@@ -38,12 +39,20 @@ class CreateOrderScaffold extends StatelessWidget {
 int selectedOfferType = 0;
 
 class CreateOrderBottomDialog extends BaseStatefulWidget {
+  List<AssetPairRecord> assetPairs;
+
+  CreateOrderBottomDialog(this.assetPairs);
+
   @override
   State<CreateOrderBottomDialog> createState() =>
-      _CreateOrderBottomDialogState();
+      _CreateOrderBottomDialogState(assetPairs);
 }
 
 class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
+  List<AssetPairRecord> assetPairs;
+
+  _CreateOrderBottomDialogState(this.assetPairs);
+
   GlobalKey<DefaultButtonState> _createButtonKey =
       GlobalKey<DefaultButtonState>();
 
@@ -64,7 +73,7 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
               progress.dismiss();
             } else if (state.isRequestSubmitted) {
               progress.dismiss();
-              widget.repositoryProvider.balances.update();
+              widget.repositoryProvider.offersRepository.update();
               Navigator.pop(contextBuilder, false);
             } else if (state.isRequestConfirmed) {
               progress.show();
@@ -149,7 +158,7 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                     ),
                     Padding(
                         padding: EdgeInsets.only(top: Sizes.standartPadding)),
-                    _BaseAssetTextField(),
+                    _BaseAssetTextField(assetPairs),
                     Padding(
                         padding: EdgeInsets.only(top: Sizes.standartMargin)),
                     _PriceInputField(),
@@ -238,16 +247,26 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
 }
 
 class _BaseAssetTextField extends StatelessWidget {
+  List<AssetPairRecord> assetPairs;
+
+  _BaseAssetTextField(this.assetPairs);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreateOfferBloc, CreateOfferState>(
         builder: (context, state) {
-      return DefaultTextField(
-        isEnabled: false,
-        onChanged: (String newBaseAsset) {},
-        colorTheme: context.colorTheme,
-        label:
-            'create_buy_order'.tr, // TODO choose label depending on chosen type
+      var colorScheme = context.colorTheme;
+
+      return DropDownField<AssetPairRecord>(
+        onChanged: (newPair) {
+          context.read<CreateOfferBloc>().add(AssetPairChanged(newPair));
+        },
+        colorTheme: colorScheme,
+        currentValue: state.assetPairRecord,
+        list: assetPairs,
+        format: (AssetPairRecord item) {
+          return '${item.base.code}/${item.quote.code}';
+        },
       );
     });
   }

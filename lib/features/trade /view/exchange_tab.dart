@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
@@ -117,9 +116,15 @@ class _ExchangeTabState extends State<ExchangeTab> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 16.0),
                           child: DropDownField<AssetPairRecord>(
-                            onChanged: (newPair) {},
+                            onChanged: (newPair) {
+                              setState(() {
+                                selectedAssetPair = newPair;
+                                chartRepository?.isFresh = false;
+                              });
+                            },
                             colorTheme: colorScheme,
-                            currentValue: snapshot.data!.first,
+                            currentValue:
+                                selectedAssetPair ?? snapshot.data!.first,
                             list: snapshot.data!,
                             format: (AssetPairRecord item) {
                               return '${item.base.code}/${item.quote.code}';
@@ -130,7 +135,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                       Padding(
                         padding: EdgeInsets.only(top: 18.0, bottom: 16.0),
                         child: Text(
-                          '${snapshot.data![selectedAssetPairIndex].base.code}/${snapshot.data![selectedAssetPairIndex].quote.code}',
+                          '${(selectedAssetPair ?? snapshot.data!.first).base.code}/${(selectedAssetPair ?? snapshot.data!.first).quote.code}',
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: colorScheme.accent,

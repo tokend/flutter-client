@@ -5,7 +5,7 @@ import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
 
 class DropDownField<T> extends StatelessWidget {
-  Function(String?) onChanged;
+  Function(T?) onChanged;
   T? currentValue;
   String labelText;
   String hintText;
@@ -66,7 +66,7 @@ class DropDownField<T> extends StatelessWidget {
                   value: currentValue == "" ? list.first : currentValue,
                   isDense: true,
                   onChanged: (newValue) {
-                    onChanged.call(newValue.toString());
+                    onChanged.call(newValue);
                   },
                   hint: Container(
                     alignment: Alignment.centerLeft,

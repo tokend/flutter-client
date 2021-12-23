@@ -1,6 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_template/features/assets/model/asset.dart';
+import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 
 abstract class CreateOfferEvent extends Equatable {
   const CreateOfferEvent();
@@ -28,15 +28,15 @@ class AmountChanged extends CreateOfferEvent {
   List<Object?> get props => [amount];
 }
 
-class AssetChanged extends CreateOfferEvent {
-  const AssetChanged(
-    this.asset,
+class AssetPairChanged extends CreateOfferEvent {
+  const AssetPairChanged(
+    this.assetPair,
   );
 
-  final Asset? asset;
+  final AssetPairRecord? assetPair;
 
   @override
-  List<Object?> get props => [asset];
+  List<Object?> get props => [assetPair];
 }
 
 class PriceChanged extends CreateOfferEvent {

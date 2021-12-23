@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/view/assets_screen.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:flutter_template/utils/view/default_bottom_dialog.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider<DrawerBloc>(
       create: (BuildContext context) =>
@@ -43,7 +44,10 @@ class HomeScreen extends StatelessWidget {
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             builder: (context) => DefaultBottomDialog(
-                                  CreateOrderScaffold(),
+                                  CreateOrderScaffold(repositoryProvider
+                                      .assetPairsRepository
+                                      .streamSubject
+                                      .value),
                                   height:
                                       MediaQuery.of(context).size.height * 0.9,
                                 ));

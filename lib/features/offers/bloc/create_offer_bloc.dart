@@ -23,16 +23,18 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
       yield state.copyWith(amount: event.amount);
     } else if (event is PriceChanged) {
       yield state.copyWith(price: event.price);
-    } else if (event is AssetChanged) {
-      yield state.copyWith(baseAsset: event.asset);
+    } else if (event is AssetPairChanged) {
+      yield state.copyWith(assetPairRecord: event.assetPair);
     } else if (event is IsBuyChanged) {
       yield state.copyWith(isBuy: event.isBuy);
     } else if (event is FormFilled) {
       yield state.copyWith(isFilled: event.isFilled);
       WalletInfoProvider walletInfoProvider = session.walletInfoProvider;
 
-      var baseAsset =
-          await repositoryProvider.orderBook('BTC', 'USD').getItem(); //TODO
+      var baseAsset = await repositoryProvider
+          .orderBook(
+              state.assetPairRecord.base.code, state.assetPairRecord.quote.code)
+          .getItem();
       try {
         this._offerRequest = await CreateOfferRequestUseCase(
                 state.amount,
