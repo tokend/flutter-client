@@ -29,6 +29,7 @@ class CreateOfferState extends Equatable {
   @override
   List<Object?> get props => [
         amount,
+        price,
         isBuy,
         isFormFilled,
         isRequestReady,

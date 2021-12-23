@@ -26,10 +26,11 @@ class CreateOrderScaffold extends StatelessWidget {
     return Container(
       child: BlocProvider(
         create: (_) => CreateOfferBloc(CreateOfferState(
-            amount: Decimal.zero,
-            isBuy: true,
-            assetPairRecord: assetPairs.first,
-            price: Decimal.ten)),
+          amount: Decimal.zero,
+          isBuy: true,
+          assetPairRecord: assetPairs.first,
+          price: Decimal.zero,
+        )),
         child: CreateOrderBottomDialog(assetPairs),
       ),
     );
@@ -140,6 +141,9 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                                     builder: (BuildContext context) =>
                                         GestureDetector(
                                       onTap: () {
+                                        context
+                                            .read<CreateOfferBloc>()
+                                            .add(IsBuyChanged(index == 0));
                                         setState(() {
                                           selectedOfferType = index;
                                         });
@@ -220,15 +224,7 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                               color: buildContext.colorTheme.grayText),
                           textAlign: TextAlign.left,
                         ),
-                        Text(
-                          '0 USD',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: buildContext.colorTheme.primaryText,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
+                        _TotalField(),
                       ],
                     ),
                   ],
@@ -291,7 +287,7 @@ class _AmountInputField extends StatelessWidget {
           },
           inputType: TextInputType.number,
           hint: '0',
-          label: 'amount'.tr,
+          label: 'amount'.tr + 'of ${state.assetPairRecord.base.code}',
         );
       },
     );
@@ -306,18 +302,39 @@ class _PriceInputField extends StatelessWidget {
         return DefaultTextField(
           textInputFormatters: [DecimalTextInputFormatter()],
           colorTheme: context.colorTheme,
-          onChanged: (String newAmount) {
-            if (newAmount.isNotEmpty) {
+          onChanged: (String newPrice) {
+            if (newPrice.isNotEmpty) {
               context
                   .read<CreateOfferBloc>()
-                  .add(AmountChanged(Decimal.parse(newAmount)));
+                  .add(PriceChanged(Decimal.parse(newPrice)));
             } else {
-              context.read<CreateOfferBloc>().add(AmountChanged(Decimal.zero));
+              context.read<CreateOfferBloc>().add(PriceChanged(Decimal.zero));
             }
           },
           inputType: TextInputType.number,
           hint: '0',
-          label: 'price'.tr,
+          label: 'price'.tr +
+              state.assetPairRecord.base.code +
+              '(in ${state.assetPairRecord.quote.code})',
+        );
+      },
+    );
+  }
+}
+
+class _TotalField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CreateOfferBloc, CreateOfferState>(
+      builder: (context, state) {
+        return Text(
+          '${state.isBuy || state.price == Decimal.zero || state.amount == Decimal.zero ? state.amount * state.price : state.price / state.amount} USD', //TODO
+          style: TextStyle(
+            fontSize: 20.0,
+            color: context.colorTheme.primaryText,
+            fontWeight: FontWeight.w700,
+          ),
+          textAlign: TextAlign.right,
         );
       },
     );
