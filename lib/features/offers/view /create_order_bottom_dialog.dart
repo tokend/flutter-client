@@ -16,6 +16,7 @@ import 'package:flutter_template/utils/view/default_text_field.dart';
 import 'package:flutter_template/utils/view/drop_down_field.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
+//TODO after cancellation state should be returned to CreateOrderInitialState
 class CreateOrderScaffold extends StatelessWidget {
   List<AssetPairRecord> assetPairs;
 
@@ -87,7 +88,10 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                       title: Text('confirm_offer_creation_op'.tr),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(dialogContext, false),
+                          onPressed: () {
+                            progress.dismiss();
+                            Navigator.pop(dialogContext, false);
+                          },
                           child: Text('cancel'.tr),
                         ),
                         TextButton(
