@@ -40,6 +40,8 @@ class ConfirmOfferRequestUseCase {
   ConfirmOfferRequestUseCase(this._request, this._accountProvider,
       this._repositoryProvider, this._txManager) {
     _offerToCancel = _request.offerToCancel;
+    _cancellationOnly =
+        _request.baseAmount.signum == 0 && _offerToCancel != null;
   }
 
   Future<void> perform() async {
@@ -94,14 +96,15 @@ class ConfirmOfferRequestUseCase {
 
   Future<SubmitTransactionResponse?> _submitOfferActions() {
     var result;
-    /*if (!_cancellationOnly) {
+    if (_cancellationOnly) {
+      result = _offersRepository.cancel(
+          _accountProvider, _systemInfo, _txManager, _offerToCancel!);
+    } else {
       result = _offersRepository.create(_accountProvider, _systemInfo,
           _txManager, baseBalanceId, quoteBalanceId, _request,
           offerToCancel: _offerToCancel);
-    }*/ //TODO
+    }
 
-    return _offersRepository.create(_accountProvider, _systemInfo, _txManager,
-        baseBalanceId, quoteBalanceId, _request,
-        offerToCancel: _offerToCancel);
+    return result;
   }
 }

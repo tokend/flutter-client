@@ -25,11 +25,12 @@ class CreateOrderScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: BlocProvider(
-        create: (_) => CreateOfferBloc(CreateOfferState(
+        create: (_) => CreateOfferBloc(CreateOfferInitial(
           amount: Decimal.zero,
           isBuy: true,
           assetPairRecord: assetPairs.first,
           price: Decimal.zero,
+          error: null,
         )),
         child: CreateOrderBottomDialog(assetPairs),
       ),
@@ -101,6 +102,8 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                       ],
                     );
                   });
+            } else if (state.isFormFilled) {
+              progress.show();
             }
           },
           child: Padding(

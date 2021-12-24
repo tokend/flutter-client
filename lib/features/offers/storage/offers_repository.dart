@@ -75,6 +75,7 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
     });
   }
 
+  //#region Create
   Future<SubmitTransactionResponse?> create(
     AccountProvider accountProvider,
     SystemInfoRepository systemInfoRepository,
@@ -92,12 +93,12 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
 
     SystemInfoRecord systemInfoRecord = await systemInfoRepository.getItem();
     NetworkParams networkParams = systemInfoRecord.toNetworkParams();
-    return createOfferCreationTransaction(networkParams, accountId, account,
+    return _createOfferCreationTransaction(networkParams, accountId, account,
             baseBalanceId, quoteBalanceId, offerRequest, offerToCancel)
         .then((transaction) => txManager.submit(transaction));
   }
 
-  Future<transaction.Transaction> createOfferCreationTransaction(
+  Future<transaction.Transaction> _createOfferCreationTransaction(
     NetworkParams networkParams,
     String sourceAccountId,
     Account signer,
@@ -106,7 +107,23 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
     OfferRequest offerRequest,
     OfferRecord? offerToCancel,
   ) {
-    var second = ManageOfferOp(
+    var firstOp;
+    if (offerToCancel != null) {
+      firstOp = ManageOfferOp(
+        PublicKeyFactory.fromBalanceId(offerToCancel.baseBalanceId),
+        PublicKeyFactory.fromBalanceId(offerToCancel.quoteBalanceId),
+        offerToCancel.isBuy,
+        Int64.ZERO,
+        Int64(networkParams.amountToPrecised(offerToCancel.price.toDouble())),
+        Int64(
+            networkParams.amountToPrecised(offerToCancel.fee.total.toDouble())),
+        Int64(offerToCancel.id),
+        Int64(offerToCancel.orderBookId),
+        ManageOfferOpExtEmptyVersion(),
+      );
+    }
+
+    var secondOp = ManageOfferOp(
       PublicKeyFactory.fromBalanceId(baseBalanceId),
       PublicKeyFactory.fromBalanceId(quoteBalanceId),
       offerRequest.isBuy,
@@ -118,25 +135,58 @@ class OffersRepository extends PagedDataRepository<OfferRecord> {
       ManageOfferOpExtEmptyVersion(),
     );
 
-    return Future.value(List.of([second]))
-        .then((offer) {
-          /*var first = ManageOfferOp(
-            PublicKeyFactory.fromBalanceId(offer.baseBalanceId),
-            PublicKeyFactory.fromBalanceId(offer.quoteBalanceId),
-            offer.isBuy,
-            Int64.ZERO,
-            Int64(networkParams.amountToPrecised(offer.price.toDouble())),
-            Int64(networkParams.amountToPrecised(offer.fee.total.toDouble())),
-            Int64(offer.id),
-            Int64(offer.orderBookId),
-            ManageOfferOpExtEmptyVersion(),
-          );*/
-
-          return List.of([second]);
-        })
+    return Future.value(offerToCancel != null
+            ? List.of([firstOp, secondOp])
+            : List.of([secondOp]))
         .then((operations) =>
             operations.map((op) => OperationBodyManageOffer(op)).toList())
         .then((operations) => TxManager.createSignedTransaction(
             networkParams, sourceAccountId, signer, operations));
   }
+
+  //endregion
+
+  //#region Cancel
+  cancel(
+    AccountProvider accountProvider,
+    SystemInfoRepository systemInfoRepository,
+    TxManager txManager,
+    OfferRecord offerRecord,
+  ) async {
+    var accountId = _walletInfoProvider.getWalletInfo()?.accountId;
+    var account = accountProvider.getAccount();
+
+    if (accountId == null || account == null)
+      return Future.error(StateError('No wallet info found'));
+
+    SystemInfoRecord systemInfoRecord = await systemInfoRepository.getItem();
+    NetworkParams networkParams = systemInfoRecord.toNetworkParams();
+    return _createOfferCancellationTransaction(
+            networkParams, accountId, account, offerRecord)
+        .then((transaction) => txManager.submit(transaction))
+        .then((_) => itemsList.remove(offerRecord));
+  }
+
+  Future<transaction.Transaction> _createOfferCancellationTransaction(
+    NetworkParams networkParams,
+    String sourceAccountId,
+    Account signer,
+    OfferRecord offerRecord,
+  ) {
+    var op = ManageOfferOp(
+      PublicKeyFactory.fromBalanceId(offerRecord.baseBalanceId),
+      PublicKeyFactory.fromBalanceId(offerRecord.quoteBalanceId),
+      offerRecord.isBuy,
+      Int64.ZERO,
+      Int64(networkParams.amountToPrecised(offerRecord.price.toDouble())),
+      Int64(networkParams.amountToPrecised(offerRecord.fee.total.toDouble())),
+      Int64(offerRecord.id),
+      Int64(offerRecord.orderBookId),
+      ManageOfferOpExtEmptyVersion(),
+    );
+
+    return TxManager.createSignedTransaction(
+        networkParams, sourceAccountId, signer, [OperationBodyManageOffer(op)]);
+  }
+//endregion
 }

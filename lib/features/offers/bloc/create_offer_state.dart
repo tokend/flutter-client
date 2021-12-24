@@ -65,3 +65,24 @@ class CreateOfferState extends Equatable {
     );
   }
 }
+
+class CreateOfferInitial extends CreateOfferState {
+  final Decimal amount;
+  final bool isBuy;
+  final AssetPairRecord assetPairRecord;
+  final Decimal price;
+  Exception? error;
+
+  CreateOfferInitial(
+      {required this.amount,
+      required this.isBuy,
+      required this.assetPairRecord,
+      required this.price,
+      required this.error})
+      : super(
+            amount: amount,
+            isBuy: isBuy,
+            assetPairRecord: assetPairRecord,
+            price: price,
+            error: error);
+}

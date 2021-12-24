@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:dart_sdk/api/transactions/model/transaction_failed_exception.dart';
 import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
-import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/fees/storage/fee_manager.dart';
 import 'package:flutter_template/features/offers/logic/confirm_offer_request_use_case.dart';
 import 'package:flutter_template/features/offers/logic/create_offer_request_use_case.dart';
 import 'package:flutter_template/features/offers/model/offer_request.dart';
+import 'package:flutter_template/utils/error_handler/error_handler.dart';
+import 'package:get/get.dart';
 
 import 'create_offer_event.dart';
 import 'create_offer_state.dart';
@@ -42,7 +42,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
                 baseAsset.baseAsset,
                 baseAsset.quoteAsset,
                 0,
-                true,
+                state.isBuy,
                 null,
                 walletInfoProvider,
                 FeeManager(apiProvider))
@@ -51,7 +51,12 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
       } catch (e, s) {
         log(e.toString());
         log(s.toString());
-        yield state.copyWith(error: e as Exception);
+        yield CreateOfferInitial(
+            amount: state.amount,
+            isBuy: state.isBuy,
+            assetPairRecord: state.assetPairRecord,
+            price: state.price,
+            error: state.error);
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
@@ -62,14 +67,21 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
             .perform();
         yield state.copyWith(isRequestSubmitted: true);
       } catch (e, s) {
-        if (e is TransactionFailedException) {
-          log('TransactionFailedException ${e.operationResultCodes.first}');
-          e.transactionResultCode;
-          e.submitTransactionResponse.resultMetaXdr?.printLongString();
+        if (e is Exception) {
+          ErrorHandler errorHandler = Get.find();
+          toastManager.showShortToast('${errorHandler.getErrorMessage(e)}');
+          errorHandler.getErrorMessage(e);
+        } else {
+          toastManager.showShortToast('error_try_again'.tr);
         }
         log(e.toString());
         log(s.toString());
-        yield state.copyWith(error: e as Exception);
+        yield CreateOfferInitial(
+            amount: state.amount,
+            isBuy: state.isBuy,
+            assetPairRecord: state.assetPairRecord,
+            price: state.price,
+            error: state.error);
       }
     }
   }

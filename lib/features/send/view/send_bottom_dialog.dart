@@ -32,10 +32,12 @@ class SendScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: BlocProvider(
-      create: (_) => SendBloc(
-          SendInitial(assets.first, balances.first, Decimal.zero, '', null)),
-      child: SendBottomDialog(balances, assets),
-    ));
+          create: (_) =>
+              SendBloc(
+                  SendInitial(
+                      assets.first, balances.first, Decimal.zero, '', null)),
+          child: SendBottomDialog(balances, assets),
+        ));
   }
 }
 
@@ -43,7 +45,7 @@ class SendBottomDialog extends BaseStatelessWidget {
   List<BalanceRecord> balances;
   List<Asset> assets;
   GlobalKey<DefaultButtonState> _sendButtonKey =
-      GlobalKey<DefaultButtonState>();
+  GlobalKey<DefaultButtonState>();
 
   SendBottomDialog(this.balances, this.assets);
 
@@ -74,8 +76,10 @@ class SendBottomDialog extends BaseStatelessWidget {
                             title: Text('confirm_send_op'.tr),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(dialogContext, false),
+                                onPressed: () {
+                                  progress.dismiss();
+                                  Navigator.pop(dialogContext, false)
+                                },
                                 child: Text('cancel'.tr),
                               ),
                               TextButton(
@@ -85,9 +89,12 @@ class SendBottomDialog extends BaseStatelessWidget {
                                       .read<SendBloc>()
                                       .add(RequestConfirmed(true));
                                 }, //loader
-                                child: Text('ok'.tr),
-                              ),
-                            ],
+                                child: Text('ok'.tr)
+                                ,
+                              )
+                              ,
+                            ]
+                            ,
                           );
                         });
                   }
@@ -113,7 +120,7 @@ class SendBottomDialog extends BaseStatelessWidget {
                           ),
                           Padding(
                             padding:
-                                EdgeInsets.only(top: Sizes.standartPadding),
+                            EdgeInsets.only(top: Sizes.standartPadding),
                           ),
                           _BalanceDropDown(balances),
                           Padding(
@@ -130,7 +137,7 @@ class SendBottomDialog extends BaseStatelessWidget {
                           _NotesInputField(),
                           Padding(
                               padding:
-                                  EdgeInsets.only(top: Sizes.standartMargin)),
+                              EdgeInsets.only(top: Sizes.standartMargin)),
                         ],
                       ),
                       Align(
@@ -200,7 +207,8 @@ class _AvailableBalanceField extends StatelessWidget {
     return BlocBuilder<SendBloc, SendState>(
       builder: (context, state) {
         return Text(
-          'Balance is ${getBalanceByAssetCode(balances, state.asset.code).available} ${state.asset.code.toUpperCase()}.',
+          'Balance is ${getBalanceByAssetCode(balances, state.asset.code)
+              .available} ${state.asset.code.toUpperCase()}.',
           style: TextStyle(color: context.colorTheme.grayText, fontSize: 12.0),
         );
       },
@@ -208,8 +216,8 @@ class _AvailableBalanceField extends StatelessWidget {
   }
 }
 
-BalanceRecord getBalanceByAssetCode(
-    List<BalanceRecord> balances, String assetCode) {
+BalanceRecord getBalanceByAssetCode(List<BalanceRecord> balances,
+    String assetCode) {
   try {
     return balances.firstWhere((element) => element.asset.code == assetCode);
   } catch (e, stacktrace) {

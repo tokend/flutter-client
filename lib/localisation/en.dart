@@ -181,8 +181,9 @@ final Map<String, String> en = {
   "show_account_fees": "Show my account fees",
   "total_amount": "Total amount",
   "buy": "Buy",
+  "sell": "Sell",
   "send": "Send",
-  "confirm_offer_creation_op": "Please, confirm sending operation",
+  "confirm_offer_creation_op": "Please, confirm creating offer operation",
 
   //charts
   "loading": "Loading...",
