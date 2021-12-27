@@ -354,7 +354,7 @@ class KycBloc extends BaseBloc<KycEvent, KycState> {
             api: api,
             keyValueEntriesRepository:
                 repositoryProvider.keyValueEntriesRepository,
-            signedApi: signedApi!,
+            signedApi: signedApi,
             repositoryProvider: repositoryProvider,
             newDocument: {
               "kyc_avatar": LocalFile.fromPath(state.image.value)

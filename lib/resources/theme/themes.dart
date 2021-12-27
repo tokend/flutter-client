@@ -12,6 +12,7 @@ abstract class BaseColorTheme {
   final Color secondaryText = Color(0xFFFFFFFF);
   final Color headerText = Color(0xFFFFFFFF);
   final Color grayText = Color(0xFFFFFFFF);
+  final Color lightGrayText = Color(0xFFFFFFFF);
   final Color suffixIcons = Color(0xFFFFFFFF);
   final Color hint = Color(0xFFFFFFFF);
   final Color buttonDisabled = Color(0xFFFFFFFF);
@@ -111,6 +112,9 @@ class LightColorTheme implements BaseColorTheme {
 
   @override
   Color get approvedLight => Color(0x1A329D3D);
+
+  @override
+  Color get lightGrayText => Color(0xFF9B9B9B);
 }
 
 class DarkColorTheme implements BaseColorTheme {
@@ -196,4 +200,7 @@ class DarkColorTheme implements BaseColorTheme {
 
   @override
   Color get approvedLight => Color(0x1A329D3D);
+
+  @override
+  Color get lightGrayText => Color(0xFF9B9B9B);
 }

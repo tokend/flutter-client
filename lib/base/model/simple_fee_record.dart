@@ -20,6 +20,12 @@ class SimpleFeeRecord {
     total = fixed + percent;
   }
 
+  SimpleFeeRecord.fromJson(Map<String, dynamic> json)
+      : fixed = Decimal.parse(json['fixed']),
+        percent = Decimal.parse(json['calculated_percent']) {
+    total = fixed + percent;
+  }
+
   static var zero = SimpleFeeRecord(Decimal.zero, Decimal.zero);
 
   Fee toXdrFee(NetworkParams networkParams) {

@@ -103,7 +103,7 @@ final Map<String, String> en = {
   "send_to": "Send to",
   "asset": "Asset",
   "balance": "Balance",
-  "amount": "Amount",
+  "amount": "Amount ",
   "recipient_acc_id": "Recipient email or account ID",
   "recipient_acc_id_hint": "Enter your email or account ID",
   "note_hint": "Add note",
@@ -169,4 +169,23 @@ final Map<String, String> en = {
   "no": "No",
   "depositable": "Depositable",
   "non_depositable": "Non-depositable",
+
+  //exchange
+  "exchange": "Exchange",
+  "my_orders": "My Orders",
+  "create_order": "Create order",
+  "create_buy_order": "Create buy order",
+  "create_sell_order": "Create sell order",
+  "price": "Price per 1",
+  "order_fee": "Order fee",
+  "show_account_fees": "Show my account fees",
+  "total_amount": "Total amount",
+  "buy": "Buy",
+  "sell": "Sell",
+  "send": "Send",
+  "confirm_offer_creation_op": "Please, confirm creating offer operation",
+
+  //charts
+  "loading": "Loading...",
+  "no_asset_pairs": "No asset pairs found",
 };

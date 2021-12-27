@@ -4,25 +4,28 @@ import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/resources/theme/themes.dart';
 
-class DropDownField extends StatelessWidget {
-  Function(String?) onChanged;
-  String? currentValue;
+class DropDownField<T> extends StatelessWidget {
+  Function(T?) onChanged;
+  T? currentValue;
   String labelText;
   String hintText;
   String? errorText;
-  List<String> list;
+  List<T> list;
   final BaseColorTheme colorTheme;
   final Color background;
+  String Function(T) format;
 
-  DropDownField(
-      {required this.onChanged,
-      this.currentValue,
-      this.labelText = "",
-      this.hintText = "",
-      this.errorText,
-      required this.colorTheme,
-      this.background = Colors.transparent,
-      required this.list});
+  DropDownField({
+    required this.onChanged,
+    this.currentValue,
+    this.labelText = "",
+    this.hintText = "",
+    this.errorText,
+    required this.colorTheme,
+    required this.list,
+    this.background = Colors.transparent,
+    required this.format,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +61,12 @@ class DropDownField extends StatelessWidget {
               ),
               isEmpty: false,
               child: DropdownButtonHideUnderline(
-                child: DropdownButton(
+                child: DropdownButton<T>(
                   //TODO change dropdown icon
                   value: currentValue == "" ? list.first : currentValue,
                   isDense: true,
                   onChanged: (newValue) {
-                    onChanged.call(newValue.toString());
+                    onChanged.call(newValue);
                   },
                   hint: Container(
                     alignment: Alignment.centerLeft,
@@ -74,10 +77,10 @@ class DropDownField extends StatelessWidget {
                       textAlign: TextAlign.end,
                     ),
                   ),
-                  items: list.map((String value) {
-                    return DropdownMenuItem<String>(
+                  items: list.map((T value) {
+                    return DropdownMenuItem<T>(
                       value: value,
-                      child: Text(value),
+                      child: Text(format.call(value)),
                     );
                   }).toList(),
                 ),

@@ -74,8 +74,10 @@ class SendBottomDialog extends BaseStatelessWidget {
                             title: Text('confirm_send_op'.tr),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(dialogContext, false),
+                                onPressed: () {
+                                  Navigator.pop(dialogContext, false);
+                                  progress.dismiss();
+                                },
                                 child: Text('cancel'.tr),
                               ),
                               TextButton(

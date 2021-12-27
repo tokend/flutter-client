@@ -14,8 +14,8 @@ import 'package:get/get.dart';
 
 class BalancesRepository extends MultipleItemsRepository<BalanceRecord> {
   ApiProvider _apiProvider;
-  late WalletInfoProvider _walletInfoProvider;
-  late UrlConfigProvider _urlConfigProvider;
+  WalletInfoProvider _walletInfoProvider;
+  UrlConfigProvider _urlConfigProvider;
 
   BalancesRepository(
       this._apiProvider, this._walletInfoProvider, this._urlConfigProvider);

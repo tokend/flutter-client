@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dart_sdk/api/tokend_api.dart';
 import 'package:dart_sdk/key_server/key_server.dart';
 import 'package:dart_sdk/signing/account_request_signer.dart';
@@ -47,14 +45,14 @@ class ApiProviderImpl implements ApiProvider {
   }
 
   @override
-  TokenDApi? getSignedApi() {
+  TokenDApi getSignedApi() {
     Session session = Get.find();
     var account = session.accountProvider.getAccount();
-    if (account == null) return null;
+    if (account == null) throw StateError('No account found');
 
     var originalAccountId =
         session.walletInfoProvider.getWalletInfo()?.accountId;
-    if (originalAccountId == null) return null;
+    if (originalAccountId == null) throw StateError('No wallet info found');
 
     var hash = hashValues(account.accountId, _url);
 
@@ -63,8 +61,8 @@ class ApiProviderImpl implements ApiProvider {
       signedApi = signedApiByHash!.item2;
     } else {
       signedApi = TokenDApi(_url,
-          requestSigner:
-          AccountRequestSigner(account, originalAccountId: originalAccountId),
+          requestSigner: AccountRequestSigner(account,
+              originalAccountId: originalAccountId),
           tfaCallback: _tfaCallback,
           withLogs: _withLogs);
     }

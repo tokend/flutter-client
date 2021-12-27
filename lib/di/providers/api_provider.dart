@@ -4,7 +4,7 @@ import 'package:dart_sdk/key_server/key_server.dart';
 abstract class ApiProvider {
   TokenDApi getApi();
 
-  TokenDApi? getSignedApi();
+  TokenDApi getSignedApi();
 
   KeyServer getKeyServer();
 

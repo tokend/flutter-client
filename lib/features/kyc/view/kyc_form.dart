@@ -478,17 +478,20 @@ class _SexInputField extends StatelessWidget {
       buildWhen: (previous, current) => previous.sex != current.sex,
       builder: (context, state) {
         return Padding(
-            padding: const EdgeInsets.only(bottom: 0.0),
-            child: DropDownField(
-                colorTheme: colorTheme,
-                hintText: "Hint",
-                labelText: "Label",
-                errorText: state.sex.error?.name,
-                currentValue: state.sex.value,
-                onChanged: (String? newValue) {
-                  context.read<KycBloc>().add(SexChanged(sex: newValue));
-                },
-                list: _currencies));
+          padding: const EdgeInsets.only(bottom: 0.0),
+          child: DropDownField<String>(
+            colorTheme: colorTheme,
+            hintText: "Hint",
+            labelText: "Label",
+            errorText: state.sex.error?.name,
+            currentValue: state.sex.value,
+            onChanged: (String? newValue) {
+              context.read<KycBloc>().add(SexChanged(sex: newValue));
+            },
+            list: _currencies,
+            format: (String item) => '$item',
+          ),
+        );
       },
     );
   }
