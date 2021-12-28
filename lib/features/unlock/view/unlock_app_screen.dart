@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/base/base_widget.dart';
+import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
@@ -196,27 +197,7 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
                         Padding(
                             padding:
                                 EdgeInsets.only(top: Sizes.standartMargin)),
-                        GestureDetector(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'dont_have_account'.tr,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: Sizes.textSizeHint,
-                                  color: colorTheme.hint),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'action_register'.tr,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: Sizes.textSizeHint,
-                                      color: colorTheme.accent),
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: () => Get.toNamed('/signUp'),
-                        ),
+                        _ChangeAccountButton(signOut),
                         Container(
                           height: screenSize.height * 0.04,
                         ),
@@ -256,6 +237,15 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
         );
       },
     );
+  }
+
+  signOut({bool soft = false}) {
+    //Delete all dependencies for current account
+    widget.sharedPreferences.clear();
+    Get.deleteAll();
+    MainBindings(widget.env, widget.sharedPreferences).dependencies();
+
+    Get.toNamed('/signIn');
   }
 }
 
@@ -313,6 +303,36 @@ class _UnlockButton extends StatelessWidget {
           colorTheme: colorTheme,
         );
       },
+    );
+  }
+}
+
+class _ChangeAccountButton extends StatelessWidget {
+  Function callback;
+
+  _ChangeAccountButton(this.callback, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = context.colorTheme;
+    return ElevatedButton(
+      style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all(Size(double.infinity, 56)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Sizes.xSmallRadius),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all(colorTheme.secondaryText),
+      ),
+      onPressed: () => callback.call(),
+      child: Text(
+        'change_account'.tr,
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: Sizes.textSizeDialog,
+            color: colorTheme.primary),
+      ),
     );
   }
 }
