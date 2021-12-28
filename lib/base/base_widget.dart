@@ -11,6 +11,7 @@ import 'package:flutter_template/logic/tx_manager.dart';
 import 'package:flutter_template/utils/error_handler/error_handler.dart';
 import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseWidget {
@@ -25,6 +26,7 @@ class BaseWidget {
   TxManager txManager = Get.find();
   SharedPreferences sharedPreferences = Get.find();
   CredentialsPersistence credentialsPersistence = Get.find();
+  LocalAuthentication localAuthentication = Get.find();
 }
 
 abstract class BaseStatelessWidget extends StatelessWidget with BaseWidget {

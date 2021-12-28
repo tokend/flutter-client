@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_template/config/development.dart';
@@ -44,8 +43,6 @@ class App extends StatelessWidget {
         translations: AppTranslation(),
         fallbackLocale: Locale('en', 'US'),
         home: SignInScaffold(),
-        //home: KycScaffold(),
-        // home: SignUpScaffold(),
         getPages: getPageList(env, sharedPreferences, binding));
   }
 }

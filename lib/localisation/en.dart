@@ -188,4 +188,8 @@ final Map<String, String> en = {
   //charts
   "loading": "Loading...",
   "no_asset_pairs": "No asset pairs found",
+
+  //unlock
+  "unlock": "Unlock application",
+  "finger_print_hint": "Place and hold your finger on the fingerprint reader ",
 };

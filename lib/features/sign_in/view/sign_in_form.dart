@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -18,7 +17,6 @@ import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SignInForm extends BaseStatelessWidget {
   SignInForm({Key? key}) : super(key: key);
@@ -138,11 +136,13 @@ class SignInForm extends BaseStatelessWidget {
             ),
           ),
         );
-
         if (isSignedIn()) {
+          log('is really signed in');
           //TODO simplify
           signInWidget =
               _LoggedInUseCase(); // Actually no widget, but going to Home screen
+        } else {
+          log('is not signed in');
         }
 
         return BlocListener<SignInBloc, SignInState>(
@@ -162,7 +162,7 @@ class SignInForm extends BaseStatelessWidget {
                 log('HAS KYC: ${state.hasKyc}');
 
                 if (state.hasKyc) {
-                  Get.offAllNamed('/home');
+                  Get.offAllNamed('/unlock');
                 } else {
                   Get.offAllNamed('/kycForm');
                 }
