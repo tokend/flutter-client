@@ -184,6 +184,11 @@ final Map<String, String> en = {
   "sell": "Sell",
   "send": "Send",
   "confirm_offer_creation_op": "Please, confirm creating offer operation",
+  "order_id": "Order ID",
+  "order": "Order",
+  "base_asset_amount": "Base asset amount",
+  "price_in_quote_asset": "Price in quote asset",
+  "empty_offers_list": "No offers found",
 
   //charts
   "loading": "Loading...",
