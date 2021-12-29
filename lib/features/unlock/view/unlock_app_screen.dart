@@ -52,7 +52,9 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
 
   @override
   void onVisibilityChanged(WidgetVisibility visibility) {
-    setState(() {}); //call build() again in order to implement fingerprint
+    if (visibility != WidgetVisibility.VISIBLE) {
+      setState(() {}); //call build() again in order to implement fingerprint
+    }
     super.onVisibilityChanged(visibility);
   }
 
