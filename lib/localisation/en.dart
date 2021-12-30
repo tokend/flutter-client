@@ -189,6 +189,7 @@ final Map<String, String> en = {
   "base_asset_amount": "Base asset amount",
   "price_in_quote_asset": "Price in quote asset",
   "empty_offers_list": "No offers found",
+  "open_orders": "Your open %s orders",
 
   //charts
   "loading": "Loading...",

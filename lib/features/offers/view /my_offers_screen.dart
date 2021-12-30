@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/offers/model/offer_record.dart';
 import 'package:flutter_template/features/offers/storage/offers_repository.dart';
 import 'package:flutter_template/features/offers/view%20/my_offer_item.dart';
@@ -25,9 +26,8 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
     var streamController;
 
     void subscribeToOffers() async {
-      await widget.repositoryProvider.activeKyc.getItem();
-      widget.repositoryProvider.activeKyc.isNeverUpdated = false;
       await offersRepository.update();
+      offersRepository.isNeverUpdated = false;
     }
 
     if (currentAssetPair == null) {
@@ -78,43 +78,46 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                 },
                 child: Column(
                   children: [
-                    Align(
-                      alignment: FractionalOffset.topCenter,
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 24.0, right: 24.0, bottom: 24.0),
-                          child: DropDownField<AssetPairRecord>(
-                            onChanged: (newPair) {
-                              setState(() {
-                                currentAssetPair = newPair;
-                              });
-                            },
-                            colorTheme: context.colorTheme,
-                            currentValue: currentAssetPair,
-                            list: widget.repositoryProvider.assetPairsRepository
-                                .streamSubject.value,
-                            format: (AssetPairRecord item) {
-                              return '${item.base.code}/${item.quote.code}';
-                            },
-                          )),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 20.0)),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Expanded(
-                        child: ListView.separated(
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    Divider(height: 2),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: filteredByAssetPair.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Builder(
-                                  builder: (BuildContext context) =>
-                                      MyOfferItem(filteredByAssetPair[index]));
-                            }),
-                      ),
+                        padding: EdgeInsets.only(
+                            left: 24.0, right: 24.0, bottom: 24.0),
+                        child: DropDownField<AssetPairRecord>(
+                          onChanged: (newPair) {
+                            setState(() {
+                              currentAssetPair = newPair;
+                            });
+                          },
+                          colorTheme: context.colorTheme,
+                          currentValue: currentAssetPair,
+                          list: widget.repositoryProvider.assetPairsRepository
+                              .streamSubject.value,
+                          format: (AssetPairRecord item) {
+                            return '${item.base.code}/${item.quote.code}';
+                          },
+                        )),
+                    Padding(padding: EdgeInsets.only(top: 20.0)),
+                    Text(
+                      'open_orders'.tr.format([
+                        '${currentAssetPair?.base.code}/${currentAssetPair?.quote.code}'
+                      ]),
+                      style: TextStyle(
+                          color: context.colorTheme.drawerBackground,
+                          fontSize: 22.0),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                          separatorBuilder:
+                              (BuildContext context, int index) =>
+                              Divider(height: 2),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: filteredByAssetPair.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Builder(
+                                builder: (BuildContext context) =>
+                                    MyOfferItem(filteredByAssetPair[index]));
+                          }),
                     ),
                   ],
                 ),

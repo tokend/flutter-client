@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/system_info/model/system_info_record.dart';
+import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -10,12 +11,25 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 class PassphraseScreen extends BaseStatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: repositoryProvider.systemInfo
-            .getItem()
-            .then((systemInfo) => systemInfo.passphrase),
-        builder: (context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+    var networkStreamController;
+
+    SystemInfoRepository systemInfoRepository = repositoryProvider.systemInfo;
+    void subscribeToNetworkData() async {
+      if (systemInfoRepository.isNeverUpdated == true) {
+        await systemInfoRepository.getItem();
+        systemInfoRepository.isNeverUpdated = false;
+      }
+    }
+
+    subscribeToNetworkData();
+    networkStreamController = systemInfoRepository.streamSubject;
+    return StreamBuilder<SystemInfoRecord>(
+        stream: networkStreamController
+            ?.stream,
+        builder: (context, AsyncSnapshot<SystemInfoRecord> snapshot) {
+          if (snapshot.connectionState != ConnectionState.waiting &&
+              snapshot.hasData &&
+              snapshot.data != null) {
             return Scaffold(
                 backgroundColor: context.colorTheme.background,
                 appBar: AppBar(
@@ -53,7 +67,7 @@ class PassphraseScreen extends BaseStatelessWidget {
                           color: context.colorTheme.primaryLight,
                           child: ListTile(
                             title: Text(
-                              '${snapshot.data}',
+                              '${snapshot.data!.passphrase}',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: context.colorTheme.primary,
@@ -62,8 +76,8 @@ class PassphraseScreen extends BaseStatelessWidget {
                             ),
                             trailing: Icon(CustomIcons.copy),
                             onLongPress: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: snapshot.data));
+                              Clipboard.setData(ClipboardData(
+                                  text: snapshot.data!.passphrase));
                               toastManager.showShortToast('data_copied'.tr);
                             },
                           ),

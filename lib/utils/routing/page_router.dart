@@ -1,10 +1,16 @@
 import 'package:flutter_template/config/env.dart';
 import 'package:flutter_template/di/main_bindings.dart';
+import 'package:flutter_template/features/assets/view/assets_screen.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
+import 'package:flutter_template/features/change_password/view/change_password_screen.dart';
 import 'package:flutter_template/features/home/view/home_screen.dart';
 import 'package:flutter_template/features/kyc/view/kyc_scaffold.dart';
 import 'package:flutter_template/features/qr/logic/scan_network_qr_use_case.dart';
 import 'package:flutter_template/features/recovery/view/recovery_scaffold.dart';
+import 'package:flutter_template/features/settings/view/security/account_id/account_id_screen.dart';
+import 'package:flutter_template/features/settings/view/security/network_screen/network_screen.dart';
+import 'package:flutter_template/features/settings/view/security/secret_seed/secret_seed_screen.dart';
+import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -38,4 +44,24 @@ List<GetPage<dynamic>> getPageList(
           name: '/balances',
           page: () => BalancesScreen(false, false),
           binding: binding),
+      /*GetPage(
+          name: '/unlock', page: () => UnlockAppScaffold(), binding: binding),*/
+      GetPage(
+          name: '/settings', page: () => SettingsScreen(), binding: binding),
+      GetPage(
+          name: '/changePassword',
+          page: () => ChangePasswordScaffold(),
+          binding: binding),
+      GetPage(
+          name: '/accountId', page: () => AccountIdScreen(), binding: binding),
+      GetPage(
+          name: '/secretSeed',
+          page: () => SecretSeedScreen(),
+          binding: binding),
+      GetPage(
+          name: '/passphraseScreen',
+          page: () => PassphraseScreen(),
+          binding: binding),
+      GetPage(
+          name: '/assetsScreen', page: () => AssetsScreen(), binding: binding),
     ];
