@@ -13,8 +13,10 @@ import 'package:flutter_template/features/settings/view/security/secret_seed/sec
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/sign_in/view/sign_in_scaffold.dart';
 import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
+import 'package:flutter_template/features/unlock/view/unlock_app_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_template/features/unlock/view/unlock_app_screen.dart';
 
 List<GetPage<dynamic>> getPageList(
         Env env, SharedPreferences sharedPreferences, MainBindings binding) =>
@@ -44,8 +46,8 @@ List<GetPage<dynamic>> getPageList(
           name: '/balances',
           page: () => BalancesScreen(false, false),
           binding: binding),
-      /*GetPage(
-          name: '/unlock', page: () => UnlockAppScaffold(), binding: binding),*/
+      GetPage(
+          name: '/unlock', page: () => UnlockAppScaffold(), binding: binding),
       GetPage(
           name: '/settings', page: () => SettingsScreen(), binding: binding),
       GetPage(

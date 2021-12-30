@@ -22,7 +22,7 @@ import 'package:flutter_template/utils/error_handler/default_error_handler.dart'
 import 'package:flutter_template/utils/error_handler/error_handler.dart';
 import 'package:flutter_template/view/toast_manager.dart';
 import 'package:get/get.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainBindings extends Bindings {
@@ -58,6 +58,7 @@ class MainBindings extends Bindings {
         persistencePreferences: sharedPreferences);
     ToastManager toastManager = ToastManager();
     ErrorHandler errorHandler = DefaultErrorHandler(toastManager);
+    LocalAuthentication localAuthentication = LocalAuthentication();
 
     //Put to GetX pool
     Get.put(env);
@@ -74,6 +75,7 @@ class MainBindings extends Bindings {
     Get.put(repositoryProvider);
     Get.put(toastManager);
     Get.put(errorHandler);
+    Get.put(localAuthentication);
     //TODO: add dependencies, example: https://pub.dev/packages/get/example
   }
 }

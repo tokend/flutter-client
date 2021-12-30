@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 
@@ -30,7 +29,10 @@ class SecurityListItem extends StatelessWidget {
             ),
             child: ListTile(
               minLeadingWidth: 12,
-              leading: Icon(icon, color: colourScheme.primaryText,),
+              leading: Icon(
+                icon,
+                color: colourScheme.primaryText,
+              ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

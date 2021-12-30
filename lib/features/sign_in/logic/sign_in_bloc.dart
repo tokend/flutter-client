@@ -17,8 +17,7 @@ part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
-  SignInBloc(this.env)
-      : super(SignInState(Email.pure(), Password.pure(), network: env.apiUrl));
+  SignInBloc(this.env, SignInState state) : super(state);
   Env env;
 
   @override

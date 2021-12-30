@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/config/logic/url_config_manager.dart';
 import 'package:flutter_template/features/qr/view/qr_screen.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
+import 'package:flutter_template/utils/view/models/email.dart';
+import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:get/get.dart';
 
 class ScanNetworkQrUseCase extends BaseStatelessWidget {
@@ -15,7 +16,8 @@ class ScanNetworkQrUseCase extends BaseStatelessWidget {
 
     return Scaffold(
         body: BlocProvider(
-      create: (_) => SignInBloc(env),
+      create: (_) => SignInBloc(
+          env, SignInState(Email.pure(), Password.pure(), network: env.apiUrl)),
       child: ScanQRScreen((result, scannerContext) {
         var hasScanSucceed = urlConfigManager.setFromJson(result);
         scannerContext
