@@ -11,7 +11,7 @@ import 'package:flutter_template/di/providers/api_provider_impl.dart';
 import 'package:flutter_template/di/providers/repository_provider_impl.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider_impl.dart';
-import 'package:flutter_template/features/tfa%20/app_tfa_callback.dart';
+import 'package:flutter_template/features/tfa%20/logic/app_tfa_callback.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence.dart';
 import 'package:flutter_template/logic/credentials/persistence/credentials_persistence_impl.dart';
 import 'package:flutter_template/logic/credentials/persistence/wallet_info_persistence.dart';
