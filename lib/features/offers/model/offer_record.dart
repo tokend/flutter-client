@@ -4,6 +4,7 @@ import 'package:dart_wallet/base32check.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
+import 'package:flutter_template/features/assets/model/simple_asset.dart';
 
 class OfferRecord {
   int id;
@@ -43,18 +44,20 @@ class OfferRecord {
   }
 
   OfferRecord.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        baseAsset = json['base_asset'],
-        quoteAsset = json['quote_asset'],
-        price = json['price'],
-        isBuy = json['is_buy'],
-        baseAmount = json['base_amount'],
-        quoteAmount = json['quote_amount'],
-        fee = json['fee'],
-        date = json['created_at'],
-        orderBookId = json['order_book_id'],
-        baseBalanceId = json['base_balance']['data']['id'],
-        quoteBalanceId = json['quote_balance']['data']['id'];
+      : id = int.parse(json['id']),
+        baseAsset = SimpleAsset(
+            json['relationships']['base_asset']['data']['id'], '', 6),
+        quoteAsset = SimpleAsset(
+            json['relationships']['quote_asset']['data']['id'], '', 6),
+        price = Decimal.parse(json['attributes']['price']),
+        isBuy = json['attributes']['is_buy'],
+        baseAmount = Decimal.parse(json['attributes']['base_amount']),
+        quoteAmount = Decimal.parse(json['attributes']['quote_amount']),
+        fee = SimpleFeeRecord.fromJson(json['attributes']['fee']),
+        date = DateTime.parse(json['attributes']['created_at']),
+        orderBookId = int.parse(json['attributes']['order_book_id']),
+        baseBalanceId = json['relationships']['base_balance']['data']['id'],
+        quoteBalanceId = json['relationships']['quote_balance']['data']['id'];
 
   @override
   int get hashCode => id.hashCode;

@@ -26,8 +26,8 @@ ChartTimePeriod timePeriod = ChartTimePeriod.hour;
 int selectedTimePeriod = 0;
 
 var chartStreamController;
-AssetChartRepository? chartRepository;
-AssetPairsRepository? assetPairsRepository;
+AssetChartRepository? _chartRepository;
+AssetPairsRepository? _assetPairsRepository;
 
 List<String> timePeriods = [
   describeEnum(ChartTimePeriod.hour).capitalize(),
@@ -39,46 +39,46 @@ List<String> timePeriods = [
 class _ExchangeTabState extends State<ExchangeTab> {
   @override
   Widget build(BuildContext context) {
-    assetPairsRepository = widget.repositoryProvider.assetPairsRepository;
+    _assetPairsRepository = widget.repositoryProvider.assetPairsRepository;
 
     var assetPairsStreamController;
 
     void subscribeToChartsData() async {
-      if (chartRepository?.isNeverUpdated == true) {
-        await chartRepository?.getItem();
-        chartRepository?.isNeverUpdated = false;
+      if (_chartRepository?.isNeverUpdated == true) {
+        await _chartRepository?.getItem();
+        _chartRepository?.isNeverUpdated = false;
       }
     }
 
     void subscribeToAssetPairs() async {
-      var items = await assetPairsRepository?.getItems();
+      var items = await _assetPairsRepository?.getItems();
       if (selectedAssetPair == null) selectedAssetPair = items!.first;
 
       if (this.mounted) {
         setState(() {
-          chartRepository = widget.repositoryProvider.assetChartsRepository(
+          _chartRepository = widget.repositoryProvider.assetChartsRepository(
               selectedAssetPair!.base.code, selectedAssetPair!.quote.code);
-          chartStreamController = chartRepository!.streamSubject;
+          chartStreamController = _chartRepository!.streamSubject;
         });
       }
 
       subscribeToChartsData();
     }
 
-    if (assetPairsRepository?.isNeverUpdated == true) {
+    if (_assetPairsRepository?.isNeverUpdated == true) {
       subscribeToAssetPairs();
-      assetPairsRepository?.isNeverUpdated = false;
+      _assetPairsRepository?.isNeverUpdated = false;
     } else {
-      if (chartRepository?.isFresh == false) {
-        chartRepository = widget.repositoryProvider.assetChartsRepository(
+      if (_chartRepository?.isFresh == false) {
+        _chartRepository = widget.repositoryProvider.assetChartsRepository(
             selectedAssetPair!.base.code, selectedAssetPair!.quote.code);
-        chartStreamController = chartRepository!.streamSubject;
+        chartStreamController = _chartRepository!.streamSubject;
         subscribeToChartsData();
-        chartRepository?.isFresh = true;
+        _chartRepository?.isFresh = true;
       }
     }
 
-    assetPairsStreamController = assetPairsRepository?.streamSubject;
+    assetPairsStreamController = _assetPairsRepository?.streamSubject;
     var colorScheme = context.colorTheme;
 
     return Container(
@@ -92,7 +92,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
             stream: assetPairsStreamController?.stream,
             builder: (context, AsyncSnapshot<List<AssetPairRecord>> snapshot) {
               if (snapshot.data?.isEmpty == true &&
-                  chartRepository?.isNeverUpdated == false &&
+                  _chartRepository?.isNeverUpdated == false &&
                   snapshot.connectionState != ConnectionState.waiting) {
                 return Center(
                     child: Text(
@@ -103,7 +103,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                   snapshot.hasData) {
                 return RefreshIndicator(
                   onRefresh: () {
-                    return chartRepository!.update();
+                    return _chartRepository!.update();
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +119,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                             onChanged: (newPair) {
                               setState(() {
                                 selectedAssetPair = newPair;
-                                chartRepository?.isFresh = false;
+                                _chartRepository?.isFresh = false;
                               });
                             },
                             colorTheme: colorScheme,
@@ -158,7 +158,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
               stream: chartStreamController?.stream,
               builder: (context, AsyncSnapshot<AssetChartData> snapshot) {
                 if (snapshot.data == null &&
-                    assetPairsRepository?.isNeverUpdated == false &&
+                    _assetPairsRepository?.isNeverUpdated == false &&
                     snapshot.connectionState != ConnectionState.waiting) {
                   return Center(
                       child: Text(
