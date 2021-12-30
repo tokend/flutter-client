@@ -16,6 +16,7 @@ import 'package:flutter_template/features/sign_up/view/sign_up_scaffold.dart';
 import 'package:flutter_template/features/unlock/view/unlock_app_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_template/features/unlock/view/unlock_app_screen.dart';
 
 List<GetPage<dynamic>> getPageList(
         Env env, SharedPreferences sharedPreferences, MainBindings binding) =>

@@ -169,7 +169,7 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
                     ),
                     Padding(
                         padding: EdgeInsets.only(top: Sizes.standartPadding)),
-                    _BaseAssetTextField(assetPairs),
+                    _AssetPairDropDown(assetPairs),
                     Padding(
                         padding: EdgeInsets.only(top: Sizes.standartMargin)),
                     _PriceInputField(),
@@ -249,10 +249,10 @@ class _CreateOrderBottomDialogState extends State<CreateOrderBottomDialog> {
   }
 }
 
-class _BaseAssetTextField extends StatelessWidget {
+class _AssetPairDropDown extends StatelessWidget {
   List<AssetPairRecord> assetPairs;
 
-  _BaseAssetTextField(this.assetPairs);
+  _AssetPairDropDown(this.assetPairs);
 
   @override
   Widget build(BuildContext context) {

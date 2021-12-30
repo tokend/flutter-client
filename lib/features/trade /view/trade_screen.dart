@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/offers/view%20/my_offers_screen.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 import 'exchange_tab.dart';
@@ -57,7 +57,7 @@ class TradeScreen extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width / 2,
                     color: colourScheme.background,
-                    child: ExchangeTab(), //TODO
+                    child: MyOffersScreen(), //TODO
                   ),
                 ],
               ),
