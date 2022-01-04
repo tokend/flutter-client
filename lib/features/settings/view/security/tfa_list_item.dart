@@ -1,11 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'package:dart_sdk/api/tfa/model/tfa_factor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/tfa%20/logic/disable_tfa_use_case.dart';
+import 'package:flutter_template/features/tfa%20/logic/enable_tfa_use_case.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TfaListItem extends StatefulWidget {
+class TfaListItem extends BaseStatefulWidget {
   @override
   State<TfaListItem> createState() => _TfaListItemState();
 }
@@ -30,14 +33,14 @@ class _TfaListItemState extends State<TfaListItem> {
 
   Future<bool> saveSwitchState(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool("switchState", value);
+    prefs.setBool("tfaState", value);
     print('Switch Value saved $value');
-    return prefs.setBool("switchState", value);
+    return prefs.setBool("tfaState", value);
   }
 
   Future<bool?> getSwitchState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isSwitchedFT = prefs.getBool("switchState");
+    bool? isSwitchedFT = prefs.getBool("tfaState");
     print(isSwitchedFT);
 
     return isSwitchedFT;
@@ -66,9 +69,25 @@ class _TfaListItemState extends State<TfaListItem> {
           onChanged: (bool value) {
             setState(() {
               isSwitchOn = value;
+              if (isSwitchOn)
+                _addAndEnableNewTfaFactor();
+              else
+                _disableTfa();
               saveSwitchState(value);
             });
           }),
     );
+  }
+
+  _disableTfa() async {
+    await DisableTfaUseCase(
+            TfaFactorType.TOTP, widget.repositoryProvider.tfaFactorsRepository)
+        .perform();
+  }
+
+  _addAndEnableNewTfaFactor() async {
+    await EnableTfaUseCase(
+            TfaFactorType.TOTP, widget.repositoryProvider.tfaFactorsRepository)
+        .perform();
   }
 }

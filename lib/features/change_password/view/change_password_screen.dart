@@ -2,7 +2,6 @@ import 'package:dart_sdk/tfa/exceptions.dart';
 import 'package:dart_sdk/tfa/password_tfa_otp_generator.dart';
 import 'package:dart_sdk/tfa/tfa_callback.dart';
 import 'package:dart_sdk/tfa/tfa_verifier.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -123,8 +122,8 @@ class ChangePasswordScreen extends BaseStatelessWidget implements TfaCallback {
   }
 
   @override
-  Future<void> onTfaRequired(
-      NeedTfaException exception, Interface verifierInterface) async {
+  Future<void> onTfaRequired(NeedTfaException exception,
+      TfaVerifierInterface verifierInterface) async {
     WalletInfoProvider walletInfoProvider = Get.find();
     var email = walletInfoProvider.getWalletInfo()?.email;
 

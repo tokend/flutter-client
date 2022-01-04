@@ -1,13 +1,10 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/biometrics/biometric_auth_manager.dart';
 import 'package:flutter_template/features/sign_in/logic/sign_in_bloc.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/view/auth_screen_template.dart';
@@ -17,7 +14,6 @@ import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:flutter_template/utils/view/password_text_field.dart';
 import 'package:formz/formz.dart';
 import 'package:get/get.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:visibility_aware_state/visibility_aware_state.dart';
 
 class UnlockAppScaffold extends BaseStatelessWidget {
@@ -60,74 +56,33 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var credentials;
+
+    Future<void> getCredentials() async {
+      credentials = await widget.credentialsPersistence.getCredentials();
+    }
+
     return BlocBuilder<SignInBloc, SignInState>(
       buildWhen: (previous, current) => false,
       builder: (context, state) {
+        getCredentials();
+
+        BiometricAuthManager authManager = BiometricAuthManager(
+            onAuthEnabled: () {
+              context
+                  .read<SignInBloc>()
+                  .add(PasswordChanged(password: credentials.item2));
+
+              context.read<SignInBloc>().add(FormSubmitted(
+                  email: state.email.value, password: state.password.value));
+            },
+            onAuthDisabled: () {});
+
         final colorTheme = context.colorTheme;
         final screenSize = MediaQuery.of(context).size;
         var progress;
 
-        void checkIfAuthPossible() async {
-          var msg = '';
-          try {
-            bool hasBiometrics =
-                await widget.localAuthentication.canCheckBiometrics;
-
-            if (hasBiometrics) {
-              List<BiometricType> availableBiometrics =
-                  await widget.localAuthentication.getAvailableBiometrics();
-              var credentials =
-                  await widget.credentialsPersistence.getCredentials();
-
-              if (Platform.isIOS) {
-                if (availableBiometrics.contains(BiometricType.face)) {
-                  bool pass = await widget.localAuthentication.authenticate(
-                      localizedReason: 'finger_print_hint'.tr,
-                      biometricOnly: true);
-
-                  if (pass) {
-                    context
-                        .read<SignInBloc>()
-                        .add(PasswordChanged(password: credentials.item2));
-
-                    context.read<SignInBloc>().add(FormSubmitted(
-                        email: state.email.value,
-                        password: state.password.value));
-                  }
-                }
-              } else {
-                if (availableBiometrics.contains(BiometricType.fingerprint)) {
-                  bool pass = await widget.localAuthentication.authenticate(
-                      localizedReason: 'finger_print_hint'.tr,
-                      biometricOnly: true);
-                  if (pass) {
-                    context
-                        .read<SignInBloc>()
-                        .add(PasswordChanged(password: credentials.item2));
-
-                    context.read<SignInBloc>().add(FormSubmitted(
-                        email: state.email.value,
-                        password: state.password.value));
-                    //Get.toNamed('/home');
-                  }
-                } else {
-                  log('Android BiometricType.fingerprint not allowed');
-                }
-              }
-            } else {
-              msg = "You are not allowed to access biometrics.";
-            }
-          } on PlatformException catch (e) {
-            msg = "Error while opening fingerprint/face scanner";
-            log(e.stacktrace.toString() + ' ${e.code}');
-          }
-
-          log('message $msg');
-        }
-
-        checkIfAuthPossible();
-
-        log('building unlock screen again');
+        authManager.requestAuthIfPossible();
         return ProgressHUD(
           child: Builder(builder: (contextBuilder) {
             Widget signInWidget = AuthScreenTemplate(

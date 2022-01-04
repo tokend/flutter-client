@@ -53,7 +53,7 @@ class SecureStorage {
     var secretKey = await _getSecretKey(key);
     if (secretKey == null) return null;
     try {
-      var keychainData = (await _loadKeychainData(secretKey))!;
+      var keychainData = _loadKeychainData(secretKey)!;
       var iv = IV.fromLength(16);
 
       return _getEncryptCipher(secretKey).decrypt(
@@ -117,7 +117,7 @@ class SecureStorage {
     await preferences.remove(key);
   }
 
-  Future<KeychainData?> _loadKeychainData(String key) async {
+  KeychainData? _loadKeychainData(String key) {
     var jsonString = preferences.getString(key);
     if (jsonString == null || jsonString.isEmpty == true) return null;
     try {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/tfa/model/tfa_factor.dart';
 import 'package:flutter_template/features/tfa%20/storage/tfa_factors_repository.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -19,9 +21,10 @@ class DisableTfaUseCase {
 
     if (currentFactor != null && currentFactor.priority > 0) {
       _factorsRepository.deleteFactor(currentFactor.id);
+      log('_deleteFactorIfActive is true');
       return Future.value(true);
     }
-
+    log('_deleteFactor is not active');
     return Future.value(false);
   }
 }

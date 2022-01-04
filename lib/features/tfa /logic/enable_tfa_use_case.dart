@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dart_sdk/api/tfa/model/tfa_factor.dart';
 import 'package:flutter_template/features/tfa%20/storage/tfa_factors_repository.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -23,12 +25,13 @@ class EnableTfaUseCase {
         .then((value) => _enableNewFactor());
   }
 
-  Future<Map<String, dynamic>>? _deleteOldFactorIfNeeded() {
+  Future<Map<String, dynamic>?> _deleteOldFactorIfNeeded() {
     var oldFactor = _factorsRepository.streamSubject.value
         .firstWhereOrNull((element) => element.type == _factorType);
     if (oldFactor != null) {
       return _factorsRepository.deleteFactor(oldFactor.id);
     }
+    return Future.value(null);
   }
 
   Future<Map<String, dynamic>> _addNewFactor() {
@@ -36,6 +39,8 @@ class EnableTfaUseCase {
   }
 
   Future<Map<String, dynamic>> _enableNewFactor() {
+    log('_enableNewFactor');
+    log(creationResult.toString());
     return _factorsRepository
         .setFactorAsMain(creationResult['new_factor']['id']);
   }

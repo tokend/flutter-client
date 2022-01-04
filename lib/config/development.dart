@@ -7,10 +7,10 @@ class Development extends Env {
   SharedPreferences sp;
   @override
   // String apiUrl = 'http://d631-193-19-228-94.ngrok.io/_/api/';
-  String apiUrl = 'http://6dc7-193-19-228-94.ngrok.io/_/api/';
+  String apiUrl = 'http://0428-193-19-228-94.ngrok.io/_/api/';
 
   @override
-  String storageUrl = 'http://6dc7-193-19-228-94.ngrok.io/_/storage/api/';
+  String storageUrl = 'http://0428-193-19-228-94.ngrok.io/_/storage/api/';
 
   // 'https://s3.eu-west-1.amazonaws.com/demo-identity-storage-festive-colden/';
 

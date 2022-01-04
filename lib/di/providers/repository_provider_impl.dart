@@ -21,6 +21,7 @@ import 'package:flutter_template/features/kyc/storage/active_kyc_repository.dart
 import 'package:flutter_template/features/offers/storage/offers_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
+import 'package:flutter_template/features/tfa%20/storage/tfa_factors_repository.dart';
 import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_repository.dart';
 import 'package:flutter_template/features/trade%20/orderbook/storage/order_book_repository.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
@@ -67,6 +68,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late OffersRepository offersRepository;
 
+  @override
+  late TfaFactorsRepository tfaFactorsRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -88,6 +92,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
     assetPairsRepository = AssetPairsRepository(apiProvider, urlConfigProvider);
     offersRepository = OffersRepository(
         apiProvider, walletInfoProvider, false); //TODO onlyPrimary
+    tfaFactorsRepository =
+        TfaFactorsRepository(apiProvider, walletInfoProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

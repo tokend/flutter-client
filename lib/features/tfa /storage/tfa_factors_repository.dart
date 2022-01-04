@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/attributes_entity.dart';
 import 'package:dart_sdk/api/base/model/data_entity.dart';
@@ -14,19 +15,27 @@ class TfaFactorsRepository extends MultipleItemsRepository<TfaFactor> {
   TfaFactorsRepository(this._apiProvider, this._walletInfoProvider);
 
   @override
-  Future<List<TfaFactor>> getItems() {
+  Future<List<TfaFactor>> getItems() async {
     var signedApi = _apiProvider.getSignedApi();
     var walletId = _walletInfoProvider.getWalletInfo()?.walletIdHex;
     if (walletId == null)
       return Future.error(StateError('No wallet info found'));
 
-    return signedApi
-        .getService()
-        .get('wallets/$walletId/factors')
-        .then((response) {
-      var data = json.decode(json.encode(response['data'])) as List<dynamic>;
-      return data.map((e) => TfaFactor.fromJson(e)).toList();
-    });
+    try {
+      var items = signedApi
+          .getService()
+          .get('wallets/$walletId/factors')
+          .then((response) {
+        var data = json.decode(json.encode(response['data'])) as List<dynamic>;
+        return data.map((e) => TfaFactor.fromJson(e)).toList();
+      });
+      streamSubject.add(await items);
+      return items;
+    } catch (e, s) {
+      log('ERROR OCCURRED');
+      log('$e ${s.toString()}');
+      return [];
+    }
   }
 
   /// Adds given factor as disabled,
@@ -38,7 +47,7 @@ class TfaFactorsRepository extends MultipleItemsRepository<TfaFactor> {
       return Future.error(StateError('No wallet info found'));
 
     return signedApi.getService().post('wallets/$walletId/factors',
-        body: DataEntity(Map.from({'type': type.name.toLowerCase()})));
+        body: DataEntity(FactorBody(type.name.toLowerCase())).toJson());
   }
 
   /// Adds given factor as disabled,
@@ -51,6 +60,7 @@ class TfaFactorsRepository extends MultipleItemsRepository<TfaFactor> {
     if (walletId == null)
       return Future.error(StateError('No wallet info found'));
 
+    log('setFactorAsMain');
     return signedApi.getService().patch('wallets/$walletId/factors/$id',
         body: AttributesEntity(Map.from({'priority': newPriority})));
   }
@@ -67,4 +77,12 @@ class TfaFactorsRepository extends MultipleItemsRepository<TfaFactor> {
           'wallets/$walletId/factors/$id',
         );
   }
+}
+
+class FactorBody {
+  String type;
+
+  FactorBody(this.type);
+
+  Map<String, dynamic> toJson() => {'type': type};
 }

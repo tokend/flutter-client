@@ -199,4 +199,15 @@ final Map<String, String> en = {
   "unlock": "Unlock application",
   "finger_print_hint": "Place and hold your finger on the fingerprint reader ",
   "change_account": "Change Account",
+
+  //tfa
+  "enter_tfa_code_hint": "Enter tfa code",
+  "enter_your_password": "Enter your password",
+  "invalid_password": "Invalid password",
+  "invalid_code": "Invalid code",
+  "enter_temporary_code":
+      "Enter the temporary code from the authentication app",
+  "enter_temporary_code_from_email":
+      "Enter the verification code from the letter",
+  "enter_code": "Enter code",
 };
