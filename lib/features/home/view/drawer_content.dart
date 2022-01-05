@@ -46,12 +46,19 @@ class DrawerContent extends BaseStatelessWidget {
     }
 
     streamController = repositoryProvider.activeKyc.streamSubject;
+
+    if (repositoryProvider.account.isNeverUpdated) {
+      updateAccount();
+    }
   }
 
   var streamController;
 
   void subscribeToBalances() async {
     await repositoryProvider.activeKyc.getItem();
+  }
+
+  void updateAccount() async {
     await repositoryProvider.account.update();
   }
 
