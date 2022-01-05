@@ -20,7 +20,7 @@ class ActiveKycRepository extends SingleItemRepository<ActiveKyc> {
   Future<ActiveKyc> getItem() async {
     var kyc = _accountRepository.getItem().then((account) async {
       if (account.kycBlob != null) {
-        var form = await getForm(account.kycBlob!, account.roleId);
+        var form = await getForm(account.kycBlob!, account.role.id);
         return ActiveKycForm(form);
       }
       return Future.value(KycMissing());

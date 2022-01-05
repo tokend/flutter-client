@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/di/main_bindings.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/features/account/model/account_role.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_event.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
@@ -12,7 +14,6 @@ import 'package:flutter_template/features/kyc/model/kyc_form.dart';
 import 'package:flutter_template/resources/sizes.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 final List<NavigationItemData> listItems = [
   NavigationItemData(true, null, null, CustomIcons.element_3),
@@ -51,6 +52,7 @@ class DrawerContent extends BaseStatelessWidget {
 
   void subscribeToBalances() async {
     await repositoryProvider.activeKyc.getItem();
+    await repositoryProvider.account.update();
   }
 
   //TODO create header
@@ -103,7 +105,8 @@ class DrawerContent extends BaseStatelessWidget {
           : _makeListItem(data, state, context);
 
   Widget makeHeader(AsyncSnapshot<ActiveKyc> snapshot, BuildContext context) {
-    var form = ((snapshot.data as ActiveKycForm).formData as GeneralKycForm);
+    var form = ((snapshot.data as ActiveKycForm).formData
+        as GeneralKycForm); //TODO not always acc is general
     var documentUrl = form.documents?['kyc_avatar']
         ?.getUrl(urlConfigProvider.getConfig().storage);
     return Card(
@@ -132,6 +135,7 @@ class DrawerContent extends BaseStatelessWidget {
             ],
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 '${form.firstName} ${form.lastName}',
@@ -146,7 +150,8 @@ class DrawerContent extends BaseStatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 6.0),
                     child: Text(
-                      "Unverified account", //TODO
+                      getLocalizedNameForAccountRole(repositoryProvider
+                          .account.streamSubject.value.role.accountRole),
                       style: TextStyle(
                           color: context.colorTheme.secondaryText,
                           fontSize: Sizes.textSizeHint),
@@ -242,4 +247,20 @@ class NavigationItemData {
   final IconData? icon;
 
   NavigationItemData(this.header, this.item, this.title, this.icon);
+}
+
+String getLocalizedNameForAccountRole(String accountRole) {
+  log('getLocalizedNameForAccountRole $accountRole');
+  switch (accountRole) {
+    case AccountRole.UNVERIFIED:
+      return 'unverified_acc'.tr;
+    case AccountRole.GENERAL:
+      return 'general_acc'.tr;
+    case AccountRole.CORPORATE:
+      return 'corporate_acc'.tr;
+    case AccountRole.BLOCKED:
+      return 'blocked_acc'.tr;
+    default:
+      return 'unknown_acc'.tr;
+  }
 }

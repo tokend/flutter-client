@@ -81,8 +81,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
     keyValueEntriesRepository = KeyValueEntriesRepository(apiProvider.getApi());
     kycRequestStateRepository = KycRequestStateRepository(
         apiProvider, walletInfoProvider, blobs, keyValueEntriesRepository);
-    account = AccountRepository(
-        apiProvider, walletInfoProvider, getAccountRecordPersistence());
+    account = AccountRepository(apiProvider, walletInfoProvider,
+        keyValueEntriesRepository, getAccountRecordPersistence());
     activeKyc = ActiveKycRepository(
         account, blobs, keyValueEntriesRepository, getActiveKycPersistence());
     assetPairsRepository = AssetPairsRepository(apiProvider, urlConfigProvider);

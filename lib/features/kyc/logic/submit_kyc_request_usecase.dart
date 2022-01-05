@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:dart_sdk/api/base/model/remote_file.dart';
@@ -19,6 +18,7 @@ import 'package:dart_wallet/xdr/xdr_types.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/features/account/model/resolved_account_role.dart';
 import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
 import 'package:flutter_template/features/kyc/model/active_kyc.dart';
 import 'package:flutter_template/features/kyc/model/kyc_form.dart';
@@ -56,7 +56,7 @@ class SubmitKycRequestUseCase {
       this.requestIdToSubmit,
       this.explicitRoleToSet});
 
-  Int64 _roleToSet = Int64(0);
+  late ResolvedAccountRole _roleToSet;
   late String _formBlobId;
   late NetworkParams _networkParams;
   late String _transactionRequestXdr;
@@ -78,17 +78,18 @@ class SubmitKycRequestUseCase {
         .then((_) => _updateRepositories());
   }
 
-  Future<Int64> _getRoleToSet() async {
+  Future<ResolvedAccountRole> _getRoleToSet() async {
     try {
       if (explicitRoleToSet != null && explicitRoleToSet! > 0) {
-        return Future.value(explicitRoleToSet ?? Int64(0));
+        return Future.value(
+            ResolvedAccountRole(explicitRoleToSet?.toInt() ?? 0, ''));
       }
 
       var key = kycForm.getRoleKey();
       var result = keyValueEntriesRepository.update().then((_) =>
           keyValueEntriesRepository.getItem(key).then((keyValueRecord) =>
-              Future.value(Int64(int.parse(keyValueRecord.value)))));
-      return await result;
+              Future.value(int.parse(keyValueRecord.value))));
+      return ResolvedAccountRole(await result, key);
     } catch (e, s) {
       log('${e.toString()}');
       log(s.toString());
@@ -125,7 +126,7 @@ class SubmitKycRequestUseCase {
       var operation = CreateChangeRoleRequestOp(
           requestIdToSubmit ?? Int64(0),
           PublicKeyFactory.fromAccountId(accountId),
-          _roleToSet,
+          Int64(_roleToSet.id),
           "{\"blob_id\":\"$_formBlobId\"}",
           null,
           CreateChangeRoleRequestOpExtEmptyVersion());
@@ -193,6 +194,6 @@ class SubmitKycRequestUseCase {
   _updateRepositories() {
     //TODO update kyc request state repo
     repositoryProvider.activeKyc.set(ActiveKycForm(kycForm));
-    repositoryProvider.account.updateRole(_roleToSet.toInt());
+    repositoryProvider.account.updateRole(_roleToSet);
   }
 }

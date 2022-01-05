@@ -1,16 +1,22 @@
 import 'dart:developer';
 
+import 'package:flutter_template/features/account/model/resolved_account_role.dart';
+import 'package:flutter_template/features/key_value/model/key_value_entry_record.dart';
+
 class AccountRecord {
   String id;
-  int roleId;
+  ResolvedAccountRole role;
   KycRecoveryStatus kycRecoveryStatus;
   String? kycBlob;
 
-  AccountRecord(this.id, this.roleId, this.kycRecoveryStatus, this.kycBlob);
+  AccountRecord(this.id, this.role, this.kycRecoveryStatus, this.kycBlob);
 
-  AccountRecord.fromJson(Map<String, dynamic> json)
+  AccountRecord.fromJson(
+      Map<String, dynamic> json, List<KeyValueEntryRecord> keyValueEntries)
       : id = json['data']['id'],
-        roleId = int.parse(json['data']['relationships']['role']['data']['id']),
+        role = ResolvedAccountRole.fromKeyEntries(
+            int.parse(json['data']['relationships']['role']['data']['id']),
+            keyValueEntries),
         kycRecoveryStatus = getKycRecoveryStatus(
             json['data']['attributes']['kyc_recovery_status']['name']),
         kycBlob = (json['included'] as List).isNotEmpty
@@ -20,7 +26,7 @@ class AccountRecord {
   Map<String, dynamic> toJson() => {
         //TODO fix up wrong structure
         'id': id,
-        'role_id': roleId,
+        'role_id': role,
         'kyc_recovery_status': kycRecoveryStatus,
         'kyc_blob_id': kycBlob
       };

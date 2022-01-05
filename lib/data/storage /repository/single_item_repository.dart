@@ -22,7 +22,6 @@ abstract class SingleItemRepository<T> extends Repository {
 
   storeItem(T item) => objectPersistence?.saveItem(item);
 
-  //TODO ??
   broadcast() {}
 
   onNewItem(T newItem) {
@@ -35,22 +34,13 @@ abstract class SingleItemRepository<T> extends Repository {
   //TODO implement items ensuring
 
   @override
-  Future<void> update() {
+  Future<void> update() async {
     invalidate();
-
-    return lock.synchronized(() {
-      T? storedItem;
-      if (isNeverUpdated) {
-        storedItem = getStoredItem();
-      }
-
-      getItem().then((item) => storeItem(item)).then((item) {
-        streamSubject.add(item);
-        isNeverUpdated = false;
-        isLoading = false;
-        onNewItem(item);
-      });
-      //TODO return value  ?
+    await getItem().then((item) => storeItem(item)).then((item) {
+      streamSubject.add(item);
+      isNeverUpdated = false;
+      isLoading = false;
+      onNewItem(item);
     });
   }
 

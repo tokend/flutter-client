@@ -199,4 +199,11 @@ final Map<String, String> en = {
   "unlock": "Unlock application",
   "finger_print_hint": "Place and hold your finger on the fingerprint reader ",
   "change_account": "Change Account",
+
+  //account roles
+  "unverified_acc": "Unverified account",
+  "general_acc": "General account",
+  "corporate_acc": "Corporate account",
+  "blocked_acc": "Blocked account",
+  "unknown_acc": "Unknown account type",
 };

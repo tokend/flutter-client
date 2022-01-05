@@ -124,7 +124,7 @@ class ChangePasswordScreen extends BaseStatelessWidget implements TfaCallback {
 
   @override
   Future<void> onTfaRequired(
-      NeedTfaException exception, Interface verifierInterface) async {
+      NeedTfaException exception, TfaVerifierInterface verifierInterface) async {
     WalletInfoProvider walletInfoProvider = Get.find();
     var email = walletInfoProvider.getWalletInfo()?.email;
 

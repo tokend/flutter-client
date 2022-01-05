@@ -20,7 +20,7 @@ class AppTfaCallback implements TfaCallback {
 
   @override
   Future<void> onTfaRequired(
-      NeedTfaException exception, Interface verifierInterface) {
+      NeedTfaException exception, TfaVerifierInterface verifierInterface) {
     if (_handlers.isNotEmpty) {
       return _handlers.last.onTfaRequired(exception, verifierInterface);
     } else {
