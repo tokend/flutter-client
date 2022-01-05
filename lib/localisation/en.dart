@@ -206,4 +206,10 @@ final Map<String, String> en = {
   "corporate_acc": "Corporate account",
   "blocked_acc": "Blocked account",
   "unknown_acc": "Unknown account type",
+
+  //trade history
+  "amount_trade": "Amount(%s)",
+  "price_trade": "Price(%s)",
+  "total_trade": "Total(%s)",
+  "time": "Time",
 };

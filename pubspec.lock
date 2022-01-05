@@ -274,7 +274,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "3cde5b089b6f65e1871421f3ce7901d3a288fc39"
+      resolved-ref: "94a08d5993d8e515612b53362db22884cf58cfb5"
       url: "https://github.com/tokend/dart-sdk"
     source: git
     version: "0.0.1"
