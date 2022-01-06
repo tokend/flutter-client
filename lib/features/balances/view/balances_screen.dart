@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';

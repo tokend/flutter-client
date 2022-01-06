@@ -22,6 +22,7 @@ import 'package:flutter_template/features/offers/storage/offers_repository.dart'
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
 import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_repository.dart';
+import 'package:flutter_template/features/trade%20/history/storage/trade_history_repository.dart';
 import 'package:flutter_template/features/trade%20/orderbook/storage/order_book_repository.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -150,5 +151,17 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   OrderBookRepository orderBook(String baseAsset, String quoteAsset) {
     return OrderBookRepository(apiProvider, baseAsset, quoteAsset);
+  }
+
+  @override
+  TradeHistoryRepository tradeHistoryRepository(
+    String baseAsset,
+    String quoteAsset,
+  ) {
+    return TradeHistoryRepository(
+      baseAsset,
+      quoteAsset,
+      apiProvider,
+    );
   }
 }

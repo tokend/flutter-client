@@ -212,4 +212,5 @@ final Map<String, String> en = {
   "price_trade": "Price(%s)",
   "total_trade": "Total(%s)",
   "time": "Time",
+  "trade_history": "Trade history",
 };

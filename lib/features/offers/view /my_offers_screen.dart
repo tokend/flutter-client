@@ -16,7 +16,7 @@ class MyOffersScreen extends BaseStatefulWidget {
   State<MyOffersScreen> createState() => _MyOffersScreenState();
 }
 
-AssetPairRecord? currentAssetPair;
+AssetPairRecord? _currentAssetPair;
 
 class _MyOffersScreenState extends State<MyOffersScreen> {
   @override
@@ -30,8 +30,8 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
       offersRepository.isNeverUpdated = false;
     }
 
-    if (currentAssetPair == null) {
-      currentAssetPair = widget
+    if (_currentAssetPair == null) {
+      _currentAssetPair = widget
           .repositoryProvider.assetPairsRepository.streamSubject.value.first;
     }
     if (offersRepository.isNeverUpdated) {
@@ -45,8 +45,8 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
         builder: (context, AsyncSnapshot<List<OfferRecord>> snapshot) {
           var filteredByAssetPair = snapshot.data!
               .where((offerRecord) =>
-                  offerRecord.baseAsset.code == currentAssetPair?.base.code &&
-                  offerRecord.quoteAsset.code == currentAssetPair?.quote.code)
+                  offerRecord.baseAsset.code == _currentAssetPair?.base.code &&
+                  offerRecord.quoteAsset.code == _currentAssetPair?.quote.code)
               .toList();
           if (snapshot.data?.isEmpty ==
                       true && //TODO add 'empty list' message for empty filtered list
@@ -84,11 +84,11 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                         child: DropDownField<AssetPairRecord>(
                           onChanged: (newPair) {
                             setState(() {
-                              currentAssetPair = newPair;
+                              _currentAssetPair = newPair;
                             });
                           },
                           colorTheme: context.colorTheme,
-                          currentValue: currentAssetPair,
+                          currentValue: _currentAssetPair,
                           list: widget.repositoryProvider.assetPairsRepository
                               .streamSubject.value,
                           format: (AssetPairRecord item) {
@@ -98,7 +98,7 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                     Padding(padding: EdgeInsets.only(top: 20.0)),
                     Text(
                       'open_orders'.tr.format([
-                        '${currentAssetPair?.base.code}/${currentAssetPair?.quote.code}'
+                        '${_currentAssetPair?.base.code}/${_currentAssetPair?.quote.code}'
                       ]),
                       style: TextStyle(
                           color: context.colorTheme.drawerBackground,
@@ -106,9 +106,9 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                     ),
                     Expanded(
                       child: ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                          separatorBuilder:
-                              (BuildContext context, int index) =>
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 10.0),
+                          separatorBuilder: (BuildContext context, int index) =>
                               Divider(height: 2),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,

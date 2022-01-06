@@ -6,7 +6,6 @@ import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:dart_sdk/api/base/params/paging_params_v2.dart';
 import 'package:dart_sdk/api/v3/params/matches_page_params.dart';
 import 'package:flutter_template/data/storage%20/pagination/memory_only_paged_data_cache.dart';
-import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/repository/paged_data_repository.dart';
 import 'package:flutter_template/di/providers/api_provider.dart';
 import 'package:flutter_template/features/trade%20/history/model/trade_history_record.dart';
@@ -16,9 +15,11 @@ class TradeHistoryRepository extends PagedDataRepository<TradeHistoryRecord> {
   String _quoteAsset;
   ApiProvider _apiProvider;
 
-  TradeHistoryRepository(this._baseAsset, this._quoteAsset, this._apiProvider,
-      PagingOrder pagingOrder, PagedDataCache? cache)
-      : super(PagingOrder.DESC, MemoryOnlyPagedDataCache<TradeHistoryRecord>());
+  TradeHistoryRepository(
+    this._baseAsset,
+    this._quoteAsset,
+    this._apiProvider,
+  ) : super(PagingOrder.DESC, MemoryOnlyPagedDataCache<TradeHistoryRecord>());
 
   @override
   Future<DataPage<TradeHistoryRecord>> getRemotePage(
@@ -28,7 +29,6 @@ class TradeHistoryRepository extends PagedDataRepository<TradeHistoryRecord> {
     var requestParams = MatchesPageParams(
       baseAsset: _baseAsset,
       quoteAsset: _quoteAsset,
-      orderBookId: "0",
       pagingParams: PagingParamsV2(nextCursor.toString(), 15, requiredOrder),
     );
 

@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_template/features/assets/model/asset.dart';
+import 'package:flutter_template/features/assets/model/simple_asset.dart';
 
 class TradeHistoryRecord {
   int id;
@@ -24,13 +25,15 @@ class TradeHistoryRecord {
 
   TradeHistoryRecord.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        baseAsset = json['base_asset'],
-        quoteAsset = json['quote_asset'],
-        baseAmount = json['base_amount'],
-        quoteAmount = json['quote_amount'],
-        price = json['quote_amount'],
-        createdAt = json['created_at'],
-        hasPositiveTrend = json['has_positive_trend'];
+        baseAsset =
+            SimpleAsset.simpleModel(json['relationships']['base_asset']),
+        quoteAsset =
+            SimpleAsset.simpleModel(json['relationships']['quote_asset']),
+        baseAmount = Decimal.parse(json['attributes']['base_amount']),
+        quoteAmount = Decimal.parse(json['attributes']['quote_amount']),
+        price = Decimal.parse(json['attributes']['quote_amount']),
+        createdAt = json['attributes']['created_at'],
+        hasPositiveTrend = json['attributes']['has_positive_trend'];
 
   @override
   bool operator ==(Object other) {

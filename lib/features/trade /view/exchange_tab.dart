@@ -8,6 +8,7 @@ import 'package:flutter_template/features/trade%20/chart/model/asset_chart_data.
 import 'package:flutter_template/features/trade%20/chart/model/chart_time_period.dart';
 import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_repository.dart';
 import 'package:flutter_template/features/trade%20/chart/view%20/chart_view.dart';
+import 'package:flutter_template/features/trade%20/history/view/trade_history_list.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
 import 'package:flutter_template/features/trade%20/view/time_period_picker.dart';
@@ -22,6 +23,7 @@ class ExchangeTab extends BaseStatefulWidget {
 
 int selectedAssetPairIndex = 0;
 AssetPairRecord? selectedAssetPair;
+AssetPairRecord? firstAssetPair;
 ChartTimePeriod timePeriod = ChartTimePeriod.hour;
 int selectedTimePeriod = 0;
 
@@ -101,6 +103,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                 ));
               } else if (snapshot.connectionState != ConnectionState.waiting &&
                   snapshot.hasData) {
+                firstAssetPair = snapshot.data!.first;
                 return RefreshIndicator(
                   onRefresh: () {
                     return _chartRepository!.update();
@@ -215,7 +218,33 @@ class _ExchangeTabState extends State<ExchangeTab> {
                 ),
               )
             ],
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 32.0),
+            child: Row(
+              children: [
+                Text(
+                  'trade_history'.tr,
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: colorScheme.drawerBackground,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Visibility(
+            //TODO refactor
+            child: Padding(
+              padding: EdgeInsets.only(top: 14.0),
+              child: TradeHistoryList(
+                selectedAssetPair?.base.code ?? '',
+                selectedAssetPair?.quote.code ?? '',
+              ),
+            ),
+            visible: selectedAssetPair != null,
+          ),
         ],
       ),
     );
