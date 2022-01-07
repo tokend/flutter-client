@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_template/extensions/dates.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/trade%20/history/model/trade_history_record.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -76,7 +77,7 @@ class TradeHistoryListItem extends StatelessWidget {
                     style: leftTextStyle,
                   ),
                   Text(
-                    '${_tradeHistoryRecord.createdAt}',
+                    '${_tradeHistoryRecord.createdAt.format(FULL_DATE_AND_TIME)}',
                     style: rightTextStyle,
                   ),
                 ],
