@@ -12,8 +12,10 @@ class TradeHistoryList extends BaseStatefulWidget {
   String baseAsset;
   String quoteAsset;
   bool isFull;
+  bool addPadding;
 
-  TradeHistoryList(this.baseAsset, this.quoteAsset, {this.isFull = true});
+  TradeHistoryList(this.baseAsset, this.quoteAsset,
+      {this.isFull = true, this.addPadding = true});
 
   @override
   State<TradeHistoryList> createState() => _TradeHistoryListState();
@@ -62,13 +64,16 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
                 onRefresh: () {
                   return tradeHistoryRepository.update();
                 },
-                child: Column(
-                  children: [
-                    Padding(padding: EdgeInsets.only(top: 20.0)),
-                    Expanded(
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Expanded(
                       child: ListView.separated(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 10.0),
+                          padding: EdgeInsets.only(
+                              top: 10.0,
+                              bottom: 10.0,
+                              right: 16.0,
+                              left: widget.addPadding ? 16.0 : 0.0),
                           separatorBuilder: (BuildContext context, int index) =>
                               Divider(height: 2),
                           shrinkWrap: true,
@@ -82,7 +87,7 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
                                         snapshot.data![index]));
                           }),
                     ),
-                  ],
+                  ),
                 ),
               ),
             );

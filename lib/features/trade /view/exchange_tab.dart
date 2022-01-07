@@ -9,6 +9,7 @@ import 'package:flutter_template/features/trade%20/chart/model/chart_time_period
 import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_repository.dart';
 import 'package:flutter_template/features/trade%20/chart/view%20/chart_view.dart';
 import 'package:flutter_template/features/trade%20/history/view/trade_history_list.dart';
+import 'package:flutter_template/features/trade%20/history/view/trade_history_screen.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
 import 'package:flutter_template/features/trade%20/view/time_period_picker.dart';
@@ -83,169 +84,196 @@ class _ExchangeTabState extends State<ExchangeTab> {
     assetPairsStreamController = _assetPairsRepository?.streamSubject;
     var colorScheme = context.colorTheme;
 
-    return Container(
-      margin: EdgeInsets.only(left: 16.0, top: 24.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StreamBuilder<List<AssetPairRecord>>(
-            initialData: [],
-            stream: assetPairsStreamController?.stream,
-            builder: (context, AsyncSnapshot<List<AssetPairRecord>> snapshot) {
-              if (snapshot.data?.isEmpty == true &&
-                  _chartRepository?.isNeverUpdated == false &&
-                  snapshot.connectionState != ConnectionState.waiting) {
-                return Center(
-                    child: Text(
-                  'no_asset_pairs'.tr,
-                  style: TextStyle(fontSize: 17.0),
-                ));
-              } else if (snapshot.connectionState != ConnectionState.waiting &&
-                  snapshot.hasData) {
-                firstAssetPair = snapshot.data!.first;
-                return RefreshIndicator(
-                  onRefresh: () {
-                    return _chartRepository!.update();
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ConstrainedBox(
-                        constraints: new BoxConstraints(
-                          maxHeight: 95.0,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 16.0),
-                          child: DropDownField<AssetPairRecord>(
-                            onChanged: (newPair) {
-                              setState(() {
-                                selectedAssetPair = newPair;
-                                _chartRepository?.isFresh = false;
-                              });
-                            },
-                            colorTheme: colorScheme,
-                            currentValue:
-                                selectedAssetPair ?? snapshot.data!.first,
-                            list: snapshot.data!,
-                            format: (AssetPairRecord item) {
-                              return '${item.base.code}/${item.quote.code}';
-                            },
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 18.0, bottom: 16.0),
-                        child: Text(
-                          '${(selectedAssetPair ?? snapshot.data!.first).base.code}/${(selectedAssetPair ?? snapshot.data!.first).quote.code}',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: colorScheme.accent,
-                            fontSize: 32.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                log(snapshot.stackTrace.toString());
-                return Text(
-                    snapshot.error.toString()); // TODO display error correctly
-              }
-              return CircularProgressIndicator();
-            },
-          ),
-          StreamBuilder<AssetChartData>(
-              stream: chartStreamController?.stream,
-              builder: (context, AsyncSnapshot<AssetChartData> snapshot) {
-                if (snapshot.data == null &&
-                    _assetPairsRepository?.isNeverUpdated == false &&
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(left: 16.0, top: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StreamBuilder<List<AssetPairRecord>>(
+              initialData: [],
+              stream: assetPairsStreamController?.stream,
+              builder:
+                  (context, AsyncSnapshot<List<AssetPairRecord>> snapshot) {
+                if (snapshot.data?.isEmpty == true &&
+                    _chartRepository?.isNeverUpdated == false &&
                     snapshot.connectionState != ConnectionState.waiting) {
                   return Center(
                       child: Text(
-                    'loading'.tr,
+                    'no_asset_pairs'.tr,
                     style: TextStyle(fontSize: 17.0),
                   ));
                 } else if (snapshot.connectionState !=
                         ConnectionState.waiting &&
                     snapshot.hasData) {
-                  return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: ChartView(snapshot.data!, timePeriod));
+                  firstAssetPair = snapshot.data!.first;
+                  return RefreshIndicator(
+                    onRefresh: () {
+                      return _chartRepository!.update();
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ConstrainedBox(
+                          constraints: new BoxConstraints(
+                            maxHeight: 95.0,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 16.0),
+                            child: DropDownField<AssetPairRecord>(
+                              onChanged: (newPair) {
+                                setState(() {
+                                  selectedAssetPair = newPair;
+                                  _chartRepository?.isFresh = false;
+                                });
+                              },
+                              colorTheme: colorScheme,
+                              currentValue:
+                                  selectedAssetPair ?? snapshot.data!.first,
+                              list: snapshot.data!,
+                              format: (AssetPairRecord item) {
+                                return '${item.base.code}/${item.quote.code}';
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 18.0, bottom: 16.0),
+                          child: Text(
+                            '${(selectedAssetPair ?? snapshot.data!.first).base.code}/${(selectedAssetPair ?? snapshot.data!.first).quote.code}',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: colorScheme.accent,
+                              fontSize: 32.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   log(snapshot.stackTrace.toString());
                   return Text(snapshot.error
                       .toString()); // TODO display error correctly
                 }
-                return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Center(child: CircularProgressIndicator()));
-              }),
-          Row(
-            children: [
-              ConstrainedBox(
-                constraints: new BoxConstraints(
-                  maxHeight: 45.0,
-                ),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: timePeriods.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (selectedTimePeriod != index) {
-                          setState(() {
-                            if (index == 0)
-                              timePeriod = ChartTimePeriod.hour;
-                            else if (index == 1)
-                              timePeriod = ChartTimePeriod.day;
-                            else if (index == 2)
-                              timePeriod = ChartTimePeriod.month;
-                            else if (index == 3)
-                              timePeriod = ChartTimePeriod.year;
-                            selectedTimePeriod = index;
-                          });
-                        }
-                      },
-                      child: Container(
-                          child: TimePeriodPicker(
-                              timePeriods[index], selectedTimePeriod == index)),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 32.0),
-            child: Row(
+                return CircularProgressIndicator();
+              },
+            ),
+            StreamBuilder<AssetChartData>(
+                stream: chartStreamController?.stream,
+                builder: (context, AsyncSnapshot<AssetChartData> snapshot) {
+                  if (snapshot.data == null &&
+                      _assetPairsRepository?.isNeverUpdated == false &&
+                      snapshot.connectionState != ConnectionState.waiting) {
+                    return Center(
+                        child: Text(
+                      'loading'.tr,
+                      style: TextStyle(fontSize: 17.0),
+                    ));
+                  } else if (snapshot.connectionState !=
+                          ConnectionState.waiting &&
+                      snapshot.hasData) {
+                    return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: ChartView(snapshot.data!, timePeriod));
+                  } else if (snapshot.hasError) {
+                    log(snapshot.stackTrace.toString());
+                    return Text(snapshot.error
+                        .toString()); // TODO display error correctly
+                  }
+                  return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Center(child: CircularProgressIndicator()));
+                }),
+            Row(
               children: [
-                Text(
-                  'trade_history'.tr,
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    color: colorScheme.drawerBackground,
-                    fontWeight: FontWeight.w700,
+                ConstrainedBox(
+                  constraints: new BoxConstraints(
+                    maxHeight: 45.0,
+                  ),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: timePeriods.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          if (selectedTimePeriod != index) {
+                            setState(() {
+                              if (index == 0)
+                                timePeriod = ChartTimePeriod.hour;
+                              else if (index == 1)
+                                timePeriod = ChartTimePeriod.day;
+                              else if (index == 2)
+                                timePeriod = ChartTimePeriod.month;
+                              else if (index == 3)
+                                timePeriod = ChartTimePeriod.year;
+                              selectedTimePeriod = index;
+                            });
+                          }
+                        },
+                        child: Container(
+                            child: TimePeriodPicker(timePeriods[index],
+                                selectedTimePeriod == index)),
+                      );
+                    },
                   ),
                 )
               ],
             ),
-          ),
-          Visibility(
-            //TODO refactor
-            child: Padding(
-              padding: EdgeInsets.only(top: 14.0),
-              child: TradeHistoryList(
-                selectedAssetPair?.base.code ?? '',
-                selectedAssetPair?.quote.code ?? '',
+            Padding(
+              padding: EdgeInsets.only(top: 32.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'trade_history'.tr,
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: colorScheme.drawerBackground,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 16.0),
+                      child: Text(
+                        'see_all'.tr,
+                        style: TextStyle(
+                          fontSize: 11.0,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TradeHistoryScreen(
+                                  selectedAssetPair?.base.code ?? '',
+                                  selectedAssetPair?.quote.code ?? '',
+                                ))),
+                  ),
+                ],
               ),
             ),
-            visible: selectedAssetPair != null,
-          ),
-        ],
+            Container(
+              child: Visibility(
+                //TODO refactor
+                child: Padding(
+                  padding: EdgeInsets.only(top: 14.0),
+                  child: TradeHistoryList(
+                    selectedAssetPair?.base.code ?? '',
+                    selectedAssetPair?.quote.code ?? '',
+                    addPadding: false,
+                  ),
+                ),
+                visible: selectedAssetPair != null,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
