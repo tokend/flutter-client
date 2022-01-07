@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/dates.dart';
 import 'package:flutter_template/extensions/resources.dart';
+import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/trade%20/history/model/trade_history_record.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
@@ -31,7 +32,9 @@ class TradeHistoryListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'amount_trade'.tr,
+                    'amount_trade'
+                        .tr
+                        .format([_tradeHistoryRecord.baseAsset.code]),
                     style: leftTextStyle,
                   ),
                   Text(
@@ -45,7 +48,9 @@ class TradeHistoryListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'price_trade'.tr,
+                    'price_trade'
+                        .tr
+                        .format([_tradeHistoryRecord.quoteAsset.code]),
                     style: leftTextStyle,
                   ),
                   Text(
@@ -59,7 +64,9 @@ class TradeHistoryListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'total_trade'.tr,
+                    'total_trade'
+                        .tr
+                        .format([_tradeHistoryRecord.quoteAsset.code]),
                     style: leftTextStyle,
                   ),
                   Text(
