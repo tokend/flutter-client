@@ -61,7 +61,8 @@ class ConfirmOfferRequestUseCase {
     //TODO update repos
   }
 
-  Future<Tuple2<String, String>> getBalances(List<BalanceRecord> balances) {
+  Future<Tuple2<String, String>> getBalances(
+      List<BalanceRecord> balances) async {
     var baseAsset = _request.baseAsset;
     var quoteAsset = _request.quoteAsset;
 
@@ -70,7 +71,7 @@ class ConfirmOfferRequestUseCase {
     var existingQuote = balances
         .firstWhereOrNull((balance) => balance.asset.code == quoteAsset.code);
 
-    var toCreate = [];
+    List<String> toCreate = [];
     if (existingBase == null) {
       toCreate.add(baseAsset.code);
     }
@@ -78,6 +79,11 @@ class ConfirmOfferRequestUseCase {
       toCreate.add(quoteAsset.code);
     }
 
+    if (toCreate.isNotEmpty) {
+      await _repositoryProvider.balances
+          .create(_accountProvider, _systemInfo, _txManager, toCreate);
+      await _balancesRepository.getItems();
+    }
     var base = _balancesRepository.streamSubject.value
         .firstWhere((balance) => balance.asset.code == baseAsset.code)
         .id;

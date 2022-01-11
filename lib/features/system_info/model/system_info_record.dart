@@ -12,7 +12,7 @@ class SystemInfoRecord {
   SystemInfoRecord(this.passphrase, this.precisionMultiplier,
       this.timeOffsetSeconds, this.latestBlock);
 
-  int get precision => log(precisionMultiplier) ~/ log(10);
+  int get precision => (log(precisionMultiplier) / log(10)).round();
 
   /// @param source fresh [HorizonStateResource], if it's outdated then
   /// [timeOffsetSeconds] will be wrong
