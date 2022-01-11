@@ -99,11 +99,25 @@ class _ExchangeTabState extends State<ExchangeTab> {
                 if (snapshot.data?.isEmpty == true &&
                     _chartRepository?.isNeverUpdated == false &&
                     snapshot.connectionState != ConnectionState.waiting) {
-                  return Center(
-                      child: Text(
-                    'no_asset_pairs'.tr,
-                    style: TextStyle(fontSize: 17.0),
-                  ));
+                  return Container(
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        return _chartRepository!.update();
+                      },
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              'no_asset_pairs'.tr,
+                              style: TextStyle(fontSize: 17.0),
+                            ),
+                          ),
+                          height: MediaQuery.of(context).size.height,
+                        ),
+                      ),
+                    ),
+                  );
                 } else if (snapshot.connectionState !=
                         ConnectionState.waiting &&
                     snapshot.hasData) {

@@ -155,6 +155,8 @@ final Map<String, String> en = {
   "my_balances": "My balances",
   "asset_details": "Asset details",
   "no_balance": "No balance",
+  "empty_assets_list": "No assets found",
+
   //asset details
   "maximum": "Maximum",
   "issued": "Issued",

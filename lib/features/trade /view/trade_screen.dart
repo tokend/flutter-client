@@ -57,7 +57,7 @@ class TradeScreen extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width / 2,
                     color: colourScheme.background,
-                    child: MyOffersScreen(), //TODO
+                    child: MyOffersScreen(),
                   ),
                 ],
               ),

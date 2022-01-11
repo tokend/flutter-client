@@ -56,7 +56,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
             isBuy: state.isBuy,
             assetPairRecord: state.assetPairRecord,
             price: state.price,
-            error: state.error);
+            error: e);
       }
     } else if (event is RequestConfirmed) {
       yield state.copyWith(isRequestConfirmed: event.isRequestConfirmed);
@@ -81,7 +81,7 @@ class CreateOfferBloc extends BaseBloc<CreateOfferEvent, CreateOfferState> {
             isBuy: state.isBuy,
             assetPairRecord: state.assetPairRecord,
             price: state.price,
-            error: state.error);
+            error: e);
       }
     }
   }

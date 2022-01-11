@@ -46,13 +46,20 @@ class _BalancesScreenState extends State<BalancesScreen> {
           if (snapshot.data?.isEmpty == true &&
               balanceRepo.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
-            return Container(
-              color: context.colorTheme.background,
-              child: Center(
-                  child: Text(
-                'empty_balances_list'.tr,
-                style: TextStyle(fontSize: 17.0),
-              )),
+            return RefreshIndicator(
+              onRefresh: () => balanceRepo.update(),
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      'empty_balances_list'.tr,
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height,
+                ),
+              ),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {

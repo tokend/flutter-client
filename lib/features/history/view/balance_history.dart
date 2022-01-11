@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
@@ -42,13 +41,22 @@ class _BalanceHistoryState extends State<BalanceHistory> {
           if (snapshot.hasData &&
               snapshot.data?.isEmpty == true &&
               snapshot.connectionState != ConnectionState.waiting) {
-            return Container(
-              color: context.colorTheme.background,
-              child: Center(
-                  child: Text(
-                'empty_history'.tr,
-                style: TextStyle(fontSize: 17.0),
-              )),
+            return RefreshIndicator(
+              onRefresh: () {
+                return balanceChangesRepo.update();
+              },
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      'empty_history'.tr,
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height,
+                ),
+              ),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {

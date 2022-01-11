@@ -12,7 +12,7 @@ class CreateOfferState extends Equatable {
   final bool isRequestReady;
   final bool isRequestConfirmed;
   final bool isRequestSubmitted;
-  final Exception? error;
+  final Object? error;
 
   CreateOfferState({
     required this.amount,
@@ -71,7 +71,7 @@ class CreateOfferInitial extends CreateOfferState {
   final bool isBuy;
   final AssetPairRecord assetPairRecord;
   final Decimal price;
-  Exception? error;
+  Object? error;
 
   CreateOfferInitial(
       {required this.amount,

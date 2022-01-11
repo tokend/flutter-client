@@ -58,13 +58,22 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                   snapshot.connectionState != ConnectionState.waiting &&
                   filteredByAssetPair.isEmpty*/
               ) {
-            return Container(
-              color: context.colorTheme.background,
-              child: Center(
-                  child: Text(
-                'empty_offers_list'.tr,
-                style: TextStyle(fontSize: 17.0),
-              )),
+            return RefreshIndicator(
+              onRefresh: () {
+                return offersRepository.update();
+              },
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      'empty_offers_list'.tr,
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height,
+                ),
+              ),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {

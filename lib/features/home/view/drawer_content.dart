@@ -42,7 +42,7 @@ class DrawerContent extends BaseStatelessWidget {
 
   DrawerContent(this.accountName, this.accountEmail) {
     if (repositoryProvider.activeKyc.isNeverUpdated == true) {
-      subscribeToBalances();
+      subscribeToActiveKyc();
     }
 
     streamController = repositoryProvider.activeKyc.streamSubject;
@@ -54,12 +54,12 @@ class DrawerContent extends BaseStatelessWidget {
 
   var streamController;
 
-  void subscribeToBalances() async {
+  void subscribeToActiveKyc() async {
     await repositoryProvider.activeKyc.getItem();
   }
 
   void updateAccount() async {
-    await repositoryProvider.account.update();
+    await repositoryProvider.account.getItem();
   }
 
   //TODO create header

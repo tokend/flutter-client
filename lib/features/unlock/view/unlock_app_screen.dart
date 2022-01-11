@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,7 +53,9 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
 
   @override
   void onVisibilityChanged(WidgetVisibility visibility) {
-    if (visibility != WidgetVisibility.VISIBLE) {
+    if (visibility == WidgetVisibility.INVISIBLE) {
+      log((describeEnum(visibility)));
+
       setState(() {}); //call build() again in order to implement fingerprint
     }
     super.onVisibilityChanged(visibility);
@@ -319,6 +322,7 @@ class _ChangeAccountButton extends StatelessWidget {
     final colorTheme = context.colorTheme;
     return ElevatedButton(
       style: ButtonStyle(
+        elevation: MaterialStateProperty.all(0), //Defines Elevation
         minimumSize: MaterialStateProperty.all(Size(double.infinity, 56)),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(

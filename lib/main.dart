@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_template/config/development.dart';
 import 'package:flutter_template/di/main_bindings.dart';
+import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/localisation/app_translation.dart';
 import 'package:flutter_template/utils/routing/page_router.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,9 @@ class App extends StatelessWidget {
     MainBindings(env, sharedPreferences).dependencies();
     var binding = MainBindings(env, sharedPreferences);
     return GetMaterialApp(
+        theme: ThemeData(
+            backgroundColor: context.colorTheme.background,
+            scaffoldBackgroundColor: context.colorTheme.background),
         title: 'Flutter Client',
         locale: Get.deviceLocale,
         translations: AppTranslation(),
