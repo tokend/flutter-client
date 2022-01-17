@@ -3,60 +3,61 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
-import 'package:flutter_template/features/trade%20/history/model/trade_history_record.dart';
-import 'package:flutter_template/features/trade%20/history/storage/trade_history_repository.dart';
-import 'package:flutter_template/features/trade%20/history/view/trade_history_list_item.dart';
+import 'package:flutter_template/features/trade%20/orderbook/model/order_book.dart';
+import 'package:flutter_template/features/trade%20/orderbook/model/order_book_record.dart';
+import 'package:flutter_template/features/trade%20/orderbook/storage/order_book_repository.dart';
+import 'package:flutter_template/features/trade%20/orderbook/view/order_book_list_item.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-class TradeHistoryList extends BaseStatefulWidget {
+class OrderBookList extends BaseStatefulWidget {
+  bool isAsk;
+  bool isFull;
   String baseAsset;
   String quoteAsset;
-  bool isFull;
-  bool addPadding;
 
-  TradeHistoryList(this.baseAsset, this.quoteAsset,
-      {this.isFull = true, this.addPadding = true});
+  OrderBookList(this.baseAsset, this.quoteAsset,
+      {this.isAsk = true, this.isFull = true});
 
   @override
-  State<TradeHistoryList> createState() => _TradeHistoryListState();
+  State<OrderBookList> createState() => _OrderBookListState();
 }
 
-class _TradeHistoryListState extends State<TradeHistoryList> {
+class _OrderBookListState extends State<OrderBookList> {
   @override
   Widget build(BuildContext context) {
-    TradeHistoryRepository tradeHistoryRepository = widget.repositoryProvider
-        .tradeHistoryRepository(widget.baseAsset, widget.quoteAsset);
+    OrderBookRepository orderBookRepository = widget.repositoryProvider
+        .orderBook(widget.baseAsset, widget.quoteAsset);
     var streamController;
 
-    void subscribeToTradeHistory() async {
-      await tradeHistoryRepository.update();
-      tradeHistoryRepository.isNeverUpdated = false;
+    void subscribeToOrderBookRepository() async {
+      await orderBookRepository.update();
     }
 
-    if (tradeHistoryRepository.isNeverUpdated) {
-      subscribeToTradeHistory();
-    }
+    subscribeToOrderBookRepository();
 
-    streamController = tradeHistoryRepository.streamController;
+    streamController = orderBookRepository.streamSubject;
 
-    return StreamBuilder<List<TradeHistoryRecord>>(
-        initialData: [],
+    return StreamBuilder<OrderBook>(
         stream: streamController.stream,
-        builder: (context, AsyncSnapshot<List<TradeHistoryRecord>> snapshot) {
-          if (snapshot.data?.isEmpty == true &&
-              tradeHistoryRepository.isNeverUpdated == false &&
+        builder: (context, AsyncSnapshot<OrderBook> snapshot) {
+          if (snapshot.data?.sellEntries.isEmpty == true &&
+              orderBookRepository.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
               height: 40.0,
-              child: _emptyWidget(tradeHistoryRepository),
+              child: _emptyWidget(orderBookRepository),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
-            tradeHistoryRepository.isNeverUpdated = false;
+            orderBookRepository.isNeverUpdated = false;
+
+            var filteredItems = widget.isAsk
+                ? snapshot.data!.sellEntries
+                : snapshot.data!.buyEntries;
 
             return Container(
               color: context.colorTheme.background,
-              child: _listWidget(tradeHistoryRepository, snapshot.data!),
+              child: _listWidget(orderBookRepository, filteredItems),
             );
           } else if (snapshot.hasError) {
             log(snapshot.stackTrace.toString());
@@ -69,32 +70,30 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
         });
   }
 
-  Widget _listWidget(TradeHistoryRepository tradeHistoryRepository,
-      List<TradeHistoryRecord> data) {
+  Widget _listWidget(OrderBookRepository orderBookRepository,
+      List<OrderBookRecord> filteredItems) {
     if (widget.isFull) {
       return RefreshIndicator(
         onRefresh: () {
-          return tradeHistoryRepository.update();
+          return orderBookRepository.update();
         },
         child: Container(
           child: Padding(
             padding: EdgeInsets.only(top: 20.0),
             child: Expanded(
-              child: ListView.separated(
+              child: ListView.builder(
                   padding: EdgeInsets.only(
                       top: 10.0,
                       bottom: 10.0,
                       right: 16.0,
-                      left: widget.addPadding ? 16.0 : 0.0),
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(height: 2),
+                      left: widget.isFull ? 16.0 : 0.0),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: widget.isFull == true ? data.length : 2,
+                  itemCount: widget.isFull == true ? filteredItems.length : 1,
                   itemBuilder: (BuildContext context, int index) {
                     return Builder(
                         builder: (BuildContext context) =>
-                            TradeHistoryListItem(data[index]));
+                            OrderBookListItem(filteredItems[index]));
                   }),
             ),
           ),
@@ -105,21 +104,19 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
         child: Padding(
           padding: EdgeInsets.only(top: 20.0),
           child: Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
                 padding: EdgeInsets.only(
                     top: 10.0,
                     bottom: 10.0,
                     right: 16.0,
-                    left: widget.addPadding ? 16.0 : 0.0),
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(height: 2),
+                    left: widget.isFull ? 16.0 : 0.0),
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                itemCount: widget.isFull == true ? data.length : 2,
+                itemCount: widget.isFull == true ? filteredItems.length : 1,
                 itemBuilder: (BuildContext context, int index) {
                   return Builder(
                       builder: (BuildContext context) =>
-                          TradeHistoryListItem(data[index]));
+                          OrderBookListItem(filteredItems[index]));
                 }),
           ),
         ),
@@ -127,11 +124,11 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
     }
   }
 
-  Widget _emptyWidget(TradeHistoryRepository tradeHistoryRepository) {
+  Widget _emptyWidget(OrderBookRepository orderBookRepository) {
     if (widget.isFull) {
       return RefreshIndicator(
         onRefresh: () {
-          return tradeHistoryRepository.update();
+          return orderBookRepository.update();
         },
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),

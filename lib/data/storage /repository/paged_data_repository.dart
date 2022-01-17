@@ -5,6 +5,7 @@ import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:dart_sdk/api/base/params/paging_order.dart';
 import 'package:flutter_template/data/storage%20/pagination/paged_data_cache.dart';
 import 'package:flutter_template/data/storage%20/repository/repository.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class PagedDataRepository<T> extends Repository {
   static const DEFAULT_PAGE_LIMIT = 20;
@@ -20,7 +21,7 @@ abstract class PagedDataRepository<T> extends Repository {
       nextCursor == null || pagingOrder == PagingOrder.ASC && nextCursor == 0;
   bool noMoreItems = false;
   bool isLoadingTopPages = false;
-  final streamController = StreamController<List<T>>.broadcast();
+  final streamController = BehaviorSubject<List<T>>();
 
   List<T> itemsList = [];
 

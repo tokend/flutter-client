@@ -36,7 +36,7 @@ abstract class SingleItemRepository<T> extends Repository {
   @override
   Future<void> update() async {
     invalidate();
-    await getItem().then((item) => storeItem(item)).then((item) {
+    await getItem().then((item) {
       streamSubject.add(item);
       isNeverUpdated = false;
       isLoading = false;

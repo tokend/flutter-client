@@ -14,7 +14,7 @@ class OrderBookRepository extends SingleItemRepository<OrderBook> {
   OrderBookRepository(this._apiProvider, this._baseAsset, this._quoteAsset);
 
   @override
-  Future<OrderBook> getItem() {
+  Future<OrderBook> getItem() async {
     var api = _apiProvider.getApi();
 
     var builder = OrderBookParamsBuilder();
@@ -27,12 +27,15 @@ class OrderBookRepository extends SingleItemRepository<OrderBook> {
 
     String id =
         '$_baseAsset:$_quoteAsset:0'; //TODO check correctness of id setting
-    return api.v3
+    var result = api.v3
         .getService()
         .get('v3/order_books/$id', query: builder.build().map())
         .then((response) {
       json.encode(response).printLongString();
-      return OrderBook.fromJson(response['data']);
+      return OrderBook.fromJson(response['data'], response['included']);
     });
+
+    streamSubject.add(await result);
+    return result;
   }
 }

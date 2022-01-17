@@ -40,14 +40,8 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
 
     streamController = offersRepository.streamController;
     return StreamBuilder<List<OfferRecord>>(
-        initialData: [],
         stream: streamController.stream,
         builder: (context, AsyncSnapshot<List<OfferRecord>> snapshot) {
-          var filteredByAssetPair = snapshot.data!
-              .where((offerRecord) =>
-                  offerRecord.baseAsset.code == _currentAssetPair?.base.code &&
-                  offerRecord.quoteAsset.code == _currentAssetPair?.quote.code)
-              .toList();
           if (snapshot.data?.isEmpty ==
                       true && //TODO add 'empty list' message for empty filtered list
                   offersRepository.isNeverUpdated == false &&
@@ -77,8 +71,13 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
-            offersRepository.isNeverUpdated = false;
-
+            var filteredByAssetPair = snapshot.data!
+                .where((offerRecord) =>
+                    offerRecord.baseAsset.code ==
+                        _currentAssetPair?.base.code &&
+                    offerRecord.quoteAsset.code ==
+                        _currentAssetPair?.quote.code)
+                .toList();
             return Container(
               color: context.colorTheme.background,
               child: RefreshIndicator(
@@ -106,19 +105,18 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                         )),
                     Padding(padding: EdgeInsets.only(top: 20.0)),
                     Text(
-                      'open_orders'.tr.format([
+                      'your_open_orders'.tr.format([
                         '${_currentAssetPair?.base.code}/${_currentAssetPair?.quote.code}'
                       ]),
                       style: TextStyle(
                           color: context.colorTheme.drawerBackground,
                           fontSize: 22.0),
                     ),
+                    Padding(padding: EdgeInsets.only(top: 14.0)),
                     Expanded(
-                      child: ListView.separated(
+                      child: ListView.builder(
                           padding: EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 10.0),
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Divider(height: 2),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemCount: filteredByAssetPair.length,

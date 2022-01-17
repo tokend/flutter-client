@@ -10,6 +10,8 @@ import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_rep
 import 'package:flutter_template/features/trade%20/chart/view%20/chart_view.dart';
 import 'package:flutter_template/features/trade%20/history/view/trade_history_list.dart';
 import 'package:flutter_template/features/trade%20/history/view/trade_history_screen.dart';
+import 'package:flutter_template/features/trade%20/orderbook/view/order_book_list.dart';
+import 'package:flutter_template/features/trade%20/orderbook/view/order_book_screen.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pair_record.dart';
 import 'package:flutter_template/features/trade%20/pairs/asset_pairs_repository.dart';
 import 'package:flutter_template/features/trade%20/view/time_period_picker.dart';
@@ -88,7 +90,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
       child: Container(
         margin: EdgeInsets.only(left: 16.0, top: 24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StreamBuilder<List<AssetPairRecord>>(
@@ -128,7 +130,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         ConstrainedBox(
                           constraints: new BoxConstraints(
@@ -236,6 +238,100 @@ class _ExchangeTabState extends State<ExchangeTab> {
                   ),
                 )
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 32.0, bottom: 16.0),
+              child: Column(mainAxisSize: MainAxisSize.max, children: [
+                Row(children: [
+                  Text(
+                    'open_orders'.tr,
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: colorScheme.drawerBackground,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ]),
+                Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'asks'.tr,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: colorScheme.drawerBackground,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 16.0),
+                        child: Text(
+                          'see_all'.tr,
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderBookScreen(
+                                    selectedAssetPair?.base.code ?? 'BTC',
+                                    selectedAssetPair?.quote.code ?? 'USD',
+                                    true,
+                                  ))),
+                    ),
+                  ],
+                ),
+                OrderBookList(
+                  selectedAssetPair?.base.code ?? 'BTC', //TODO
+                  selectedAssetPair?.quote.code ?? 'USD',
+                  isFull: false,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'bids'.tr,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: colorScheme.drawerBackground,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 16.0),
+                        child: Text(
+                          'see_all'.tr,
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderBookScreen(
+                                    selectedAssetPair?.base.code ?? 'BTC',
+                                    selectedAssetPair?.quote.code ?? 'USD',
+                                    false,
+                                  ))),
+                    ),
+                  ],
+                ),
+                OrderBookList(
+                  selectedAssetPair?.base.code ?? 'BTC',
+                  selectedAssetPair?.quote.code ?? 'USD',
+                  isFull: false,
+                ),
+              ]),
             ),
             Padding(
               padding: EdgeInsets.only(top: 32.0),
