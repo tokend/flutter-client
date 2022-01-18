@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/history/view/model/transaction_detail_item.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:rounded_letter/rounded_letter.dart';
 
 class AssetDetailsScreen extends StatelessWidget {
   AssetRecord assetRecord;
@@ -45,24 +46,34 @@ class AssetDetail extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 40.0, left: 16.0, right: 16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Text(
-                  'BTC',
-                  style: TextStyle(
-                      color: context.colorTheme.accent,
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.w700),
-                )
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                assetRecord.code,
+                style: TextStyle(
+                    color: context.colorTheme.accent,
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w700),
+              ),
+              assetRecord.logoUrl != null
+                  ? CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        height: 36.0,
+                        width: 36.0,
+                        child: Icon(CustomIcons.bitcoin__btc_),
+                      ),
+                      imageUrl: assetRecord.logoUrl!,
+                      fit: BoxFit.cover,
+                    )
+                  : RoundedLetter(text: assetRecord.code.substring(0, 1)),
+            ],
           ),
           Padding(padding: EdgeInsets.only(top: 32.0)),
           Text(
-            'Bitcoin',
+            assetRecord.name ?? '',
             style: TextStyle(
               color: context.colorTheme.grayText,
               fontSize: 15.0,
