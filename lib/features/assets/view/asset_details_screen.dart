@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/history/view/model/transaction_detail_item.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:rounded_letter/rounded_letter.dart';
 
 class AssetDetailsScreen extends StatelessWidget {
   AssetRecord assetRecord;
@@ -68,7 +68,11 @@ class AssetDetail extends StatelessWidget {
                       imageUrl: assetRecord.logoUrl!,
                       fit: BoxFit.cover,
                     )
-                  : RoundedLetter(text: assetRecord.code.substring(0, 1)),
+                  : CircularProfileAvatar(
+                      '',
+                      initialsText: Text(assetRecord.code.substring(0, 1)),
+                    )
+              //RoundedLetter(text: assetRecord.code.substring(0, 1)),
             ],
           ),
           Padding(padding: EdgeInsets.only(top: 32.0)),

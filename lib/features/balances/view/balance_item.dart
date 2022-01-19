@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
 import 'package:flutter_template/features/history/view/balance_history_screen.dart';
+import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 
 class BalanceItem extends StatelessWidget {
@@ -46,10 +48,11 @@ class BalanceItem extends StatelessWidget {
                         imageUrl: balanceRecord.asset.logoUrl!,
                         fit: BoxFit.cover,
                       )
-                    : Container(
-                        height: 36.0,
-                        width: 36.0,
-                        child: Icon(CustomIcons.bitcoin__btc_),
+                    : CircularProfileAvatar(
+                        '',
+                        initialsText: Text(balanceRecord.asset.code
+                            .substring(0, 1)
+                            .capitalize()),
                       ),
               ),
             ),

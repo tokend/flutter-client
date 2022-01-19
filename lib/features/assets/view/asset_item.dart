@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/assets/view/asset_details_screen.dart';
 import 'package:flutter_template/features/balances/model/balance_record.dart';
+import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
@@ -45,10 +46,10 @@ class AssetItem extends StatelessWidget {
                         imageUrl: assetRecord.logoUrl!,
                         fit: BoxFit.cover,
                       )
-                    : Container(
-                        height: 36.0,
-                        width: 36.0,
-                        child: Icon(CustomIcons.bitcoin__btc_),
+                    : CircularProfileAvatar(
+                        '',
+                        initialsText:
+                            Text(assetRecord.code.substring(0, 1).capitalize()),
                       ),
               ),
             ),

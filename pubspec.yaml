@@ -72,7 +72,7 @@ dependencies:
   local_auth: ^1.1.9
   visibility_aware_state: ^1.0.3
   sprintf: ^6.0.0
-  rounded_letter: ^0.0.6
+  circular_profile_avatar: ^2.0.5
 
 flutter_icons:
   android: "launcher_icon"
