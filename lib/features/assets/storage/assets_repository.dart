@@ -42,4 +42,23 @@ class AssetsRepository extends MultipleItemsRepository<AssetRecord> {
     streamSubject.sink.add(await assetRecords);
     return assetRecords;
   }
+
+  /// Returns single asset info by id
+  Future<AssetRecord> getById(String code) async {
+    var cachedValue =null;
+
+    if (cachedValue == null) {
+      var newValue = await _apiProvider
+          .getApi()
+          .getService()
+          .get('assets/$code')
+          .then((response) => AssetRecord.single(
+              response, this._urlConfigProvider.getConfig()));
+      singleSubject.add(newValue);
+      return newValue;
+    } else {
+      singleSubject.add(cachedValue);
+      return Future.value(cachedValue);
+    }
+  }
 }
