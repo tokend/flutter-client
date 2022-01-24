@@ -46,7 +46,17 @@ class SalesRepository extends PagedDataRepository<SaleRecord> {
         .get('v3/accounts/$accountId/sales', query: requestParams.map())
         .then((response) {
       var data = json.decode(json.encode(response['data'])) as List<dynamic>;
-      var sales = data.map((item) => SaleRecord.fromJson(item)).toList();
+      var included =
+          json.decode(json.encode(response['included'])) as List<dynamic>;
+      var sales = data
+          .map((item) => SaleRecord.fromJson(
+              item,
+              included.firstWhere((element) =>
+                  element['type'] == 'sale-quote-assets' &&
+                  element['id'] ==
+                      item['relationships']['default_quote_asset']['data']
+                          ['id'])))
+          .toList();
       var nextLink = Uri.decodeFull(response['links']['next']);
 
       var limit = int.parse(

@@ -43,6 +43,21 @@ class _SaleListItemState extends State<SaleListItem> {
         builder: (context, AsyncSnapshot<AssetRecord> snapshot) {
           if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData) {
+            var currentCap =
+                (widget._saleRecord.defaultQuoteAsset as SaleQuoteAsset)
+                    .currentCap
+                    .toInt();
+            var softCap =
+                (widget._saleRecord.defaultQuoteAsset as SaleQuoteAsset)
+                    .softCap
+                    .toInt();
+            var hardCap =
+                (widget._saleRecord.defaultQuoteAsset as SaleQuoteAsset)
+                    .hardCap
+                    .toInt();
+
+            var fundedPercentage = (currentCap * 100 / softCap).round();
+            var invested = currentCap;
             return Container(
               child: Card(
                 color: colorTheme.secondaryText,
@@ -97,6 +112,7 @@ class _SaleListItemState extends State<SaleListItem> {
                             Row(
                               children: [
                                 Icon(CustomIcons.calendar),
+                                Padding(padding: EdgeInsets.only(right: 8.0)),
                                 Flexible(
                                   child: Text(
                                     getStatusString(
@@ -115,7 +131,7 @@ class _SaleListItemState extends State<SaleListItem> {
                       ),
                       Padding(padding: EdgeInsets.only(top: 12.0)),
                       LinearProgressIndicator(
-                        value: 0.3,
+                        value: fundedPercentage / 100,
                         color: colorTheme.accent,
                       ),
                       Padding(padding: EdgeInsets.only(top: 14.0)),
@@ -123,7 +139,7 @@ class _SaleListItemState extends State<SaleListItem> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'funded_percentage'.tr,
+                            'funded_percentage'.tr.format([fundedPercentage]),
                             style: TextStyle(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w700,
@@ -131,7 +147,10 @@ class _SaleListItemState extends State<SaleListItem> {
                             ),
                           ),
                           Text(
-                            'invested_amount'.tr,
+                            'invested_amount'.tr.format([
+                              invested,
+                              widget._saleRecord.defaultQuoteAsset.code
+                            ]),
                             style: TextStyle(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w700,
@@ -142,7 +161,12 @@ class _SaleListItemState extends State<SaleListItem> {
                       ),
                       Padding(padding: EdgeInsets.only(top: 20.0)),
                       Text(
-                        'buy_for'.tr,
+                        'buy_for'.tr.format([
+                          softCap,
+                          widget._saleRecord.baseAsset.code,
+                          hardCap,
+                          widget._saleRecord.defaultQuoteAsset.code,
+                        ]),
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w400,

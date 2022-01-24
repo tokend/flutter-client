@@ -222,10 +222,10 @@ final Map<String, String> en = {
   "see_all": "See all",
 
   //sales
-  'funded_percentage': "%s % funded",
-  'invested_amount': "%s invested",
+  'funded_percentage': "%s funded",
+  'invested_amount': "%s %s invested",
   "empty_sales_list": "No sales found",
-  "buy_for": "Buy %s for %s",
+  "buy_for": "Buy %s %s for %s %s",
   "is_opened_till": "Sale is opened till %s",
   "is_closed_from": "Sale is closed from %s",
   "is_canceled_from": "Sale is canceled from %s",
