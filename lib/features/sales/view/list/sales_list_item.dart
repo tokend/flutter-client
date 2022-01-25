@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/base/base_widget.dart';
+import 'package:flutter_template/extensions/dates.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/sales/model/sale_record.dart';
+import 'package:flutter_template/features/sales/view/description/description_screen.dart';
 import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -117,7 +119,10 @@ class _SaleListItemState extends State<SaleListItem> {
                                   child: Text(
                                     getStatusString(
                                             widget._saleRecord.saleState.name)
-                                        .format([widget._saleRecord.endTime]),
+                                        .format([
+                                      widget._saleRecord.endTime
+                                          .format(FULL_DATE_AND_TIME)
+                                    ]),
                                     maxLines: 2,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -128,6 +133,13 @@ class _SaleListItemState extends State<SaleListItem> {
                             ),
                           ],
                         ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DescriptionScreen(
+                                      widget._saleRecord, snapshot.data!)));
+                        },
                       ),
                       Padding(padding: EdgeInsets.only(top: 12.0)),
                       LinearProgressIndicator(

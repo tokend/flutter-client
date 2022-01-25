@@ -230,4 +230,8 @@ final Map<String, String> en = {
   "is_closed_from": "Sale is closed from %s",
   "is_canceled_from": "Sale is canceled from %s",
   "sale_closes_on": "Sale closes from %s",
+  "descriptions": "Descriptions",
+  "sale_overview": "Sale overview",
+  "details": "Details",
+  "sale_details": "Sale Details",
 };

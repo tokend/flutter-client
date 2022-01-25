@@ -5,7 +5,7 @@ import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/sales/model/sale_record.dart';
 import 'package:flutter_template/features/sales/storage%20/sales_repository.dart';
-import 'package:flutter_template/features/sales/view/sales_list_item.dart';
+import 'package:flutter_template/features/sales/view/list/sales_list_item.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class SalesListScreen extends BaseStatefulWidget {
