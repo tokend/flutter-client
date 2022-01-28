@@ -191,6 +191,22 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
                             onTap: () => Get.toNamed('/recovery'),
                           ),
                         ),
+                        Padding(padding: EdgeInsets.only(top: 16.0)),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'use_fingerprint'.tr,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: Sizes.textSizeHint,
+                                    color: colorTheme.accent),
+                              ),
+                            ),
+                            onTap: () => checkIfAuthPossible.call(),
+                          ),
+                        ),
                       ],
                     ),
                     Container(

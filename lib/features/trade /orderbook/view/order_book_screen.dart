@@ -27,7 +27,9 @@ class _OrderBookScreenState extends State<OrderBookScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'asks'.tr,
+          widget.isAsks
+              ? 'asks'.tr + ' ${widget.baseAsset}/${widget.quoteAsset}'
+              : 'bids'.tr + ' ${widget.baseAsset}/${widget.quoteAsset}',
           style:
               TextStyle(color: context.colorTheme.headerText, fontSize: 17.0),
         ),

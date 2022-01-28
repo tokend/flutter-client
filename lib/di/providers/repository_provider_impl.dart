@@ -38,6 +38,15 @@ class RepositoryProviderImpl implements RepositoryProvider {
   var chartRepositoriesByCode = LruCache(
       storage: InMemoryStorage<String, AssetChartRepository>(
           MAX_SAME_REPOSITORIES_COUNT));
+  var orderBookRepositories = LruCache(
+      storage: InMemoryStorage<String, OrderBookRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
+  var tradesRepositoriesByAssetPair = LruCache(
+      storage: InMemoryStorage<String, TradeHistoryRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
+  var balanceChangesByBalanceId = LruCache(
+      storage: InMemoryStorage<String, BalanceChangesRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
 
   @override
   late var balances;
@@ -140,11 +149,13 @@ class RepositoryProviderImpl implements RepositoryProvider {
 
   @override
   BalanceChangesRepository balanceChanges(String? balanceId) {
-    return BalanceChangesRepository(
-        balanceId,
-        walletInfoProvider.getWalletInfo()?.accountId,
-        apiProvider,
-        MemoryOnlyPagedDataCache<BalanceChange>());
+    return balanceChangesByBalanceId.getOrPut(
+        '$balanceId',
+        new BalanceChangesRepository(
+            balanceId,
+            walletInfoProvider.getWalletInfo()?.accountId,
+            apiProvider,
+            MemoryOnlyPagedDataCache<BalanceChange>()));
   }
 
   @override
@@ -158,7 +169,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
 
   @override
   OrderBookRepository orderBook(String baseAsset, String quoteAsset) {
-    return OrderBookRepository(apiProvider, baseAsset, quoteAsset);
+    return orderBookRepositories.getOrPut('$baseAsset.$quoteAsset',
+        new OrderBookRepository(apiProvider, baseAsset, quoteAsset));
   }
 
   @override
@@ -166,10 +178,12 @@ class RepositoryProviderImpl implements RepositoryProvider {
     String baseAsset,
     String quoteAsset,
   ) {
-    return TradeHistoryRepository(
-      baseAsset,
-      quoteAsset,
-      apiProvider,
-    );
+    return tradesRepositoriesByAssetPair.getOrPut(
+        '$baseAsset:$quoteAsset',
+        new TradeHistoryRepository(
+          baseAsset,
+          quoteAsset,
+          apiProvider,
+        ));
   }
 }

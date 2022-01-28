@@ -238,107 +238,116 @@ class _ExchangeTabState extends State<ExchangeTab> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 32.0, bottom: 16.0),
-                          child:
-                              Column(mainAxisSize: MainAxisSize.max, children: [
-                            Row(children: [
+                        ),
+                        Column(mainAxisSize: MainAxisSize.min, children: [
+                          Row(children: [
+                            Text(
+                              'open_orders'.tr,
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                color: colorScheme.drawerBackground,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ]),
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                               Text(
-                                'open_orders'.tr,
+                                'asks'.tr,
                                 style: TextStyle(
-                                  fontSize: 22.0,
+                                  fontSize: 15.0,
                                   color: colorScheme.drawerBackground,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                            ]),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16.0),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'asks'.tr,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: colorScheme.drawerBackground,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(right: 16.0),
-                                    child: Text(
-                                      'see_all'.tr,
-                                      style: TextStyle(
-                                        fontSize: 11.0,
-                                        color: colorScheme.primary,
-                                      ),
+                              GestureDetector(
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 16.0),
+                                  child: Text(
+                                    'see_all'.tr,
+                                    style: TextStyle(
+                                      fontSize: 11.0,
+                                      color: colorScheme.primary,
                                     ),
                                   ),
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => OrderBookScreen(
-                                                selectedAssetPair?.base.code ??
-                                                    assetPairsSnapshot
-                                                        .data!.first.base.code,
-                                                selectedAssetPair?.quote.code ??
-                                                    assetPairsSnapshot
-                                                        .data!.first.quote.code,
-                                                true,
-                                              ))),
                                 ),
-                              ],
-                            ),
-                            OrderBookList(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OrderBookScreen(
+                                              selectedAssetPair?.base.code ??
+                                                  assetPairsSnapshot
+                                                      .data!.first.base.code,
+                                              selectedAssetPair?.quote.code ??
+                                                  assetPairsSnapshot
+                                                      .data!.first.quote.code,
+                                              true,
+                                            ))),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 14.0),
+                            child: OrderBookList(
                               selectedAssetPair?.base.code ??
                                   assetPairsSnapshot.data!.first.base.code,
                               selectedAssetPair?.quote.code ??
                                   assetPairsSnapshot.data!.first.quote.code,
                               isFull: false,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'bids'.tr,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: colorScheme.drawerBackground,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'bids'.tr,
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: colorScheme.drawerBackground,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                GestureDetector(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(right: 16.0),
-                                    child: Text(
-                                      'see_all'.tr,
-                                      style: TextStyle(
-                                        fontSize: 11.0,
-                                        color: colorScheme.primary,
-                                      ),
+                              ),
+                              GestureDetector(
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 16.0),
+                                  child: Text(
+                                    'see_all'.tr,
+                                    style: TextStyle(
+                                      fontSize: 11.0,
+                                      color: colorScheme.primary,
                                     ),
                                   ),
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => OrderBookScreen(
-                                                selectedAssetPair?.base.code ??
-                                                    'BTC',
-                                                selectedAssetPair?.quote.code ??
-                                                    'USD',
-                                                false,
-                                              ))),
                                 ),
-                              ],
-                            ),
-                            OrderBookList(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OrderBookScreen(
+                                              selectedAssetPair?.base.code ??
+                                                  'BTC',
+                                              selectedAssetPair?.quote.code ??
+                                                  'USD',
+                                              false,
+                                            ))),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 14.0),
+                            child: OrderBookList(
                               selectedAssetPair?.base.code ?? 'BTC',
                               selectedAssetPair?.quote.code ?? 'USD',
                               isFull: false,
+                              isAsk: false,
                             ),
-                          ]),
-                        ),
+                          ),
+                        ]),
                         Padding(
                           padding: EdgeInsets.only(top: 32.0),
                           child: Row(
@@ -386,6 +395,7 @@ class _ExchangeTabState extends State<ExchangeTab> {
                                 selectedAssetPair?.base.code ?? '',
                                 selectedAssetPair?.quote.code ?? '',
                                 addPadding: false,
+                                isFull: false,
                               ),
                             ),
                             visible: selectedAssetPair != null,

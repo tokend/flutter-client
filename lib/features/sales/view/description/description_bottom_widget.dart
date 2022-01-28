@@ -78,7 +78,7 @@ class _DescriptionBottomWidgetState extends State<DescriptionBottomWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'funded_percentage'.tr.format([fundedPercentage]),
+                  'funded_percentage'.tr.format(['$fundedPercentage%']),
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.w700,
