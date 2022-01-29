@@ -111,7 +111,6 @@ class _DescriptionBottomWidgetState extends State<DescriptionBottomWidget> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 28.0, bottom: 24.0),
-              //child: Expanded(child: Divider()),
             ),
             Text(
               'descriptions'.tr,
@@ -138,22 +137,13 @@ class _DescriptionBottomWidgetState extends State<DescriptionBottomWidget> {
               ),
             ),
             Padding(padding: EdgeInsets.only(top: 14.0)),
-            /* ExpandablePanel(
-                collapsed: Text(
-                  'asset'.tr,
-                  style: TextStyle(
-                    fontSize: 15.0,
-                  ),
-                ),
-                expanded: Text('Not implemented yet')),
-            Padding(padding: EdgeInsets.only(top: 14.0)),*/
             ExpansionTile(
               title: Text(
                 'asset'.tr,
                 style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w500,
+                    color: colorTheme.primaryText),
               ),
               tilePadding: EdgeInsets.zero,
               children: <Widget>[
@@ -164,45 +154,15 @@ class _DescriptionBottomWidgetState extends State<DescriptionBottomWidget> {
               title: Text(
                 'details'.tr,
                 style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w500,
+                    color: colorTheme.primaryText),
               ),
               tilePadding: EdgeInsets.zero,
               children: <Widget>[
                 ListTile(title: Text('Not implemented yet')),
               ],
             ),
-/*
-            ExpansionPanelList(
-              animationDuration: Duration(milliseconds: 2000),
-              children: [
-                ExpansionPanel(
-                  headerBuilder: (context, isExpanded) {
-                    return Text(
-                      'asset'.tr,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                    );
-                  },
-                  body: Text(
-                    'Not implemented'.tr,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                  isExpanded: _expanded,
-                  canTapOnHeader: true,
-                ),
-              ],
-              dividerColor: Colors.grey,
-              expansionCallback: (panelIndex, isExpanded) {
-                _expanded = !_expanded;
-                setState(() {});
-              },
-            ),
-*/
           ],
         ),
       ),

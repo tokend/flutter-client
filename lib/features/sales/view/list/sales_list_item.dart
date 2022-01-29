@@ -8,7 +8,7 @@ import 'package:flutter_template/extensions/strings.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/sales/model/sale_record.dart';
-import 'package:flutter_template/features/sales/view/description/description_screen.dart';
+import 'package:flutter_template/features/sales/view/description/sale_description_screen.dart';
 import 'package:flutter_template/utils/formatters/string_formatter.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';

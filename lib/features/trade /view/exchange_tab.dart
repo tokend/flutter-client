@@ -401,6 +401,9 @@ class _ExchangeTabState extends State<ExchangeTab> {
                             visible: selectedAssetPair != null,
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                        ),
                       ],
                     ),
                   );

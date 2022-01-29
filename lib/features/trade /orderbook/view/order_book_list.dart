@@ -48,7 +48,7 @@ class _OrderBookListState extends State<OrderBookList> {
               orderBookRepository.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
-              height: 40.0,
+              height: widget.isFull ? MediaQuery.of(context).size.height : 40.0,
               child: _emptyWidget(orderBookRepository),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
@@ -113,7 +113,7 @@ class _OrderBookListState extends State<OrderBookList> {
                 style: TextStyle(fontSize: 17.0),
               ),
             ),
-            height: 40.0,
+            height: widget.isFull ? MediaQuery.of(context).size.height : 40.0,
           ),
         ),
       );

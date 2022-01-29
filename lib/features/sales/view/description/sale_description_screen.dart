@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/model/asset_record.dart';
 import 'package:flutter_template/features/sales/model/sale_record.dart';
-import 'package:flutter_template/features/sales/view/description/description_bottom_widget.dart';
+import 'package:flutter_template/features/sales/view/description/sale_description_bottom_widget.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 

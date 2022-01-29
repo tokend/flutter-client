@@ -47,7 +47,8 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
               tradeHistoryRepository.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
-              height: 40.0,
+              height:
+                  widget.addPadding ? MediaQuery.of(context).size.height : 40.0,
               child: _emptyWidget(tradeHistoryRepository),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
@@ -138,7 +139,8 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
                 style: TextStyle(fontSize: 17.0),
               ),
             ),
-            height: 40.0,
+            height:
+                widget.addPadding ? MediaQuery.of(context).size.height : 40.0,
           ),
         ),
       );
