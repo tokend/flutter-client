@@ -45,7 +45,7 @@ class AssetsRepository extends MultipleItemsRepository<AssetRecord> {
 
   /// Returns single asset info by id
   Future<AssetRecord> getById(String code) async {
-    var cachedValue =null;
+    var cachedValue = null;
 
     if (cachedValue == null) {
       var newValue = await _apiProvider

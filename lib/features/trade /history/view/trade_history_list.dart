@@ -66,7 +66,11 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
           }
           return Container(
               color: context.colorTheme.background,
-              child: Center(child: CircularProgressIndicator()));
+              child: widget.isFull
+                  ? Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: Text('loading'.tr),
+                    ));
         });
   }
 

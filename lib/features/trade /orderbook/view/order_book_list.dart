@@ -67,7 +67,13 @@ class _OrderBookListState extends State<OrderBookList> {
           }
           return Container(
               color: context.colorTheme.background,
-              child: Center(child: CircularProgressIndicator()));
+              child: widget.isFull
+                  ? Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: Text(
+                        'loading'.tr,
+                      ),
+                    ));
         });
   }
 

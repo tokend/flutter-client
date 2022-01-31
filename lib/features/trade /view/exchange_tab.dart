@@ -98,321 +98,302 @@ class _ExchangeTabState extends State<ExchangeTab> {
               stream: assetPairsStreamController?.stream,
               builder: (context,
                   AsyncSnapshot<List<AssetPairRecord>> assetPairsSnapshot) {
-                if (assetPairsSnapshot.data?.isEmpty == true &&
-                    _chartRepository?.isNeverUpdated == false &&
-                    assetPairsSnapshot.connectionState !=
-                        ConnectionState.waiting) {
-                  return Container(
-                    child: RefreshIndicator(
-                      onRefresh: () {
-                        return _chartRepository!.update();
-                      },
-                      child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: Container(
-                          child: Center(
-                            child: Text(
-                              'no_asset_pairs'.tr,
-                              style: TextStyle(fontSize: 17.0),
-                            ),
-                          ),
-                          height: MediaQuery.of(context).size.height,
-                        ),
-                      ),
-                    ),
-                  );
-                } else if (assetPairsSnapshot.connectionState !=
-                        ConnectionState.waiting &&
-                    assetPairsSnapshot.hasData) {
-                  firstAssetPair = assetPairsSnapshot.data!.first;
-                  return RefreshIndicator(
-                    onRefresh: () {
-                      return _chartRepository!.update();
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        ConstrainedBox(
-                          constraints: new BoxConstraints(
-                            maxHeight: 95.0,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 16.0),
-                            child: DropDownField<AssetPairRecord>(
-                              onChanged: (newPair) {
-                                setState(() {
-                                  selectedAssetPair = newPair;
-                                  _chartRepository?.isFresh = false;
-                                });
-                              },
-                              colorTheme: colorScheme,
-                              currentValue: selectedAssetPair ??
-                                  assetPairsSnapshot.data!.first,
-                              list: assetPairsSnapshot.data!,
-                              format: (AssetPairRecord item) {
-                                return '${item.base.code}/${item.quote.code}';
-                              },
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.0, bottom: 16.0),
-                          child: Text(
-                            '${(selectedAssetPair ?? assetPairsSnapshot.data!.first).base.code}/${(selectedAssetPair ?? assetPairsSnapshot.data!.first).quote.code}',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: colorScheme.accent,
-                              fontSize: 32.0,
-                            ),
-                          ),
-                        ),
-                        StreamBuilder<AssetChartData>(
-                            stream: chartStreamController?.stream,
-                            builder: (context,
-                                AsyncSnapshot<AssetChartData> snapshot) {
-                              if (snapshot.data == null &&
-                                  _assetPairsRepository?.isNeverUpdated ==
-                                      false &&
-                                  snapshot.connectionState !=
-                                      ConnectionState.waiting) {
-                                return Center(
-                                    child: Text(
-                                  'loading'.tr,
-                                  style: TextStyle(fontSize: 17.0),
-                                ));
-                              } else if (snapshot.connectionState !=
-                                      ConnectionState.waiting &&
-                                  snapshot.hasData) {
-                                return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 16.0),
-                                    child:
-                                        ChartView(snapshot.data!, timePeriod));
-                              } else if (snapshot.hasError) {
-                                log(snapshot.stackTrace.toString());
-                                return Text(snapshot.error
-                                    .toString()); // TODO display error correctly
-                              }
-                              return Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Center(
-                                      child: CircularProgressIndicator()));
-                            }),
-                        Row(
-                          children: [
-                            ConstrainedBox(
-                              constraints: new BoxConstraints(
-                                maxHeight: 45.0,
-                              ),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: timePeriods.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      if (selectedTimePeriod != index) {
-                                        setState(() {
-                                          if (index == 0)
-                                            timePeriod = ChartTimePeriod.hour;
-                                          else if (index == 1)
-                                            timePeriod = ChartTimePeriod.day;
-                                          else if (index == 2)
-                                            timePeriod = ChartTimePeriod.month;
-                                          else if (index == 3)
-                                            timePeriod = ChartTimePeriod.year;
-                                          selectedTimePeriod = index;
-                                        });
-                                      }
+                return StreamBuilder<AssetChartData>(
+                    stream: chartStreamController?.stream,
+                    builder:
+                        (context, AsyncSnapshot<AssetChartData> chartSnapshot) {
+                      bool areAssetPairsReady =
+                          assetPairsSnapshot.connectionState !=
+                                  ConnectionState.waiting &&
+                              assetPairsSnapshot.hasData;
+                      bool isChartReady = chartSnapshot.connectionState !=
+                              ConnectionState.waiting &&
+                          chartSnapshot.hasData;
+
+                      if (areAssetPairsReady && isChartReady) {
+                        return RefreshIndicator(
+                          onRefresh: () {
+                            return _chartRepository!.update();
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              ConstrainedBox(
+                                constraints: new BoxConstraints(
+                                  maxHeight: 95.0,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 16.0),
+                                  child: DropDownField<AssetPairRecord>(
+                                    onChanged: (newPair) {
+                                      setState(() {
+                                        selectedAssetPair = newPair;
+                                        _chartRepository?.isFresh = false;
+                                      });
                                     },
-                                    child: Container(
-                                        child: TimePeriodPicker(
-                                            timePeriods[index],
-                                            selectedTimePeriod == index)),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 32.0, bottom: 16.0),
-                        ),
-                        Column(mainAxisSize: MainAxisSize.min, children: [
-                          Row(children: [
-                            Text(
-                              'open_orders'.tr,
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: colorScheme.drawerBackground,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ]),
-                          Padding(
-                            padding: EdgeInsets.only(top: 16.0),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'asks'.tr,
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: colorScheme.drawerBackground,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 16.0),
-                                  child: Text(
-                                    'see_all'.tr,
-                                    style: TextStyle(
-                                      fontSize: 11.0,
-                                      color: colorScheme.primary,
-                                    ),
+                                    colorTheme: colorScheme,
+                                    currentValue: selectedAssetPair ??
+                                        assetPairsSnapshot.data!.first,
+                                    list: assetPairsSnapshot.data!,
+                                    format: (AssetPairRecord item) {
+                                      return '${item.base.code}/${item.quote.code}';
+                                    },
                                   ),
                                 ),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OrderBookScreen(
-                                              selectedAssetPair?.base.code ??
-                                                  assetPairsSnapshot
-                                                      .data!.first.base.code,
-                                              selectedAssetPair?.quote.code ??
-                                                  assetPairsSnapshot
-                                                      .data!.first.quote.code,
-                                              true,
-                                            ))),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 18.0, bottom: 16.0),
+                                child: Text(
+                                  '${(selectedAssetPair ?? assetPairsSnapshot.data!.first).base.code}/${(selectedAssetPair ?? assetPairsSnapshot.data!.first).quote.code}',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: colorScheme.accent,
+                                    fontSize: 32.0,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                                  child: ChartView(
+                                      chartSnapshot.data!, timePeriod)),
+                              Row(
+                                children: [
+                                  ConstrainedBox(
+                                    constraints: new BoxConstraints(
+                                      maxHeight: 45.0,
+                                    ),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemCount: timePeriods.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            if (selectedTimePeriod != index) {
+                                              setState(() {
+                                                if (index == 0)
+                                                  timePeriod =
+                                                      ChartTimePeriod.hour;
+                                                else if (index == 1)
+                                                  timePeriod =
+                                                      ChartTimePeriod.day;
+                                                else if (index == 2)
+                                                  timePeriod =
+                                                      ChartTimePeriod.month;
+                                                else if (index == 3)
+                                                  timePeriod =
+                                                      ChartTimePeriod.year;
+                                                selectedTimePeriod = index;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                              child: TimePeriodPicker(
+                                                  timePeriods[index],
+                                                  selectedTimePeriod == index)),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 32.0, bottom: 16.0),
+                              ),
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                                Row(children: [
+                                  Text(
+                                    'open_orders'.tr,
+                                    style: TextStyle(
+                                      fontSize: 22.0,
+                                      color: colorScheme.drawerBackground,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ]),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16.0),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'asks'.tr,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: colorScheme.drawerBackground,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 16.0),
+                                        child: Text(
+                                          'see_all'.tr,
+                                          style: TextStyle(
+                                            fontSize: 11.0,
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrderBookScreen(
+                                                    selectedAssetPair
+                                                            ?.base.code ??
+                                                        assetPairsSnapshot.data!
+                                                            .first.base.code,
+                                                    selectedAssetPair
+                                                            ?.quote.code ??
+                                                        assetPairsSnapshot.data!
+                                                            .first.quote.code,
+                                                    true,
+                                                  ))),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 14.0),
+                                  child: OrderBookList(
+                                    selectedAssetPair?.base.code ??
+                                        assetPairsSnapshot
+                                            .data!.first.base.code,
+                                    selectedAssetPair?.quote.code ??
+                                        assetPairsSnapshot
+                                            .data!.first.quote.code,
+                                    isFull: false,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16.0),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'bids'.tr,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: colorScheme.drawerBackground,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 16.0),
+                                        child: Text(
+                                          'see_all'.tr,
+                                          style: TextStyle(
+                                            fontSize: 11.0,
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrderBookScreen(
+                                                    selectedAssetPair
+                                                            ?.base.code ??
+                                                        'BTC',
+                                                    selectedAssetPair
+                                                            ?.quote.code ??
+                                                        'USD',
+                                                    false,
+                                                  ))),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 14.0),
+                                  child: OrderBookList(
+                                    selectedAssetPair?.base.code ?? 'BTC',
+                                    selectedAssetPair?.quote.code ?? 'USD',
+                                    isFull: false,
+                                    isAsk: false,
+                                  ),
+                                ),
+                              ]),
+                              Padding(
+                                padding: EdgeInsets.only(top: 32.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'trade_history'.tr,
+                                      style: TextStyle(
+                                        fontSize: 22.0,
+                                        color: colorScheme.drawerBackground,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 16.0),
+                                        child: Text(
+                                          'see_all'.tr,
+                                          style: TextStyle(
+                                            fontSize: 11.0,
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TradeHistoryScreen(
+                                                    selectedAssetPair
+                                                            ?.base.code ??
+                                                        '',
+                                                    selectedAssetPair
+                                                            ?.quote.code ??
+                                                        '',
+                                                  ))),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                child: Visibility(
+                                  //TODO refactor
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 14.0),
+                                    child: TradeHistoryList(
+                                      selectedAssetPair?.base.code ?? '',
+                                      selectedAssetPair?.quote.code ?? '',
+                                      addPadding: false,
+                                      isFull: false,
+                                    ),
+                                  ),
+                                  visible: selectedAssetPair != null,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 16.0),
                               ),
                             ],
                           ),
-                          Container(
-                            padding: EdgeInsets.only(top: 14.0),
-                            child: OrderBookList(
-                              selectedAssetPair?.base.code ??
-                                  assetPairsSnapshot.data!.first.base.code,
-                              selectedAssetPair?.quote.code ??
-                                  assetPairsSnapshot.data!.first.quote.code,
-                              isFull: false,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 16.0),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'bids'.tr,
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: colorScheme.drawerBackground,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 16.0),
-                                  child: Text(
-                                    'see_all'.tr,
-                                    style: TextStyle(
-                                      fontSize: 11.0,
-                                      color: colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OrderBookScreen(
-                                              selectedAssetPair?.base.code ??
-                                                  'BTC',
-                                              selectedAssetPair?.quote.code ??
-                                                  'USD',
-                                              false,
-                                            ))),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(top: 14.0),
-                            child: OrderBookList(
-                              selectedAssetPair?.base.code ?? 'BTC',
-                              selectedAssetPair?.quote.code ?? 'USD',
-                              isFull: false,
-                              isAsk: false,
-                            ),
-                          ),
-                        ]),
-                        Padding(
-                          padding: EdgeInsets.only(top: 32.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'trade_history'.tr,
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: colorScheme.drawerBackground,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 16.0),
-                                  child: Text(
-                                    'see_all'.tr,
-                                    style: TextStyle(
-                                      fontSize: 11.0,
-                                      color: colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TradeHistoryScreen(
-                                              selectedAssetPair?.base.code ??
-                                                  '',
-                                              selectedAssetPair?.quote.code ??
-                                                  '',
-                                            ))),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Visibility(
-                            //TODO refactor
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 14.0),
-                              child: TradeHistoryList(
-                                selectedAssetPair?.base.code ?? '',
-                                selectedAssetPair?.quote.code ?? '',
-                                addPadding: false,
-                                isFull: false,
-                              ),
-                            ),
-                            visible: selectedAssetPair != null,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (assetPairsSnapshot.hasError) {
-                  log(assetPairsSnapshot.stackTrace.toString());
-                  return Text(assetPairsSnapshot.error
-                      .toString()); // TODO display error correctly
-                }
-                return CircularProgressIndicator();
+                        );
+                      } else if (chartSnapshot.hasError) {
+                        log(chartSnapshot.stackTrace.toString());
+                        return Text(chartSnapshot.error
+                            .toString()); // TODO display error correctly
+                      }
+                      return Container(
+                          height: MediaQuery.of(context).size.height - 90,
+                          child: Center(child: CircularProgressIndicator()));
+                    });
               },
             ),
           ],
