@@ -50,6 +50,7 @@ class _SaleListItemState extends State<SaleListItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(4.0),
                   child: Container(
@@ -58,8 +59,8 @@ class _SaleListItemState extends State<SaleListItem> {
                     child: widget._assetRecord.logoUrl != null
                         ? CachedNetworkImage(
                             placeholder: (context, url) => Container(
-                              height: 36.0,
-                              width: 36.0,
+                              height: 88.0,
+                              width: 88.0,
                               child: Icon(CustomIcons.bitcoin__btc_),
                             ),
                             imageUrl: widget._assetRecord.logoUrl!,
