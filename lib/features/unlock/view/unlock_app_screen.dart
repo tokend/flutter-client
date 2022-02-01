@@ -266,7 +266,7 @@ class _UnlockAppScreenState extends VisibilityAwareState<UnlockAppScreen> {
     Get.deleteAll();
     MainBindings(widget.env, widget.sharedPreferences).dependencies();
 
-    Get.toNamed('/signIn');
+    Get.offAllNamed('/signIn');
   }
 }
 

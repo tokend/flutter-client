@@ -21,7 +21,7 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.9"
+    version: "3.1.11"
   args:
     dependency: transitive
     description:
@@ -281,7 +281,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "243cf00ced612f002a6a711f43972cf89ca9ec35"
+      resolved-ref: d22914f22dc1b54914b9156e256da62c0a40d0a4
       url: "https://github.com/tokend/dart-sdk"
     source: git
     version: "0.0.1"
@@ -539,7 +539,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.4+4"
+    version: "0.8.4+5"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -1062,14 +1062,14 @@ packages:
       name: syncfusion_flutter_charts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.43"
+    version: "19.4.48"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.43+1"
+    version: "19.4.48"
   synchronized:
     dependency: "direct main"
     description:
@@ -1160,7 +1160,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.6"
+    version: "2.3.10"
   xdg_directories:
     dependency: transitive
     description:

@@ -1,4 +1,3 @@
-
 import 'package:flutter_template/features/account/model/account_role.dart';
 import 'package:flutter_template/features/key_value/model/key_value_entry_record.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';

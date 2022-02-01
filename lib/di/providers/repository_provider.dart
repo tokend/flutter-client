@@ -1,3 +1,4 @@
+import 'package:flutter_template/features/account/storage/account_identities_repository.dart';
 import 'package:flutter_template/features/account/storage/account_repository.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
@@ -26,6 +27,7 @@ abstract class RepositoryProvider {
   abstract KeyValueEntriesRepository keyValueEntriesRepository;
   abstract OffersRepository offersRepository;
   abstract SalesRepository salesRepository;
+  abstract AccountIdentitiesRepository accountIdentitiesRepository;
 
   AssetChartRepository assetChartsRepository(
     String baseAsset,

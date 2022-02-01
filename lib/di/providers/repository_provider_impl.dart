@@ -8,6 +8,7 @@ import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/lru_cache.dart';
 import 'package:flutter_template/features/account/model/account_record.dart';
+import 'package:flutter_template/features/account/storage/account_identities_repository.dart';
 import 'package:flutter_template/features/account/storage/account_repository.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
@@ -81,6 +82,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late SalesRepository salesRepository;
 
+  @override
+  late AccountIdentitiesRepository accountIdentitiesRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -106,6 +110,7 @@ class RepositoryProviderImpl implements RepositoryProvider {
       walletInfoProvider,
       apiProvider,
     );
+    accountIdentitiesRepository = AccountIdentitiesRepository(apiProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

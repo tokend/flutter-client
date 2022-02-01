@@ -38,127 +38,138 @@ class _SaleListItemState extends State<SaleListItem> {
 
     var fundedPercentage = (currentCap * 100 / softCap).round();
     var invested = currentCap;
-    return Container(
-      child: Card(
-        color: colorTheme.secondaryText,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Container(
-                    width: 88.0,
-                    height: 88.0,
-                    child: widget._assetRecord.logoUrl != null
-                        ? CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              height: 88.0,
-                              width: 88.0,
-                              child: Icon(CustomIcons.bitcoin__btc_),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DescriptionScreen(
+                    widget._saleRecord, widget._assetRecord)));
+      },
+      child: Container(
+        child: Card(
+          color: colorTheme.secondaryText,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: Container(
+                      width: 88.0,
+                      height: 88.0,
+                      child: widget._assetRecord.logoUrl != null
+                          ? CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                height: 88.0,
+                                width: 88.0,
+                                child: Icon(CustomIcons.bitcoin__btc_),
+                              ),
+                              imageUrl: widget._assetRecord.logoUrl!,
+                              fit: BoxFit.cover,
+                            )
+                          : CircularProfileAvatar(
+                              '',
+                              initialsText: Text(widget._assetRecord.code
+                                  .substring(0, 1)
+                                  .capitalize()),
                             ),
-                            imageUrl: widget._assetRecord.logoUrl!,
-                            fit: BoxFit.cover,
-                          )
-                        : CircularProfileAvatar(
-                            '',
-                            initialsText: Text(widget._assetRecord.code
-                                .substring(0, 1)
-                                .capitalize()),
-                          ),
+                    ),
                   ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget._saleRecord.name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 15.0),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 6.0)),
+                      Text(
+                        widget._saleRecord.description,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 15.0),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 14.0)),
+                      Row(
+                        children: [
+                          Icon(CustomIcons.calendar),
+                          Padding(padding: EdgeInsets.only(right: 8.0)),
+                          Flexible(
+                            child: Text(
+                              getStatusString(widget._saleRecord.saleState.name)
+                                  .format([
+                                widget._saleRecord.endTime
+                                    .format(FULL_DATE_AND_TIME)
+                              ]),
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 15.0),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DescriptionScreen(
+                                widget._saleRecord, widget._assetRecord)));
+                  },
                 ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(padding: EdgeInsets.only(top: 12.0)),
+                LinearProgressIndicator(
+                  value: fundedPercentage / 100,
+                  color: colorTheme.accent,
+                ),
+                Padding(padding: EdgeInsets.only(top: 14.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget._saleRecord.name,
+                      'funded_percentage'.tr.format(['$fundedPercentage%']),
                       style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 15.0),
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w700,
+                        color: colorTheme.accent,
+                      ),
                     ),
-                    Padding(padding: EdgeInsets.only(top: 6.0)),
                     Text(
-                      widget._saleRecord.description,
+                      'invested_amount'.tr.format([
+                        invested,
+                        widget._saleRecord.defaultQuoteAsset.code
+                      ]),
                       style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 15.0),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 14.0)),
-                    Row(
-                      children: [
-                        Icon(CustomIcons.calendar),
-                        Padding(padding: EdgeInsets.only(right: 8.0)),
-                        Flexible(
-                          child: Text(
-                            getStatusString(widget._saleRecord.saleState.name)
-                                .format([
-                              widget._saleRecord.endTime
-                                  .format(FULL_DATE_AND_TIME)
-                            ]),
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 15.0),
-                          ),
-                        )
-                      ],
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w700,
+                        color: colorTheme.accent,
+                      ),
                     ),
                   ],
                 ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DescriptionScreen(
-                              widget._saleRecord, widget._assetRecord)));
-                },
-              ),
-              Padding(padding: EdgeInsets.only(top: 12.0)),
-              LinearProgressIndicator(
-                value: fundedPercentage / 100,
-                color: colorTheme.accent,
-              ),
-              Padding(padding: EdgeInsets.only(top: 14.0)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'funded_percentage'.tr.format(['$fundedPercentage%']),
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w700,
-                      color: colorTheme.accent,
-                    ),
+                Padding(padding: EdgeInsets.only(top: 20.0)),
+                Text(
+                  'buy_for'.tr.format([
+                    softCap,
+                    widget._saleRecord.baseAsset.code,
+                    hardCap,
+                    widget._saleRecord.defaultQuoteAsset.code,
+                  ]),
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w400,
                   ),
-                  Text(
-                    'invested_amount'.tr.format(
-                        [invested, widget._saleRecord.defaultQuoteAsset.code]),
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w700,
-                      color: colorTheme.accent,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(padding: EdgeInsets.only(top: 20.0)),
-              Text(
-                'buy_for'.tr.format([
-                  softCap,
-                  widget._saleRecord.baseAsset.code,
-                  hardCap,
-                  widget._saleRecord.defaultQuoteAsset.code,
-                ]),
-                style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w400,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

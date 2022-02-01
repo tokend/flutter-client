@@ -6,7 +6,7 @@ import 'env.dart';
 class Development extends Env {
   SharedPreferences sp;
   @override
-  // String apiUrl = 'http://d631-193-19-228-94.ngrok.io/_/api/';
+  //String apiUrl = 'https://api.demo.tokend.io';
   String apiUrl = 'http://e12e-193-19-228-94.ngrok.io/_/api/';
 
   @override

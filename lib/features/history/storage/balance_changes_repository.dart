@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dart_sdk/api/base/model/data_page.dart';
 import 'package:dart_sdk/api/base/params/paging_order.dart';
@@ -111,15 +110,33 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
           var action = getBalanceChangeAction(
               effect['relationships']['effect']['data']['type']);
 
+          bool isCharged = action == BalanceChangeAction.matched &&
+              _balanceId ==
+                  relatedEffect['attributes']['charged']['balance_address'];
+          var amount = action == BalanceChangeAction.matched
+              ? isCharged
+                  ? relatedEffect['attributes']['charged']['amount']
+                  : relatedEffect['attributes']['funded']['amount']
+              : relatedEffect['attributes']['amount'];
+          var fee = action == BalanceChangeAction.matched
+              ? isCharged
+                  ? relatedEffect['attributes']['charged']['fee']
+                  : relatedEffect['attributes']['funded']['fee']
+              : relatedEffect['attributes']['fee'];
+          var assetCode = action == BalanceChangeAction.matched
+              ? isCharged
+                  ? relatedEffect['attributes']['charged']['asset_code']
+                  : relatedEffect['attributes']['funded']['asset_code']
+              : effect['relationships']['asset']['data']['id'];
+
           return BalanceChange(
             int.parse(relatedEffect['id']),
             _accountId!,
             action,
-            Decimal.parse(relatedEffect['attributes']['amount']),
-            SimpleAsset(effect['relationships']['asset']['data']['id'], '', 6),
+            Decimal.parse(amount),
+            SimpleAsset(assetCode, '', 6),
             effect['relationships']['balance']['data']['id'],
-            SimpleFeeRecord.fromFee(
-                Fee.fromJson(relatedEffect['attributes']['fee'])),
+            SimpleFeeRecord.fromFee(Fee.fromJson(fee)),
             DateTime.parse(relatedOp['attributes']['applied_at']),
             getCause(
                 describeEnum(action),
@@ -134,7 +151,6 @@ class BalanceChangesRepository extends PagedDataRepository<BalanceChange> {
                 "0");
 
         var isLast = response['links']['next'] == null || items.length < limit;
-        log('RESPONSE: $response');
 
         var nextCursor = DataPage.getNumberParamFromLink(
                 Uri.decodeFull(response['links']['next']),
