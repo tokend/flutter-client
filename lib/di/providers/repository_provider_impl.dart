@@ -13,6 +13,7 @@ import 'package:flutter_template/features/account/storage/account_repository.dar
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
 import 'package:flutter_template/features/blobs/blobs_repository.dart';
+import 'package:flutter_template/features/fees/storage/fees_repository.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/storage/balance_changes_repository.dart';
 import 'package:flutter_template/features/key_value/storage/key_value_entries_repository.dart';
@@ -85,6 +86,9 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late AccountIdentitiesRepository accountIdentitiesRepository;
 
+  @override
+  late FeesRepository feeRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -111,6 +115,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
       apiProvider,
     );
     accountIdentitiesRepository = AccountIdentitiesRepository(apiProvider);
+    feeRepository = FeesRepository(
+        apiProvider, walletInfoProvider, urlConfigProvider.getConfig());
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {

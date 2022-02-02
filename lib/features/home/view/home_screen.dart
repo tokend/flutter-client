@@ -4,6 +4,7 @@ import 'package:flutter_template/base/base_widget.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/assets/view/assets_screen.dart';
 import 'package:flutter_template/features/balances/view/balances_screen.dart';
+import 'package:flutter_template/features/fees/view%20/fee_list_screen.dart';
 import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
@@ -91,8 +92,7 @@ class HomeScreen extends BaseStatelessWidget {
         // TODO: Handle this case.
         break;
       case NavItem.fees:
-        // TODO: Handle this case.
-        break;
+        return FeeListScreen();
       case NavItem.settings:
         return SettingsScreen();
       case NavItem.log_out:
