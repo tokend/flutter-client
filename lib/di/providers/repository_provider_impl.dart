@@ -8,6 +8,7 @@ import 'package:flutter_template/di/providers/repository_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/extensions/lru_cache.dart';
 import 'package:flutter_template/features/account/model/account_record.dart';
+import 'package:flutter_template/features/account/storage/account_identities_repository.dart';
 import 'package:flutter_template/features/account/storage/account_repository.dart';
 import 'package:flutter_template/features/assets/storage/assets_repository.dart';
 import 'package:flutter_template/features/balances/storage/balances_repository.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_template/features/kyc/logic/kyc_request_state_repository
 import 'package:flutter_template/features/kyc/model/active_kyc.dart';
 import 'package:flutter_template/features/kyc/storage/active_kyc_repository.dart';
 import 'package:flutter_template/features/offers/storage/offers_repository.dart';
+import 'package:flutter_template/features/sales/storage%20/sales_repository.dart';
 import 'package:flutter_template/features/system_info/model/system_info_record.dart';
 import 'package:flutter_template/features/system_info/storage/system_info_repository.dart';
 import 'package:flutter_template/features/trade%20/chart/storage/asset_chart_repository.dart';
@@ -36,6 +38,15 @@ class RepositoryProviderImpl implements RepositoryProvider {
 
   var chartRepositoriesByCode = LruCache(
       storage: InMemoryStorage<String, AssetChartRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
+  var orderBookRepositories = LruCache(
+      storage: InMemoryStorage<String, OrderBookRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
+  var tradesRepositoriesByAssetPair = LruCache(
+      storage: InMemoryStorage<String, TradeHistoryRepository>(
+          MAX_SAME_REPOSITORIES_COUNT));
+  var balanceChangesByBalanceId = LruCache(
+      storage: InMemoryStorage<String, BalanceChangesRepository>(
           MAX_SAME_REPOSITORIES_COUNT));
 
   @override
@@ -68,6 +79,12 @@ class RepositoryProviderImpl implements RepositoryProvider {
   @override
   late OffersRepository offersRepository;
 
+  @override
+  late SalesRepository salesRepository;
+
+  @override
+  late AccountIdentitiesRepository accountIdentitiesRepository;
+
   RepositoryProviderImpl(
       {required this.apiProvider,
       required this.walletInfoProvider,
@@ -89,6 +106,11 @@ class RepositoryProviderImpl implements RepositoryProvider {
     assetPairsRepository = AssetPairsRepository(apiProvider, urlConfigProvider);
     offersRepository = OffersRepository(
         apiProvider, walletInfoProvider, false); //TODO onlyPrimary
+    salesRepository = SalesRepository(
+      walletInfoProvider,
+      apiProvider,
+    );
+    accountIdentitiesRepository = AccountIdentitiesRepository(apiProvider);
   }
 
   ObjectPersistence<SystemInfoRecord> getSystemInfoPersistence() {
@@ -132,11 +154,13 @@ class RepositoryProviderImpl implements RepositoryProvider {
 
   @override
   BalanceChangesRepository balanceChanges(String? balanceId) {
-    return BalanceChangesRepository(
-        balanceId,
-        walletInfoProvider.getWalletInfo()?.accountId,
-        apiProvider,
-        MemoryOnlyPagedDataCache<BalanceChange>());
+    return balanceChangesByBalanceId.getOrPut(
+        '$balanceId',
+        new BalanceChangesRepository(
+            balanceId,
+            walletInfoProvider.getWalletInfo()?.accountId,
+            apiProvider,
+            MemoryOnlyPagedDataCache<BalanceChange>()));
   }
 
   @override
@@ -150,7 +174,8 @@ class RepositoryProviderImpl implements RepositoryProvider {
 
   @override
   OrderBookRepository orderBook(String baseAsset, String quoteAsset) {
-    return OrderBookRepository(apiProvider, baseAsset, quoteAsset);
+    return orderBookRepositories.getOrPut('$baseAsset.$quoteAsset',
+        new OrderBookRepository(apiProvider, baseAsset, quoteAsset));
   }
 
   @override
@@ -158,10 +183,12 @@ class RepositoryProviderImpl implements RepositoryProvider {
     String baseAsset,
     String quoteAsset,
   ) {
-    return TradeHistoryRepository(
-      baseAsset,
-      quoteAsset,
-      apiProvider,
-    );
+    return tradesRepositoriesByAssetPair.getOrPut(
+        '$baseAsset:$quoteAsset',
+        new TradeHistoryRepository(
+          baseAsset,
+          quoteAsset,
+          apiProvider,
+        ));
   }
 }

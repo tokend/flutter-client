@@ -4,6 +4,7 @@ import 'package:flutter_template/base/base_bloc.dart';
 import 'package:flutter_template/base/model/simple_fee_record.dart';
 import 'package:flutter_template/di/providers/account_provider.dart';
 import 'package:flutter_template/di/providers/wallet_info_provider.dart';
+import 'package:flutter_template/features/account/storage/account_identities_repository.dart';
 import 'package:flutter_template/features/send/bloc/send_event.dart';
 import 'package:flutter_template/features/send/bloc/send_state.dart';
 import 'package:flutter_template/features/send/logic/confirm_payment_request_usecase.dart';
@@ -33,9 +34,12 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
       WalletInfoProvider walletInfoProvider = session.walletInfoProvider;
 
       try {
+        var recipient = await PaymentRecipientLoader(
+                repositoryProvider.accountIdentitiesRepository)
+            .load(state.recipient);
+        log('got a recipient $recipient');
         this.paymentRequest = await CreatePaymentRequestUseCase(
-                PaymentRecipient(
-                    state.recipient, 'nickname is not set for now'),
+                recipient,
                 //TODO handle nickname setting
                 state.amount,
                 state.balanceRecord!,
@@ -46,6 +50,11 @@ class SendBloc extends BaseBloc<SendEvent, SendState> {
         yield state.copyWith(isRequestReady: true, error: null);
       } catch (e, stacktrace) {
         log(stacktrace.toString());
+        if (e is NoIdentityAvailableException) {
+          toastManager.showShortToast('error_invalid_recipient'.tr);
+        } else if (e is Exception) {
+          errorHandler.handle(e);
+        }
         yield SendInitial(
           state.asset,
           state.balanceRecord!,

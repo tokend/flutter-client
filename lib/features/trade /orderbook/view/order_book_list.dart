@@ -30,7 +30,8 @@ class _OrderBookListState extends State<OrderBookList> {
     var streamController;
 
     void subscribeToOrderBookRepository() async {
-      await orderBookRepository.update();
+      await orderBookRepository.getItem();
+      orderBookRepository.isNeverUpdated = false;
     }
 
     subscribeToOrderBookRepository();
@@ -40,11 +41,14 @@ class _OrderBookListState extends State<OrderBookList> {
     return StreamBuilder<OrderBook>(
         stream: streamController.stream,
         builder: (context, AsyncSnapshot<OrderBook> snapshot) {
-          if (snapshot.data?.sellEntries.isEmpty == true &&
+          if ((snapshot.data?.sellEntries.isEmpty == true &&
+                      widget.isAsk == true ||
+                  snapshot.data?.buyEntries.isEmpty == true &&
+                      widget.isAsk == false) &&
               orderBookRepository.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
-              height: 40.0,
+              height: widget.isFull ? MediaQuery.of(context).size.height : 40.0,
               child: _emptyWidget(orderBookRepository),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
@@ -55,10 +59,7 @@ class _OrderBookListState extends State<OrderBookList> {
                 ? snapshot.data!.sellEntries
                 : snapshot.data!.buyEntries;
 
-            return Container(
-              color: context.colorTheme.background,
-              child: _listWidget(orderBookRepository, filteredItems),
-            );
+            return _listWidget(orderBookRepository, filteredItems);
           } else if (snapshot.hasError) {
             log(snapshot.stackTrace.toString());
             return Text(
@@ -66,7 +67,13 @@ class _OrderBookListState extends State<OrderBookList> {
           }
           return Container(
               color: context.colorTheme.background,
-              child: Center(child: CircularProgressIndicator()));
+              child: widget.isFull
+                  ? Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: Text(
+                        'loading'.tr,
+                      ),
+                    ));
         });
   }
 
@@ -77,50 +84,23 @@ class _OrderBookListState extends State<OrderBookList> {
         onRefresh: () {
           return orderBookRepository.update();
         },
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.only(top: 20.0),
-            child: Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                      right: 16.0,
-                      left: widget.isFull ? 16.0 : 0.0),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: widget.isFull == true ? filteredItems.length : 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Builder(
-                        builder: (BuildContext context) =>
-                            OrderBookListItem(filteredItems[index]));
-                  }),
-            ),
-          ),
-        ),
+        child: ListView.builder(
+            padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10.0,
+                right: 16.0,
+                left: widget.isFull ? 16.0 : 0.0),
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: widget.isFull == true ? filteredItems.length : 1,
+            itemBuilder: (BuildContext context, int index) {
+              return Builder(
+                  builder: (BuildContext context) =>
+                      OrderBookListItem(filteredItems[index]));
+            }),
       );
     } else {
-      return Container(
-        child: Padding(
-          padding: EdgeInsets.only(top: 20.0),
-          child: Expanded(
-            child: ListView.builder(
-                padding: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                    right: 16.0,
-                    left: widget.isFull ? 16.0 : 0.0),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: widget.isFull == true ? filteredItems.length : 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Builder(
-                      builder: (BuildContext context) =>
-                          OrderBookListItem(filteredItems[index]));
-                }),
-          ),
-        ),
-      );
+      return OrderBookListItem(filteredItems[0]);
     }
   }
 
@@ -139,7 +119,7 @@ class _OrderBookListState extends State<OrderBookList> {
                 style: TextStyle(fontSize: 17.0),
               ),
             ),
-            height: 40.0,
+            height: widget.isFull ? MediaQuery.of(context).size.height : 40.0,
           ),
         ),
       );

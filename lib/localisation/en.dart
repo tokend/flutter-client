@@ -205,6 +205,7 @@ final Map<String, String> en = {
   "unlock": "Unlock application",
   "finger_print_hint": "Place and hold your finger on the fingerprint reader ",
   "change_account": "Change Account",
+  "use_fingerprint": "Use fingerprint",
 
   //account roles
   "unverified_acc": "Unverified account",
@@ -220,4 +221,18 @@ final Map<String, String> en = {
   "time": "Time",
   "trade_history": "Trade history",
   "see_all": "See all",
+
+  //sales
+  'funded_percentage': "%s funded",
+  'invested_amount': "%s %s invested",
+  "empty_sales_list": "No sales found",
+  "buy_for": "Buy %s %s for %s %s",
+  "is_opened_till": "Sale is opened till %s",
+  "is_closed_from": "Sale is closed from %s",
+  "is_canceled_from": "Sale is canceled from %s",
+  "sale_closes_on": "Sale closes from %s",
+  "descriptions": "Descriptions",
+  "sale_overview": "Sale overview",
+  "details": "Details",
+  "sale_details": "Sale Details",
 };

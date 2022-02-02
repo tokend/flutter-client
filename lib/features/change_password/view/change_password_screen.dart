@@ -2,7 +2,6 @@ import 'package:dart_sdk/tfa/exceptions.dart';
 import 'package:dart_sdk/tfa/password_tfa_otp_generator.dart';
 import 'package:dart_sdk/tfa/tfa_callback.dart';
 import 'package:dart_sdk/tfa/tfa_verifier.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -31,15 +30,17 @@ class ChangePasswordScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.colorTheme.background,
-        iconTheme: IconThemeData(color: context.colorTheme.accent),
-        title: Align(
-          alignment: Alignment.center,
-          child: Text(
-            'change_password'.tr,
-            style: TextStyle(
-                color: context.colorTheme.primaryText, fontSize: 17.0),
-          ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          //TODO change on custom icon
+          onPressed: () => Navigator.of(context).pop(),
         ),
+        title: Text(
+          'change_password'.tr,
+          style:
+              TextStyle(color: context.colorTheme.primaryText, fontSize: 17.0),
+        ),
+        centerTitle: true,
         elevation: 0,
       ),
       body: SafeArea(
@@ -123,8 +124,8 @@ class ChangePasswordScreen extends BaseStatelessWidget implements TfaCallback {
   }
 
   @override
-  Future<void> onTfaRequired(
-      NeedTfaException exception, TfaVerifierInterface verifierInterface) async {
+  Future<void> onTfaRequired(NeedTfaException exception,
+      TfaVerifierInterface verifierInterface) async {
     WalletInfoProvider walletInfoProvider = Get.find();
     var email = walletInfoProvider.getWalletInfo()?.email;
 

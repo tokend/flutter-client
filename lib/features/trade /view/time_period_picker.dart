@@ -12,23 +12,32 @@ class TimePeriodPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     var colorScheme = context.colorTheme;
 
-    return Card(
-      color: isSelected ? colorScheme.accent : colorScheme.secondaryText,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-            color:
-                isSelected ? colorScheme.accent : colorScheme.borderUnfocused,
-            width: 1),
-        borderRadius: BorderRadius.circular(2.0),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-        child: Text(
-          text,
-          style: TextStyle(
-              fontSize: 11.0,
+    return Container(
+      width: (MediaQuery.of(context).size.width - 32) / 4,
+      child: Card(
+        elevation: 0.0,
+        color: isSelected ? colorScheme.primary : colorScheme.background,
+        shape: RoundedRectangleBorder(
+          side: isSelected
+              ? BorderSide(
+                  color: isSelected
+                      ? colorScheme.primary
+                      : colorScheme.borderUnfocused,
+                  width: isSelected ? 1 : 0)
+              : BorderSide.none,
+          borderRadius: BorderRadius.circular(2.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 12.0,
               color:
-                  isSelected ? colorScheme.secondaryText : colorScheme.accent),
+                  isSelected ? colorScheme.secondaryText : colorScheme.grayText,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );

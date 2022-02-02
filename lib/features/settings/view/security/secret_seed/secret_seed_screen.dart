@@ -18,14 +18,12 @@ class SecretSeedScreen extends BaseStatelessWidget {
       appBar: AppBar(
         backgroundColor: context.colorTheme.background,
         iconTheme: IconThemeData(color: context.colorTheme.accent),
-        title: Align(
-          alignment: Alignment.center,
-          child: Text(
-            'secret_seed'.tr,
-            style: TextStyle(
-                color: context.colorTheme.primaryText, fontSize: 17.0),
-          ),
+        title: Text(
+          'secret_seed'.tr,
+          style:
+              TextStyle(color: context.colorTheme.primaryText, fontSize: 17.0),
         ),
+        centerTitle: true,
         elevation: 0,
       ),
       body: Container(

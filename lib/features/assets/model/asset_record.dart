@@ -64,6 +64,25 @@ class AssetRecord implements Asset, RecordWithPolicy {
     maximum = Decimal.parse(json['attributes']['max_issuance_amount']);
   }
 
+  AssetRecord.single(Map<String, dynamic> json, UrlConfig urlConfig)
+      : code = json['code'],
+        ownerAccountId = json['owner'] {
+    logoUrl = getLogoUrl(json['details']?['logo'], urlConfig);
+    policy = json['policy'];
+    if (json['details']['external_system_type'] != null) {
+      externalSystemType =
+          int.parse(json['details']['external_system_type'].toString());
+    }
+
+    if (json['details']['is_coinpayments'] != null) {
+      isConnectedToCoinpayments = true;
+    }
+
+    issued = Decimal.parse(json['issued']);
+    available = Decimal.parse(json['available_for_issuance']);
+    maximum = Decimal.parse(json['max_issuance_amount']);
+  }
+
   String? getLogoUrl(Map<String, dynamic>? json, UrlConfig urlConfig) {
     if (json != null) {
       RemoteFile logo = RemoteFile.fromJson(json);

@@ -12,6 +12,7 @@ abstract class MultipleItemsRepository<T> extends Repository {
   Lock lock = new Lock();
 
   final streamSubject = BehaviorSubject<List<T>>();
+  final singleSubject = BehaviorSubject<T>();
 
   //TODO implement items ensuring
 

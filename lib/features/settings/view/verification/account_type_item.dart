@@ -13,6 +13,7 @@ class AccountTypeItem extends StatelessWidget {
     var colourScheme = context.colorTheme;
 
     return Container(
+      width: MediaQuery.of(context).size.width,
       height: 104.0,
       child: Card(
           shape: RoundedRectangleBorder(

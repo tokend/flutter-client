@@ -24,8 +24,7 @@ class PassphraseScreen extends BaseStatelessWidget {
     subscribeToNetworkData();
     networkStreamController = systemInfoRepository.streamSubject;
     return StreamBuilder<SystemInfoRecord>(
-        stream: networkStreamController
-            ?.stream,
+        stream: networkStreamController?.stream,
         builder: (context, AsyncSnapshot<SystemInfoRecord> snapshot) {
           if (snapshot.connectionState != ConnectionState.waiting &&
               snapshot.hasData &&
@@ -35,15 +34,12 @@ class PassphraseScreen extends BaseStatelessWidget {
                 appBar: AppBar(
                   backgroundColor: context.colorTheme.background,
                   iconTheme: IconThemeData(color: context.colorTheme.accent),
-                  title: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'network_passphrase'.tr,
-                      style: TextStyle(
-                          color: context.colorTheme.primaryText,
-                          fontSize: 17.0),
-                    ),
+                  title: Text(
+                    'network_passphrase'.tr,
+                    style: TextStyle(
+                        color: context.colorTheme.primaryText, fontSize: 17.0),
                   ),
+                  centerTitle: true,
                   elevation: 0,
                 ),
                 body: Container(

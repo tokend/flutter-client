@@ -47,7 +47,8 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
               tradeHistoryRepository.isNeverUpdated == false &&
               snapshot.connectionState != ConnectionState.waiting) {
             return Container(
-              height: 40.0,
+              height:
+                  widget.addPadding ? MediaQuery.of(context).size.height : 40.0,
               child: _emptyWidget(tradeHistoryRepository),
             );
           } else if (snapshot.connectionState != ConnectionState.waiting &&
@@ -65,7 +66,11 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
           }
           return Container(
               color: context.colorTheme.background,
-              child: Center(child: CircularProgressIndicator()));
+              child: widget.isFull
+                  ? Center(child: CircularProgressIndicator())
+                  : Center(
+                      child: Text('loading'.tr),
+                    ));
         });
   }
 
@@ -79,32 +84,6 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
         child: Container(
           child: Padding(
             padding: EdgeInsets.only(top: 20.0),
-            child: Expanded(
-              child: ListView.separated(
-                  padding: EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 10.0,
-                      right: 16.0,
-                      left: widget.addPadding ? 16.0 : 0.0),
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(height: 2),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: widget.isFull == true ? data.length : 2,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Builder(
-                        builder: (BuildContext context) =>
-                            TradeHistoryListItem(data[index]));
-                  }),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        child: Padding(
-          padding: EdgeInsets.only(top: 20.0),
-          child: Expanded(
             child: ListView.separated(
                 padding: EdgeInsets.only(
                     top: 10.0,
@@ -124,6 +103,28 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
           ),
         ),
       );
+    } else {
+      return ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.only(
+              top: 10.0,
+              bottom: 10.0,
+              right: 16.0,
+              left: widget.addPadding ? 16.0 : 0.0),
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(height: 2),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: widget.isFull == true
+              ? data.length
+              : data.length > 1
+                  ? 2
+                  : 1,
+          itemBuilder: (BuildContext context, int index) {
+            return Builder(
+                builder: (BuildContext context) =>
+                    TradeHistoryListItem(data[index]));
+          });
     }
   }
 
@@ -142,7 +143,8 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
                 style: TextStyle(fontSize: 17.0),
               ),
             ),
-            height: 40.0,
+            height:
+                widget.addPadding ? MediaQuery.of(context).size.height : 40.0,
           ),
         ),
       );

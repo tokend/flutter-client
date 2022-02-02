@@ -20,14 +20,12 @@ class AccountIdScreen extends BaseStatelessWidget {
       appBar: AppBar(
         backgroundColor: context.colorTheme.background,
         iconTheme: IconThemeData(color: context.colorTheme.accent),
-        title: Align(
-          alignment: Alignment.center,
-          child: Text(
-            'account_id'.tr,
-            style: TextStyle(
-                color: context.colorTheme.primaryText, fontSize: 17.0),
-          ),
+        title: Text(
+          'account_id'.tr,
+          style: TextStyle(
+              color: context.colorTheme.primaryText, fontSize: 17.0),
         ),
+        centerTitle: true,
         elevation: 0,
       ),
       body: Container(

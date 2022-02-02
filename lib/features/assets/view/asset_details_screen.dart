@@ -59,14 +59,18 @@ class AssetDetail extends StatelessWidget {
                     fontWeight: FontWeight.w700),
               ),
               assetRecord.logoUrl != null
-                  ? CachedNetworkImage(
-                      placeholder: (context, url) => Container(
-                        height: 36.0,
-                        width: 36.0,
-                        child: Icon(CustomIcons.bitcoin__btc_),
+                  ? Container(
+                      height: 36.0,
+                      width: 36.0,
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                          height: 36.0,
+                          width: 36.0,
+                          child: Icon(CustomIcons.bitcoin__btc_),
+                        ),
+                        imageUrl: assetRecord.logoUrl!,
+                        fit: BoxFit.cover,
                       ),
-                      imageUrl: assetRecord.logoUrl!,
-                      fit: BoxFit.cover,
                     )
                   : CircularProfileAvatar(
                       '',

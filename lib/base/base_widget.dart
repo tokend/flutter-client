@@ -15,22 +15,22 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseWidget {
-  ToastManager toastManager = Get.find();
-  RepositoryProviderImpl repositoryProvider = Get.find();
-  AppTfaCallback appTfaCallback = Get.find();
-  Env env = Get.find();
-  UrlConfigProvider urlConfigProvider = Get.find();
-  ObjectPersistence<UrlConfig> urlConfigPersistence = Get.find();
-  Session session = Get.find();
-  ErrorHandler errorHandler = Get.find();
-  TxManager txManager = Get.find();
-  SharedPreferences sharedPreferences = Get.find();
-  CredentialsPersistence credentialsPersistence = Get.find();
-  LocalAuthentication localAuthentication = Get.find();
+  final ToastManager toastManager = Get.find();
+  final RepositoryProviderImpl repositoryProvider = Get.find();
+  final AppTfaCallback appTfaCallback = Get.find();
+  final Env env = Get.find();
+  final UrlConfigProvider urlConfigProvider = Get.find();
+  final ObjectPersistence<UrlConfig> urlConfigPersistence = Get.find();
+  final Session session = Get.find();
+  final ErrorHandler errorHandler = Get.find();
+  final TxManager txManager = Get.find();
+  final SharedPreferences sharedPreferences = Get.find();
+  final CredentialsPersistence credentialsPersistence = Get.find();
+  final LocalAuthentication localAuthentication = Get.find();
 }
 
 abstract class BaseStatelessWidget extends StatelessWidget with BaseWidget {
-  BaseStatelessWidget({Key? key}): super(key: key);
+  BaseStatelessWidget({Key? key}) : super(key: key);
 }
 
 abstract class BaseStatefulWidget extends StatefulWidget with BaseWidget {}

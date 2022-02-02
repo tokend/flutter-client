@@ -8,6 +8,7 @@ import 'package:flutter_template/features/home/logic/drawer_bloc.dart';
 import 'package:flutter_template/features/home/logic/drawer_state.dart';
 import 'package:flutter_template/features/home/view/drawer_content.dart';
 import 'package:flutter_template/features/offers/view%20/create_order_bottom_dialog.dart';
+import 'package:flutter_template/features/sales/view/list/sales_list_screen.dart';
 import 'package:flutter_template/features/settings/view/settings_screen.dart';
 import 'package:flutter_template/features/trade%20/view/trade_screen.dart';
 import 'package:flutter_template/utils/icons/custom_icons_icons.dart';
@@ -77,8 +78,7 @@ class HomeScreen extends BaseStatelessWidget {
       case NavItem.assets:
         return AssetsScreen();
       case NavItem.sales:
-        // TODO: Handle this case.
-        break;
+        return SalesListScreen();
       case NavItem.polls:
         // TODO: Handle this case.
         break;

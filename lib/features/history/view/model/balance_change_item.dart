@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_template/extensions/resources.dart';
 import 'package:flutter_template/features/history/model/balance_change.dart';
 import 'package:flutter_template/features/history/model/balance_change_cause.dart';
@@ -40,6 +39,7 @@ class BalanceChangeItem extends StatelessWidget {
           title:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [

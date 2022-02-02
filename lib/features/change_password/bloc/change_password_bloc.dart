@@ -1,15 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter_template/base/base_bloc.dart';
-import 'package:flutter_template/di/providers/repository_provider.dart';
-import 'package:flutter_template/di/providers/wallet_info_provider.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_event.dart';
 import 'package:flutter_template/features/change_password/bloc/change_password_state.dart';
 import 'package:flutter_template/features/change_password/logic/change_password_usecase.dart';
 import 'package:flutter_template/utils/view/models/confirm_password.dart';
 import 'package:flutter_template/utils/view/models/password.dart';
 import 'package:formz/formz.dart';
-import 'package:get/get.dart';
 
 class ChangePasswordBloc
     extends BaseBloc<ChangePasswordEvent, ChangePasswordState> {
@@ -51,8 +48,6 @@ class ChangePasswordBloc
       );
     } else if (event is FormSubmitted) {
       yield state.copyWith(status: FormzStatus.submissionInProgress);
-      RepositoryProvider repositoryProvider = Get.find();
-      WalletInfoProvider walletInfoProvider = Get.find();
       try {
         await ChangePasswordUseCase(
                 state.newPassword.value,
@@ -61,7 +56,7 @@ class ChangePasswordBloc
                 walletInfoPersistence,
                 repositoryProvider,
                 credentialsPersistence,
-                walletInfoProvider)
+                session.walletInfoProvider)
             .perform();
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } catch (e, s) {
