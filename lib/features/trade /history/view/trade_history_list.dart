@@ -85,6 +85,7 @@ class _TradeHistoryListState extends State<TradeHistoryList> {
           child: Padding(
             padding: EdgeInsets.only(top: 20.0),
             child: ListView.separated(
+                physics: AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.only(
                     top: 10.0,
                     bottom: 10.0,

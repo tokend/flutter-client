@@ -106,6 +106,7 @@ class _ExploreAssetsScreenState extends State<ExploreAssets> {
                       child: Stack(
                         children: [
                           ListView.separated(
+                            physics: AlwaysScrollableScrollPhysics(),
                             separatorBuilder:
                                 (BuildContext context, int index) =>
                                     Divider(height: 2),

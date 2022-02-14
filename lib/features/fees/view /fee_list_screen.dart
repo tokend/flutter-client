@@ -57,6 +57,7 @@ class FeeListScreen extends BaseStatelessWidget {
                   return feesRepo.update();
                 },
                 child: ListView.separated(
+                    physics: AlwaysScrollableScrollPhysics(),
                     separatorBuilder: (BuildContext context, int index) =>
                         Divider(height: 2),
                     scrollDirection: Axis.vertical,

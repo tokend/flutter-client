@@ -77,15 +77,17 @@ class _BalanceHistoryState extends State<BalanceHistory> {
                 loading = false;
               }
             });
-            return Container(
-              color: context.colorTheme.background,
-              child: RefreshIndicator(
-                onRefresh: () {
-                  return balanceChangesRepo.update();
-                },
+            return RefreshIndicator(
+              onRefresh: () {
+                return balanceChangesRepo.update();
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                color: context.colorTheme.background,
                 child: Stack(
                   children: [
                     ListView.separated(
+                        physics: AlwaysScrollableScrollPhysics(),
                         controller: controller,
                         separatorBuilder: (BuildContext context, int index) =>
                             Divider(height: 2),

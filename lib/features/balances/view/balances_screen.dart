@@ -74,6 +74,7 @@ class _BalancesScreenState extends State<BalancesScreen> {
                 child: Stack(
                   children: [
                     ListView.separated(
+                        physics: AlwaysScrollableScrollPhysics(),
                         separatorBuilder: (BuildContext context, int index) =>
                             Divider(height: 2),
                         scrollDirection: Axis.vertical,
